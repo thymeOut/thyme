@@ -1,6 +1,6 @@
 "use strict";
 
-// const { users, sauces, carts } = require("./dummydata");
+const { users, containers, items, containerUsers, containerItems } = require("./dummydata");
 const {
   db,
   models: { User, Container, Item, Container_Item, Container_User },
@@ -15,25 +15,30 @@ async function seed() {
   console.log("db synced!");
 
   // Creating Users
-  // const dummyUsers = await Promise.all(users.map((user) => User.create(user)));
+  const dummyUsers = await Promise.all(users.map((user) => User.create(user)));
 
-  // const hotSauces = await Promise.all(
-  //   sauces.map((sauce) => Sauce.create(sauce))
-  // );
+  const dummyItems = await Promise.all(
+    items.map((item) => Item.create(item))
+  );
 
-  // const dummyCarts = await Promise.all(carts.map((cart) => Cart.create(cart)));
+  const dummyContainers = await Promise.all(containers.map((container) => Container.create(container)));
 
-  // const dummyCartItems = await Promise.all(
-  //   cartItems.map((item) => CartItem.create(item))
-  // );
+  const dummyContainerUsers = await Promise.all(
+    containerUsers.map((user) => Container_User.create(user))
+  );
+
+  const dummyContainerItems = await Promise.all(
+    containerItems.map((item) => Container_Item.create(item))
+  );
 
   // console.log(`seeded ${users.length} users`);
   console.log(`seeded successfully`);
   return {
-    // dummyUsers,
-    // hotSauces,
-    // dummyCarts,
-    // dummyCartItems,
+    dummyUsers,
+    dummyContainers,
+    dummyItems,
+    dummyContainerItems,
+    dummyContainerUsers,
   };
 }
 
