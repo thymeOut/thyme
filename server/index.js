@@ -16,23 +16,24 @@ app.use(express.static(path.join(__dirname, "../public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// const server = new ApolloServer({
-//   typeDefs,
-//   resolvers: rootResolver,
-//   // context: ({ req }) => {
-//   //   return {
-//   //     ...req,
-//   //     userId:
-//   //       req && req.headers.authorization
-//   //         ? req.headers.authorization
-//   //         : null
-//   //   };
-//   // }
-// });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers: rootResolver,
+  // context: ({ req }) => {
+  //   return {
+  //     ...req,
+  //     userId:
+  //       req && req.headers.authorization
+  //         ? req.headers.authorization
+  //         : null
+  //   };
+  // }
+});
 
-// server.applyMiddleware({ app });
+server.applyMiddleware({ app });
 
 app.get("*", function (req, res) {
+  console.log('fljkhewlkfajhelkjrhg')
   res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
