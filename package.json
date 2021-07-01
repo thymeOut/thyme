@@ -31,9 +31,8 @@
     "eject": "react-scripts eject",
     "seed": "node script/seed.js",
     "start:server": "node server",
-    "start:dev": "webpack -w && nodemon server"
+    "start:dev": "webpack -w & nodemon server"
   },
-
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -53,9 +52,10 @@
     ]
   },
   "devDependencies": {
-    "axios": "^0.21.1",
     "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
     "@babel/preset-react": "^7.14.5",
+    "axios": "^0.21.1",
     "babel-loader": "^8.2.2",
     "webpack": "^5.41.1",
     "webpack-cli": "^4.7.2"
