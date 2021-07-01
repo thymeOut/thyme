@@ -7,7 +7,7 @@ const Container = db.define("container", {
     allowNull: false,
   },
   type: {
-    type: Sequelize.ENUM('fridge', 'pantry', 'freezer'),
+    type: Sequelize.ENUM('fridge', 'pantry', 'freezer', 'minifridge'),
     allowNull: false,
     defaultValue: 'fridge',
   }
