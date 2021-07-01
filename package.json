@@ -14,15 +14,26 @@
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
     "sequelize": "^6.6.4",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "@apollo/client": "^3.3.20",
+    "apollo-server-express": "^2.25.2",
+    "express": "^4.17.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.5.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.9",
+    "react-router-dom": "^5.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "seed": "node script/seed.js"
+    "seed": "node script/seed.js",
+    "start:server": "node server",
+    "start:dev": "webpack -w && nodemon server"
   },
+
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -42,6 +53,11 @@
     ]
   },
   "devDependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "@babel/core": "^7.14.6",
+    "@babel/preset-react": "^7.14.5",
+    "babel-loader": "^8.2.2",
+    "webpack": "^5.41.1",
+    "webpack-cli": "^4.7.2"
   }
 }
