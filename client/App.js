@@ -30,7 +30,7 @@ function App() {
   console.log(data)
   return (
     <div>
-      {data.users.map(user => <div key={user.id}>{user.firstName}</div>)}
+      {data.users.map(user => <div key={user.id}>{user.firstName} {user.id}</div>)}
     </div>
   );
 }
