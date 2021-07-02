@@ -48,7 +48,7 @@ const typeDefs = gql`
       password: String!
       firstName: String!
       lastName: String!
-    ): User!
+    ): AuthPayload!
     login(email: String!, password: String!): User!
   }
   scalar Date
@@ -90,7 +90,7 @@ const rootResolver = {
         const token = await user.generateToken();
         console.log("token -->", token);
 
-        return user;
+        return { token: token, user: user };
       } catch (error) {
         console.error("error in createUser mutation");
       }
