@@ -70,7 +70,7 @@ const rootResolver = {
     // context: { body, header, user: {user info} }
     async user(_, args, context) {
       console.log(context.user);
-      if (!context.user.id || !context.user.isAdmin) {
+      if (context.user.id !== +args.id && !context.user.isAdmin) {
         return null;
       } else {
         return await User.findByPk(context.user.id, {
