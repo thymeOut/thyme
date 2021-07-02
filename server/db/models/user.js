@@ -47,6 +47,8 @@ User.prototype.correctPassword = function (candidatePwd) {
 };
 
 User.prototype.generateToken = function () {
+  console.log("generating token for: ", this.id);
+  console.log("process.env.JWT -->", process.env.JWT)
   return jwt.sign({ id: this.id }, process.env.JWT);
 };
 
