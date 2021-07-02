@@ -25,7 +25,7 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     return {
       ...req,
-      authPayload:
+      user:
         req && req.headers.authorization
           ? await User.findByToken(req.headers.authorization)
           : null,

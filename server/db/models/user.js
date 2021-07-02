@@ -48,7 +48,6 @@ User.prototype.correctPassword = function (candidatePwd) {
 
 User.prototype.generateToken = function () {
   console.log("generating token for: ", this.id);
-  console.log("process.env.JWT -->", process.env.JWT)
   return jwt.sign({ id: this.id }, process.env.JWT);
 };
 
@@ -62,7 +61,8 @@ User.authenticate = async function ({ email, password }) {
     error.status = 401;
     throw error;
   }
-  return user.generateToken();
+
+  return { token: await user.generateToken(), user };
 };
 
 User.findByToken = async function (token) {

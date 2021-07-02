@@ -49,7 +49,7 @@ const typeDefs = gql`
       firstName: String!
       lastName: String!
     ): AuthPayload!
-    login(email: String!, password: String!): User!
+    login(email: String!, password: String!): AuthPayload!
   }
   scalar Date
 `;
@@ -60,6 +60,7 @@ const rootResolver = {
   Query: {
     async users(_, __, context) {
       console.log("retrieving users");
+      console.log(context.user);
       const users = await User.findAll({
         include: Container,
       });
@@ -83,22 +84,18 @@ const rootResolver = {
   },
   Mutation: {
     async createUser(_, args) {
-      console.log("args -->", args);
       try {
         const user = await User.create(args);
-        console.log("user -->", user);
         const token = await user.generateToken();
-        console.log("token -->", token);
 
-        return { token: token, user: user };
+        return { token, user };
       } catch (error) {
         console.error("error in createUser mutation");
       }
     },
     async login(_, args) {
-      console.log(args);
-      const token = await User.authenticate({ args });
-      return { token };
+      const data = await User.authenticate(args);
+      return data;
     },
     // async createWorkspace(_, args) {
     //     console.log(args)
