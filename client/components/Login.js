@@ -57,22 +57,22 @@ function LoginForm() {
         history.push('/');
       },
     });
-  
+
     const [signup] = useMutation(SIGNUP_MUTATION, {
       variables: {
         firstName: formState.firstName,
         lastName: formState.lastName,
         email: formState.email,
         password: formState.password,
-        team: formState.team,
       },
-      onCompleted: ({ signup }) => {
-        localStorage.setItem(AUTH_TOKEN, signup.token);
+      onCompleted: (data) => {
+        console.log(data);
+        localStorage.setItem("token", data.createUser.token);
         history.push('/');
         console.log("signup");
       },
     });
-  
+
     return (<div>
       <h2>Thyme</h2>
       <div className="form">
@@ -149,5 +149,5 @@ function LoginForm() {
       </div>
     );
   }
-  
+
   export default LoginForm;
