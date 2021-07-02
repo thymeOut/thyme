@@ -8491,14 +8491,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": function() { return /* binding */ Routes; }
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+<<<<<<< HEAD
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
+/* harmony import */ var _components_LandingPage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/LandingPage */ "./client/components/LandingPage.js");
+/* harmony import */ var _components_UserContainers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/UserContainers */ "./client/components/UserContainers.js");
+/* harmony import */ var _components_Login__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/Login */ "./client/components/Login.js");
+
+=======
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
 /* harmony import */ var _components_LandingPage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/LandingPage */ "./client/components/LandingPage.js");
 /* harmony import */ var _components_UserContainers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/UserContainers */ "./client/components/UserContainers.js");
+>>>>>>> origin/main
 
 
 
 
 function Routes() {
+<<<<<<< HEAD
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    exact: true,
+    path: "/",
+    component: _components_LandingPage__WEBPACK_IMPORTED_MODULE_1__.default
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    exact: true,
+    path: "/containers",
+    component: _components_UserContainers__WEBPACK_IMPORTED_MODULE_2__.default
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    exact: true,
+    path: "/login",
+    component: _components_Login__WEBPACK_IMPORTED_MODULE_3__.default
+=======
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__.Route, {
     exact: true,
     path: "/",
@@ -8506,6 +8528,7 @@ function Routes() {
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__.Route, {
     path: "/containers",
     component: _components_UserContainers__WEBPACK_IMPORTED_MODULE_2__.default
+>>>>>>> origin/main
   })));
 }
 
@@ -8530,19 +8553,41 @@ function LandingPage() {
 
 /***/ }),
 
+<<<<<<< HEAD
+/***/ "./client/components/Login.js":
+/*!************************************!*\
+  !*** ./client/components/Login.js ***!
+  \************************************/
+=======
 /***/ "./client/components/NavBar.js":
 /*!*************************************!*\
   !*** ./client/components/NavBar.js ***!
   \*************************************/
+>>>>>>> origin/main
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+<<<<<<< HEAD
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
+/* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @apollo/client */ "./node_modules/graphql-tag/lib/index.js");
+/* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @apollo/client */ "./node_modules/@apollo/client/index.js");
+var _templateObject, _templateObject2;
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+=======
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return /* binding */ NavBar; }
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+>>>>>>> origin/main
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -8555,6 +8600,124 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+<<<<<<< HEAD
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+
+
+
+var SIGNUP_MUTATION = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  mutation CreateUser(\n    $email: String!\n    $password: String!\n    $firstName: String!\n    $lastName: String!\n  ) {\n    createUser(\n      email: $email\n      password: $password\n      firstName: $firstName\n      lastName: $lastName\n    ) {\n      token\n      user {\n          id\n      }\n    }\n  }\n"])));
+var LOGIN_MUTATION = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["\n  mutation LoginMutation($email: String!, $password: String!) {\n    login(email: $email, password: $password) {\n      token\n      user {\n          id\n          isAdmin\n      }\n    }\n  }\n"])));
+
+function LoginForm() {
+  var history = (0,react_router__WEBPACK_IMPORTED_MODULE_2__.useHistory)();
+
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
+    login: true,
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: ""
+  }),
+      _useState2 = _slicedToArray(_useState, 2),
+      formState = _useState2[0],
+      setFormState = _useState2[1];
+
+  var _useMutation = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_3__.useMutation)(LOGIN_MUTATION, {
+    variables: {
+      email: formState.email,
+      password: formState.password
+    },
+    onCompleted: function onCompleted(login) {
+      console.log(login.login.token);
+      localStorage.setItem("token", login.login.token);
+      localStorage.setItem("user-id", login.login.user.id);
+      history.push('/');
+    }
+  }),
+      _useMutation2 = _slicedToArray(_useMutation, 1),
+      login = _useMutation2[0];
+
+  var _useMutation3 = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_3__.useMutation)(SIGNUP_MUTATION, {
+    variables: {
+      firstName: formState.firstName,
+      lastName: formState.lastName,
+      email: formState.email,
+      password: formState.password,
+      team: formState.team
+    },
+    onCompleted: function onCompleted(_ref) {
+      var signup = _ref.signup;
+      localStorage.setItem(AUTH_TOKEN, signup.token);
+      history.push('/');
+      console.log("signup");
+    }
+  }),
+      _useMutation4 = _slicedToArray(_useMutation3, 1),
+      signup = _useMutation4[0];
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "Thyme"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "form"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h4", null, formState.login ? "Login" : "Sign Up"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
+    className: "form-elements",
+    onSubmit: formState.login ? function (e) {
+      e.preventDefault();
+      login;
+    } : function (e) {
+      e.preventDefault();
+      signup;
+    }
+  }, !formState.login && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+    value: formState.firstName,
+    onChange: function onChange(e) {
+      return setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        firstName: e.target.value
+      }));
+    },
+    type: "text",
+    placeholder: "First Name"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+    value: formState.lastName,
+    onChange: function onChange(e) {
+      return setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        lastName: e.target.value
+      }));
+    },
+    type: "text",
+    placeholder: "Last Name"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+    value: formState.email,
+    onChange: function onChange(e) {
+      return setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        email: e.target.value
+      }));
+    },
+    type: "text",
+    placeholder: "Email"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+    value: formState.password,
+    onChange: function onChange(e) {
+      return setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        password: e.target.value
+      }));
+    },
+    type: "password",
+    placeholder: "Password"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+    type: "submit",
+    onClick: formState.login ? login : signup
+  }, formState.login ? "Login" : "Register")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+    onClick: function onClick() {
+      return setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        login: !formState.login
+      }));
+    }
+  }, formState.login ? "Register" : "Already Registered? Log in!"))));
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (LoginForm);
+
+=======
 
 
 function NavBar() {
@@ -8580,6 +8743,7 @@ function NavBar() {
   }, "Sign in/Sign Up"))));
 }
 
+>>>>>>> origin/main
 /***/ }),
 
 /***/ "./client/components/UserContainers.js":
@@ -8591,7 +8755,11 @@ function NavBar() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+<<<<<<< HEAD
+/* harmony export */   "default": function() { return /* binding */ UserContainers; }
+=======
 /* harmony export */   "default": function() { return /* binding */ UserContainer; }
+>>>>>>> origin/main
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @apollo/client */ "./node_modules/graphql-tag/lib/index.js");
@@ -8602,14 +8770,37 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 
 
 
+<<<<<<< HEAD
+var GET_CONTAINERS = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n   query User ($id: ID!) {\n    user(id: $id) {\n      id\n      containers{\n          id\n          name\n      }\n    }\n   } \n"])));
+function UserContainers() {
+  console.log(localStorage.getItem('user-id'));
+
+  var _useQuery = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_2__.useQuery)(GET_CONTAINERS, {
+    variables: {
+      id: localStorage.getItem('user-id')
+    }
+  }),
+=======
 var GET_CONTAINERS = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  query GetContainers {\n    user(id: \"2\") {\n      containers {\n        name\n      }\n    }\n  }\n"])));
 function UserContainer() {
   var _useQuery = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_2__.useQuery)(GET_CONTAINERS),
+>>>>>>> origin/main
       loading = _useQuery.loading,
       error = _useQuery.error,
       data = _useQuery.data;
 
+<<<<<<< HEAD
+  if (loading) return '...loading';
+  if (error) return '...error';
+  console.log(data);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "My Containers"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, data && data.user.containers.map(function (container) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      key: container.id
+    }, container.name);
+  })));
+=======
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "My Containers"));
+>>>>>>> origin/main
 }
 
 /***/ }),
