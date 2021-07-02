@@ -1,14 +1,15 @@
 import React from "react";
 import Routes from "./Routes";
+import NavBar from "./components/NavBar";
 
 export default function App() {
   return (
     <div>
+      <NavBar />
       <Routes />
     </div>
   );
 }
-
 
 // import { useQuery, gql, useMutation } from "@apollo/client";
 // import React, { Fragment, useContext, useEffect, useState } from "react";
@@ -32,8 +33,6 @@ export default function App() {
 //  mutation UpdateUser($firstName: String!){
 
 //  }`
-
-
 
 // function App() {
 //   const {loading, error, data} = useQuery(GET_USERS)

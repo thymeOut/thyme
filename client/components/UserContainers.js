@@ -10,7 +10,7 @@ const GET_CONTAINERS = gql`
           name
       }
     }
-   } 
+   }
 `
 
 export default function UserContainers() {
