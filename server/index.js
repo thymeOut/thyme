@@ -6,6 +6,9 @@ const port = process.env.PORT || 3000;
 const { db } = require("./db");
 const { ApolloServer } = require("apollo-server-express");
 const { typeDefs, rootResolver } = require("./graphql");
+const {
+  models: { User },
+} = require("./db");
 // some good ol' logging middleware
 app.use(morgan("dev"));
 
@@ -19,21 +22,21 @@ app.use(express.urlencoded({ extended: true }));
 const server = new ApolloServer({
   typeDefs,
   resolvers: rootResolver,
-  // context: ({ req }) => {
-  //   return {
-  //     ...req,
-  //     userId:
-  //       req && req.headers.authorization
-  //         ? req.headers.authorization
-  //         : null
-  //   };
-  // }
+  context: async ({ req }) => {
+    return {
+      ...req,
+      user:
+        req && req.headers.authorization
+          ? await User.findByToken(req.headers.authorization)
+          : null,
+    };
+  },
 });
 
 server.applyMiddleware({ app });
 
 app.get("*", function (req, res) {
-  console.log('fljkhewlkfajhelkjrhg')
+  console.log("fljkhewlkfajhelkjrhg");
   res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
