@@ -3,8 +3,10 @@ import { useQuery, gql, useMutation } from "@apollo/client";
 
 const GET_CONTAINERS = gql`
  query GetContainers {
-   user(id:'2') {
-     containers
+   user(id:"2") {
+     containers{
+         name
+     }
    }
  }
 `
