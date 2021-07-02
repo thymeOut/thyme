@@ -1,0 +1,86 @@
+body {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: normal;
+  /* line-height: 72px; */
+  margin: 0;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+a {
+  text-decoration: none;
+}
+
+h1 {
+  color: black;
+  margin: 0;
+}
+
+/* NAV BAR */
+#name {
+  flex: 1;
+  font-size: 50px;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #18a0fb;
+  text-decoration: none;
+  /* height: 2rem; */
+  font-size: 1rem;
+  height: 50px;
+  padding: 5px;
+  margin: 0;
+  justify-content: flex-end;
+}
+
+nav a {
+  font-size: 1rem;
+  color: #18a0fb;
+  margin-left: 1rem;
+  align-self: center;
+}
+
+#navLinks {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#navLinks a {
+  margin-top: 0.25rem;
+}
+
+#navButtons {
+  align-items: center;
+}
+
+#registerButton {
+  background: #18a0fb;
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+  border-radius: 10px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+#loginButton {
+  font-weight: bold;
+  background: #18a0fb;
+  font-size: 15px;
+  color: white;
+  border-width: 1px;
+  border-color: #18a0fb;
+  border-style: solid;
+  border-radius: 10px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
