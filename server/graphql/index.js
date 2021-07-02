@@ -59,21 +59,26 @@ const typeDefs = gql`
 const rootResolver = {
   Query: {
     async users(_, __, context) {
-      console.log("retrieving users");
-      console.log(context.user);
-      const users = await User.findAll({
-        include: Container,
-      });
-      return users;
+      console.log(context)
+      if (!context.user.isAdmin) {
+        return null;
+      } else {
+        console.log("retrieving users");
+        console.log(context.user);
+        const users = await User.findAll({
+          include: Container,
+        });
+        return users;
+      }
     },
 
     // context: { body, header, user: {user info} }
     async user(_, args, context) {
-      console.log(context.user);
+      console.log(context);
       if (context.user.id !== +args.id && !context.user.isAdmin) {
-        return null;
+        return  null;
       } else {
-        return await User.findByPk(context.user.id, {
+        return await User.findByPk(args.id, {
           include: Container,
         });
       }
@@ -85,7 +90,12 @@ const rootResolver = {
   Mutation: {
     async createUser(_, args) {
       try {
-        const user = await User.create(args);
+        const user = await User.create({
+          firstName: args.firstName,
+          lastName: args.lastName,
+          email: args.email,
+          password: args.password
+        });
         const token = await user.generateToken();
 
         return { token, user };
