@@ -84,3 +84,53 @@ nav a {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
 }
+
+.Card {
+  display: flex;
+    Height: 540px;
+    width: "1665px";
+    padding: 0 0 60px;
+    position: relative;
+    min-height: 540px;
+    box-sizing: border-box;
+    box-sizing: (50, 50, 93, 0.1),
+
+}
+.Card1 {
+  display: flex;
+    Height: 540px;
+    width: "1665px";
+    padding: 0 0 60px;
+    position: relative;
+    min-height: 540px;
+    box-sizing: border-box;
+    box-sizing: (50, 50, 93, 0.1);
+}
+
+.text {
+  Height: 20%;
+    width: 20%;
+    margin-left: 15%;
+    margin-top: 3%;
+}
+
+.text2 {
+  margin-top: 5%;
+  Height: 15%;
+    width: 15%;
+    padding-right: 30px;
+}
+.text3 {
+ margin-left: 5%;
+}
+
+.img {
+  border-radius: 3%;
+  margin-top: 3%;
+
+}
+.img1 {
+  border-radius: 3%;
+  margin-top: 3%;
+margin-right: 10%;
+margin-left: 10%;
