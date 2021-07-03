@@ -3,7 +3,7 @@
 const { users, containers, items, containerUsers, containerItems } = require("./dummyData");
 const {
   db,
-  models: { User, Container, Item, Container_Item, Container_User },
+  models: { User, Container, Item, ContainerItem, ContainerUser },
 } = require("../server/db");
 
 /**
@@ -24,11 +24,11 @@ async function seed() {
   const dummyContainers = await Promise.all(containers.map((container) => Container.create(container)));
 
   const dummyContainerUsers = await Promise.all(
-    containerUsers.map((user) => Container_User.create(user))
+    containerUsers.map((user) => ContainerUser.create(user))
   );
 
   const dummyContainerItems = await Promise.all(
-    containerItems.map((item) => Container_Item.create(item))
+    containerItems.map((item) => ContainerItem.create(item))
   );
 
   // console.log(`seeded ${users.length} users`);
