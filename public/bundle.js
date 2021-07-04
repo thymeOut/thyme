@@ -12344,7 +12344,7 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 
 
 
-var GET_CONTAINER = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  query Container($id: ID!) {\n    container(id: $id) {\n      id\n      name\n      users {\n        id\n        firstName\n        lastName\n      }\n      items {\n        name\n        imageUrl\n      }\n    }\n  }\n"])));
+var GET_CONTAINER = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  query Container($id: ID!) {\n    container(id: $id) {\n      id\n      name\n      users {\n        id\n        firstName\n        lastName\n      }\n      items {\n        name\n        imageUrl\n        containerItem {\n          userId\n          quantity\n        }\n      }\n    }\n  }\n"])));
 function SingleContainer(props) {
   var containerId = props.match.params.id;
 
@@ -12359,6 +12359,7 @@ function SingleContainer(props) {
 
   if (loading) return "...loading";
   if (error) return "...error";
+  console.log(data);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, data.container.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h3", null, "Users"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, data.container.users.map(function (user) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
       key: user.id
@@ -12366,7 +12367,7 @@ function SingleContainer(props) {
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h3", null, "Contents"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, data.container.items.map(function (item) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
       key: item.id
-    }, item.name);
+    }, item.name, " - ", item.containerItem.quantity);
   })));
 }
 

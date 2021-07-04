@@ -49,6 +49,7 @@ const typeDefs = gql`
     container: Container
     item: Item
     user: User
+    userId: Int!
   }
 
   type ContainerUser {
@@ -62,7 +63,7 @@ const typeDefs = gql`
     id: ID!
     name: String!
     imageUrl: String!
-    containerItems: [ContainerItem]
+    containerItem: ContainerItem
     users: [User]
     containers: [Container]
   }
@@ -126,13 +127,15 @@ const rootResolver = {
     },
 
     async container(_, args, context) {
-      if (!context.user.id) {
-        return null;
-      } else {
-        return await Container.findByPk(args.id, {
+      // if (!context.user.id) {
+      //   return null;
+      // } else {
+        const data = await Container.findByPk(args.id, {
           include: [Item, User],
         });
-      }
+        console.log(data);
+        return data;
+      // }
     },
   },
   Mutation: {
