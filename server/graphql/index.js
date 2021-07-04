@@ -49,7 +49,7 @@ const typeDefs = gql`
     container: Container
     item: Item
     user: User
-    userId: Int!
+    userId: ID!
   }
 
   type ContainerUser {
@@ -88,6 +88,7 @@ const typeDefs = gql`
       lastName: String!
     ): AuthPayload!
     login(email: String!, password: String!): AuthPayload!
+    createContainer(name: String!, type: ContainerType!, owner: ID!): Container!
   }
   scalar Date
 `;
@@ -97,12 +98,9 @@ const typeDefs = gql`
 const rootResolver = {
   Query: {
     async users(_, __, context) {
-      console.log(context);
       if (!context.user.isAdmin) {
         return null;
       } else {
-        console.log("retrieving users");
-        console.log(context.user);
         const users = await User.findAll({
           include: Container,
         });
@@ -110,9 +108,7 @@ const rootResolver = {
       }
     },
 
-    // context: { body, header, user: {user info} }
     async user(_, args, context) {
-      console.log(context);
       if (context.user.id !== +args.id && !context.user.isAdmin) {
         return null;
       } else {
@@ -133,7 +129,6 @@ const rootResolver = {
         const data = await Container.findByPk(args.id, {
           include: [Item, User],
         });
-        console.log(data);
         return data;
       }
     },
@@ -158,19 +153,20 @@ const rootResolver = {
       const data = await User.authenticate(args);
       return data;
     },
-    // async createWorkspace(_, args) {
-    //     console.log(args)
-    //     try {
-    //         const workspace = await Workspace.create(args);
-    //         const user = await User.findByPk(args.creator)
-    //         user.addWorkspace(workspace)
-    //         // user.createWorkspaces(workspace)
-    //         // workspace.createUsers(user)
-    //         return workspace;
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // },
+
+    async createContainer(_, args) {
+      try {
+        const container = await Container.create({
+          name: args.name,
+          type: args.type
+        })
+        const user = await User.findByPk(args.owner)
+        container.addUser(user.id, {through: {role: 'owner'}})
+        return container
+      } catch (error) {
+        console.log(error)
+      }
+    }
   },
 };
 
