@@ -27,20 +27,44 @@ const typeDefs = gql`
     isAdmin: Boolean
     token: String
     containers: [Container]
+    containerItems: [ContainerItem]
+    containerUsers: [ContainerUser]
   }
+
   type Container {
     id: ID!
     name: String!
     type: ContainerType!
     users: [User!]
     items: [Item!]
+    containerUsers: [ContainerUser]
+    containerItems: [ContainerItem]
+  }
+
+  type ContainerItem {
+    id: ID!
+    quantity: Int!
+    expiration: Date
+    imageUrl: String
+    container: Container
+    item: Item
+    user: User
+  }
+
+  type ContainerUser {
+    id: ID!
+    role: Role!
+    container: Container
+    user: User
   }
 
   type Item {
     id: ID!
     name: String!
     imageUrl: String!
-    user: User!
+    containerItems: [ContainerItem]
+    users: [User]
+    containers: [Container]
   }
 
   enum ContainerType {
@@ -48,6 +72,11 @@ const typeDefs = gql`
     pantry
     minifridge
     freezer
+  }
+
+  enum Role {
+    user
+    owner
   }
 
   type Mutation {
@@ -98,7 +127,10 @@ const rootResolver = {
 
     async container(_, args, context) {
       return await Container.findByPk(args.id, {
-        include: [Item, User],
+        include: [
+          Item,
+          User
+        ],
       });
     },
   },

@@ -5,6 +5,7 @@ const ContainerUser = db.define("containerUser", {
   role: {
     type: Sequelize.ENUM('user', 'owner'),
     allowNull: false,
+    defaultValue: 'user',
   }
 });
 
