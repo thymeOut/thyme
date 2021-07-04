@@ -12046,25 +12046,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": function() { return /* binding */ Routes; }
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
 /* harmony import */ var _components_LandingPage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/LandingPage */ "./client/components/LandingPage.js");
 /* harmony import */ var _components_UserContainers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/UserContainers */ "./client/components/UserContainers.js");
 /* harmony import */ var _components_Login__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/Login */ "./client/components/Login.js");
+/* harmony import */ var _components_SingleContainer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/SingleContainer */ "./client/components/SingleContainer.js");
+
 
 
 
 
 
 function Routes() {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
     exact: true,
     path: "/",
     component: _components_LandingPage__WEBPACK_IMPORTED_MODULE_1__.default
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
     exact: true,
     path: "/containers",
     component: _components_UserContainers__WEBPACK_IMPORTED_MODULE_2__.default
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
+    path: "/containers/:id",
+    component: _components_SingleContainer__WEBPACK_IMPORTED_MODULE_4__.default
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
     exact: true,
     path: "/login",
     component: _components_Login__WEBPACK_IMPORTED_MODULE_3__.default
@@ -12318,6 +12323,54 @@ function NavBar() {
 
 /***/ }),
 
+/***/ "./client/components/SingleContainer.js":
+/*!**********************************************!*\
+  !*** ./client/components/SingleContainer.js ***!
+  \**********************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ SingleContainer; }
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @apollo/client */ "./node_modules/graphql-tag/lib/index.js");
+/* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @apollo/client */ "./node_modules/@apollo/client/index.js");
+var _templateObject;
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+
+
+var GET_CONTAINER = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  query Container($id: ID!) {\n    container(id: $id) {\n      id\n      name\n      users {\n        id\n        firstName\n        lastName\n      }\n      items {\n        name\n        imageUrl\n      }\n    }\n  }\n"])));
+function SingleContainer(props) {
+  var containerId = props.match.params.id;
+
+  var _useQuery = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_2__.useQuery)(GET_CONTAINER, {
+    variables: {
+      id: containerId
+    }
+  }),
+      loading = _useQuery.loading,
+      error = _useQuery.error,
+      data = _useQuery.data;
+
+  if (loading) return "...loading";
+  if (error) return "...error";
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, data.container.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h3", null, "Users"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, data.container.users.map(function (user) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      key: user.id
+    }, user.firstName, " ", user.lastName);
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h3", null, "Contents"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, data.container.items.map(function (item) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      key: item.id
+    }, item.name);
+  })));
+}
+
+/***/ }),
+
 /***/ "./client/components/UserContainers.js":
 /*!*********************************************!*\
   !*** ./client/components/UserContainers.js ***!
@@ -12332,32 +12385,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @apollo/client */ "./node_modules/graphql-tag/lib/index.js");
 /* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @apollo/client */ "./node_modules/@apollo/client/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 var _templateObject;
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 
 
-var GET_CONTAINERS = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n   query User ($id: ID!) {\n    user(id: $id) {\n      id\n      containers{\n          id\n          name\n      }\n    }\n   }\n"])));
+
+var GET_CONTAINERS = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  query User($id: ID!) {\n    user(id: $id) {\n      id\n      containers {\n        id\n        name\n      }\n    }\n  }\n"])));
 function UserContainers() {
-  console.log(localStorage.getItem('user-id'));
+  console.log(localStorage.getItem("user-id"));
 
   var _useQuery = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_2__.useQuery)(GET_CONTAINERS, {
     variables: {
-      id: localStorage.getItem('user-id')
+      id: localStorage.getItem("user-id")
     }
   }),
       loading = _useQuery.loading,
       error = _useQuery.error,
       data = _useQuery.data;
 
-  if (loading) return '...loading';
-  if (error) return '...error';
+  if (loading) return "...loading";
+  if (error) return "...error";
   console.log(data);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "My Containers"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, data && data.user.containers.map(function (container) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__.Link, {
+      to: "/containers/".concat(container.id)
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
       key: container.id
-    }, container.name);
+    }, container.name));
   })));
 }
 

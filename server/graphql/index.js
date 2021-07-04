@@ -2,7 +2,7 @@ const { gql } = require("@apollo/client");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {
-  models: { User, Container, Item, Container_Item, Container_User },
+  models: { User, Container, Item, ContainerItem, ContainerUser },
 } = require("../db/");
 
 const typeDefs = gql`
@@ -27,12 +27,44 @@ const typeDefs = gql`
     isAdmin: Boolean
     token: String
     containers: [Container]
+    containerItems: [ContainerItem]
+    containerUsers: [ContainerUser]
   }
+
   type Container {
     id: ID!
     name: String!
     type: ContainerType!
     users: [User!]
+    items: [Item!]
+    containerUsers: [ContainerUser]
+    containerItems: [ContainerItem]
+  }
+
+  type ContainerItem {
+    id: ID!
+    quantity: Int!
+    expiration: Date
+    imageUrl: String
+    container: Container
+    item: Item
+    user: User
+  }
+
+  type ContainerUser {
+    id: ID!
+    role: Role!
+    container: Container
+    user: User
+  }
+
+  type Item {
+    id: ID!
+    name: String!
+    imageUrl: String!
+    containerItems: [ContainerItem]
+    users: [User]
+    containers: [Container]
   }
 
   enum ContainerType {
@@ -40,6 +72,11 @@ const typeDefs = gql`
     pantry
     minifridge
     freezer
+  }
+
+  enum Role {
+    user
+    owner
   }
 
   type Mutation {
@@ -59,7 +96,7 @@ const typeDefs = gql`
 const rootResolver = {
   Query: {
     async users(_, __, context) {
-      console.log(context)
+      console.log(context);
       if (!context.user.isAdmin) {
         return null;
       } else {
@@ -76,15 +113,26 @@ const rootResolver = {
     async user(_, args, context) {
       console.log(context);
       if (context.user.id !== +args.id && !context.user.isAdmin) {
-        return  null;
+        return null;
       } else {
         return await User.findByPk(args.id, {
           include: Container,
         });
       }
     },
+
     async containers() {
       return await Container.findAll();
+    },
+
+    async container(_, args, context) {
+      if (!context.user.id) {
+        return null;
+      } else {
+        return await Container.findByPk(args.id, {
+          include: [Item, User],
+        });
+      }
     },
   },
   Mutation: {
@@ -94,7 +142,7 @@ const rootResolver = {
           firstName: args.firstName,
           lastName: args.lastName,
           email: args.email,
-          password: args.password
+          password: args.password,
         });
         const token = await user.generateToken();
 
