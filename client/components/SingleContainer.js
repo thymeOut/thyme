@@ -1,5 +1,6 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import { useQuery, gql, useMutation } from "@apollo/client";
+import { Link } from "react-router-dom";
 
 const GET_CONTAINER = gql`
   query Container($id: ID!) {
@@ -46,16 +47,11 @@ export default function SingleContainer(props) {
       </div>
       <h3>Contents</h3>
       <div>
-        {
-          data.container.items.map(item => {
-            return (
-              <div key={item.id}>
-                {item.name}
-              </div>
-            )
-          })
-        }
+        {data.container.items.map((item) => {
+          return <div key={item.id}>{item.name}</div>;
+        })}
       </div>
+      <Link to="/containers">Back to all containers</Link>
     </div>
   );
 }
