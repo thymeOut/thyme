@@ -12312,13 +12312,14 @@ function NavBar() {
     id: "navLinks"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Link, {
     to: "/"
-  }, "Home"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", null, "Profile"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Link, {
+  }, "Home"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", null, "About Us"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", null, "Contact")), isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Link, {
     to: "/containers"
-  }, "My Containers"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", null, "About Us"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", null, "Contact")), isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", null, "Logout")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, "My Containers"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", null, "Profile"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", null, "Logout")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     id: "navButtons"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Link, {
+    to: "/login",
     id: "loginButton"
-  }, "Sign in/Sign Up"))));
+  }, "Login/Sign Up"))));
 }
 
 /***/ }),
