@@ -1,0 +1,14 @@
+{
+    "container": {
+        "containerId": 1,
+        "name": "container1",
+        "type": "Freezer",
+        "containerUsers": [
+            {
+                "role": "owner",
+                "userId": 1,
+                "containerId": 1
+            }
+        ]
+    }
+}
