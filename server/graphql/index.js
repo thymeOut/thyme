@@ -49,6 +49,7 @@ const typeDefs = gql`
     container: Container
     item: Item
     user: User
+    userId: Int!
   }
 
   type ContainerUser {
@@ -62,7 +63,7 @@ const typeDefs = gql`
     id: ID!
     name: String!
     imageUrl: String!
-    containerItems: [ContainerItem]
+    containerItem: ContainerItem
     users: [User]
     containers: [Container]
   }
@@ -129,9 +130,11 @@ const rootResolver = {
       if (!context.user.id) {
         return null;
       } else {
-        return await Container.findByPk(args.id, {
+        const data = await Container.findByPk(args.id, {
           include: [Item, User],
         });
+        console.log(data);
+        return data;
       }
     },
   },

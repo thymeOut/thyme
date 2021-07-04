@@ -15,6 +15,10 @@ const GET_CONTAINER = gql`
       items {
         name
         imageUrl
+        containerItem {
+          userId
+          quantity
+        }
       }
     }
   }
@@ -31,7 +35,7 @@ export default function SingleContainer(props) {
 
   if (loading) return "...loading";
   if (error) return "...error";
-
+  console.log(data);
   return (
     <div>
       <h2>{data.container.name}</h2>
@@ -47,9 +51,15 @@ export default function SingleContainer(props) {
       </div>
       <h3>Contents</h3>
       <div>
-        {data.container.items.map((item) => {
-          return <div key={item.id}>{item.name}</div>;
-        })}
+        {
+          data.container.items.map(item => {
+            return (
+              <div key={item.id}>
+                {item.name} - {item.containerItem.quantity}
+              </div>
+            )
+          })
+        }
       </div>
       <Link to="/containers">Back to all containers</Link>
     </div>
