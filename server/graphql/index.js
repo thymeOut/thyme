@@ -127,15 +127,15 @@ const rootResolver = {
     },
 
     async container(_, args, context) {
-      // if (!context.user.id) {
-      //   return null;
-      // } else {
+      if (!context.user.id) {
+        return null;
+      } else {
         const data = await Container.findByPk(args.id, {
           include: [Item, User],
         });
         console.log(data);
         return data;
-      // }
+      }
     },
   },
   Mutation: {
