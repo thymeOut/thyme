@@ -126,12 +126,13 @@ const rootResolver = {
     },
 
     async container(_, args, context) {
-      return await Container.findByPk(args.id, {
-        include: [
-          Item,
-          User
-        ],
-      });
+      if (!context.user.id) {
+        return null;
+      } else {
+        return await Container.findByPk(args.id, {
+          include: [Item, User],
+        });
+      }
     },
   },
   Mutation: {
