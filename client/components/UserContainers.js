@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { useQuery, gql, useMutation } from "@apollo/client";
-import { Link } from "react-router-dom";
-import ContainerForm from "./ContainerForm";
+import React, { useState } from 'react';
+import { useQuery, gql, useMutation } from '@apollo/client';
+import { Link } from 'react-router-dom';
+import ContainerForm from './ContainerForm';
 
 const GET_CONTAINERS = gql`
   query User($id: ID!) {
@@ -16,50 +16,55 @@ const GET_CONTAINERS = gql`
 `;
 
 const CREATE_CONTAINER = gql`
-mutation CreateContainer($name: String!, $type: ContainerType!, $owner: ID!) {
+  mutation CreateContainer($name: String!, $type: ContainerType!, $owner: ID!) {
     createContainer(name: $name, type: $type, owner: $owner) {
-    name
-    type
+      name
+      type
+    }
   }
-}
 `;
 
 export default function UserContainers() {
+  const [toggle, setToggle] = useState(false);
 
-    const [toggle, setToggle] = useState(false)
+  const { loading, error, data } = useQuery(GET_CONTAINERS, {
+    variables: {
+      id: localStorage.getItem('user-id'),
+    },
+  });
 
-    const { loading, error, data } = useQuery(GET_CONTAINERS, {
+  const [createContainer, { containerdata }] = useMutation(CREATE_CONTAINER, {
+    refetchQueries: [
+      {
+        query: GET_CONTAINERS,
         variables: {
-            id: localStorage.getItem("user-id"),
+          id: localStorage.getItem('user-id'),
         },
-    });
+      },
+    ],
+  });
 
-    const [createContainer, { containerdata }] = useMutation(CREATE_CONTAINER,
-        {
-            refetchQueries: [
-                {
-                    query: GET_CONTAINERS, variables: {
-                        id: localStorage.getItem("user-id")
-                    }
-                }]
-        });
+  if (loading) return '...loading';
+  if (error) return '...error';
 
-    if (loading) return "...loading";
-    if (error) return "...error";
-
-    return (
-        <div>
-            <h2>My Containers</h2>
-            <div>
-                {data &&
-                    data.user.containers.map((container) => (
-                        <Link to={`/containers/${container.id}`} key={container.id}>
-                            <div >{container.name}</div>
-                        </Link>
-                    ))}
-                <button onClick={() => setToggle(true)}> Add new container</button>
-                {toggle && <ContainerForm createContainer={createContainer} setToggle={setToggle} />}
-            </div>
-        </div>
-    );
+  return (
+    <div>
+      <h2>My Containers</h2>
+      <div>
+        {data &&
+          data.user.containers.map((container) => (
+            <Link to={`/containers/${container.id}`} key={container.id}>
+              <div>{container.name}</div>
+            </Link>
+          ))}
+        <button onClick={() => setToggle(true)}> Add new container</button>
+        {toggle && (
+          <ContainerForm
+            createContainer={createContainer}
+            setToggle={setToggle}
+          />
+        )}
+      </div>
+    </div>
+  );
 }

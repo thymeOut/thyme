@@ -1,8 +1,15 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-export default function NavBar() {
-  const [isLoggedIn, setLoggedIn] = useState(false);
+export default function NavBar(props) {
+  const { isLoggedIn, setLoggedIn } = props;
+
+  const handleLogout = () => {
+    window.localStorage.removeItem('token');
+    window.localStorage.removeItem('user-id');
+    setLoggedIn(false);
+  };
+
   return (
     <div id="navContainer">
       <nav>
@@ -17,7 +24,9 @@ export default function NavBar() {
             {/* The navbar will show these links after you log in */}
             <Link to="/containers">My Containers</Link>
             <a>Profile</a>
-            <a>Logout</a>
+            <Link to="/" onClick={handleLogout}>
+              Logout
+            </Link>
           </div>
         ) : (
           <div id="navButtons">
