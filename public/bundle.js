@@ -11996,11 +11996,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _Routes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Routes */ "./client/Routes.js");
 /* harmony import */ var _components_NavBar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/NavBar */ "./client/components/NavBar.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
 function App() {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_NavBar__WEBPACK_IMPORTED_MODULE_2__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Routes__WEBPACK_IMPORTED_MODULE_1__.default, null));
+  var token = window.localStorage.getItem('token');
+
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(!!token),
+      _useState2 = _slicedToArray(_useState, 2),
+      isLoggedIn = _useState2[0],
+      setLoggedIn = _useState2[1];
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_NavBar__WEBPACK_IMPORTED_MODULE_2__.default, {
+    isLoggedIn: isLoggedIn,
+    setLoggedIn: setLoggedIn
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Routes__WEBPACK_IMPORTED_MODULE_1__.default, {
+    isLoggedIn: isLoggedIn,
+    setLoggedIn: setLoggedIn
+  }));
 } // import { useQuery, gql, useMutation } from "@apollo/client";
 // import React, { Fragment, useContext, useEffect, useState } from "react";
 // const GET_USERS = gql`
@@ -12057,7 +12082,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function Routes() {
+function Routes(props) {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
     exact: true,
     path: "/",
@@ -12071,9 +12096,10 @@ function Routes() {
     component: _components_SingleContainer__WEBPACK_IMPORTED_MODULE_4__.default
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
     exact: true,
-    path: "/login",
-    component: _components_Login__WEBPACK_IMPORTED_MODULE_3__.default
-  })));
+    path: "/login"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Login__WEBPACK_IMPORTED_MODULE_3__.default, {
+    setLoggedIn: props.setLoggedIn
+  }))));
 }
 
 /***/ }),
@@ -12234,18 +12260,18 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 
 
 
-var SIGNUP_MUTATION = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  mutation CreateUser(\n    $email: String!\n    $password: String!\n    $firstName: String!\n    $lastName: String!\n  ) {\n    createUser(\n      email: $email\n      password: $password\n      firstName: $firstName\n      lastName: $lastName\n    ) {\n      token\n      user {\n          id\n      }\n    }\n  }\n"])));
-var LOGIN_MUTATION = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["\n  mutation LoginMutation($email: String!, $password: String!) {\n    login(email: $email, password: $password) {\n      token\n      user {\n          id\n          isAdmin\n      }\n    }\n  }\n"])));
+var SIGNUP_MUTATION = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  mutation CreateUser(\n    $email: String!\n    $password: String!\n    $firstName: String!\n    $lastName: String!\n  ) {\n    createUser(\n      email: $email\n      password: $password\n      firstName: $firstName\n      lastName: $lastName\n    ) {\n      token\n      user {\n        id\n      }\n    }\n  }\n"])));
+var LOGIN_MUTATION = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["\n  mutation LoginMutation($email: String!, $password: String!) {\n    login(email: $email, password: $password) {\n      token\n      user {\n        id\n        isAdmin\n      }\n    }\n  }\n"])));
 
-function LoginForm() {
+function LoginForm(props) {
   var history = (0,react_router__WEBPACK_IMPORTED_MODULE_2__.useHistory)();
 
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
     login: true,
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: ""
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: ''
   }),
       _useState2 = _slicedToArray(_useState, 2),
       formState = _useState2[0],
@@ -12258,8 +12284,9 @@ function LoginForm() {
     },
     onCompleted: function onCompleted(login) {
       console.log(login.login.token);
-      localStorage.setItem("token", login.login.token);
-      localStorage.setItem("user-id", login.login.user.id);
+      localStorage.setItem('token', login.login.token);
+      localStorage.setItem('user-id', login.login.user.id);
+      props.setLoggedIn(true);
       history.push('/');
     }
   }),
@@ -12275,9 +12302,11 @@ function LoginForm() {
     },
     onCompleted: function onCompleted(data) {
       console.log(data);
-      localStorage.setItem("token", data.createUser.token);
+      localStorage.setItem('token', data.createUser.token);
+      localStorage.setItem('user-id', data.createUser.user.id);
+      props.setLoggedIn(true);
       history.push('/');
-      console.log("signup");
+      console.log('signup');
     }
   }),
       _useMutation4 = _slicedToArray(_useMutation3, 1),
@@ -12285,14 +12314,14 @@ function LoginForm() {
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "Thyme"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "form"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h4", null, formState.login ? "Login" : "Sign Up"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h4", null, formState.login ? 'Login' : 'Sign Up'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
     className: "form-elements",
     onSubmit: formState.login ? function (e) {
       e.preventDefault();
-      login;
+      login();
     } : function (e) {
       e.preventDefault();
-      signup;
+      signup();
     }
   }, !formState.login && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
     value: formState.firstName,
@@ -12333,13 +12362,13 @@ function LoginForm() {
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
     type: "submit",
     onClick: formState.login ? login : signup
-  }, formState.login ? "Login" : "Register")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+  }, formState.login ? 'Login' : 'Register')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
     onClick: function onClick() {
       return setFormState(_objectSpread(_objectSpread({}, formState), {}, {
         login: !formState.login
       }));
     }
-  }, formState.login ? "Register" : "Already Registered? Log in!"))));
+  }, formState.login ? 'Register' : 'Already Registered? Log in!'))));
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (LoginForm);
@@ -12359,25 +12388,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
+function NavBar(props) {
+  var isLoggedIn = props.isLoggedIn,
+      setLoggedIn = props.setLoggedIn;
 
-function NavBar() {
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
-      _useState2 = _slicedToArray(_useState, 2),
-      isLoggedIn = _useState2[0],
-      setLoggedIn = _useState2[1];
+  var handleLogout = function handleLogout() {
+    window.localStorage.removeItem('token');
+    window.localStorage.removeItem('user-id');
+    setLoggedIn(false);
+  };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     id: "navContainer"
@@ -12389,7 +12410,10 @@ function NavBar() {
     to: "/"
   }, "Home"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", null, "About Us"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", null, "Contact")), isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Link, {
     to: "/containers"
-  }, "My Containers"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", null, "Profile"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", null, "Logout")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, "My Containers"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", null, "Profile"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Link, {
+    to: "/",
+    onClick: handleLogout
+  }, "Logout")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     id: "navButtons"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Link, {
     to: "/login",
@@ -12489,7 +12513,7 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 
 
 var GET_CONTAINERS = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_2__.default)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  query User($id: ID!) {\n    user(id: $id) {\n      id\n      containers {\n        id\n        name\n      }\n    }\n  }\n"])));
-var CREATE_CONTAINER = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_2__.default)(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["\nmutation CreateContainer($name: String!, $type: ContainerType!, $owner: ID!) {\n    createContainer(name: $name, type: $type, owner: $owner) {\n    name\n    type\n  }\n}\n"])));
+var CREATE_CONTAINER = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_2__.default)(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["\n  mutation CreateContainer($name: String!, $type: ContainerType!, $owner: ID!) {\n    createContainer(name: $name, type: $type, owner: $owner) {\n      name\n      type\n    }\n  }\n"])));
 function UserContainers() {
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
       _useState2 = _slicedToArray(_useState, 2),
@@ -12498,7 +12522,7 @@ function UserContainers() {
 
   var _useQuery = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_3__.useQuery)(GET_CONTAINERS, {
     variables: {
-      id: localStorage.getItem("user-id")
+      id: localStorage.getItem('user-id')
     }
   }),
       loading = _useQuery.loading,
@@ -12509,7 +12533,7 @@ function UserContainers() {
     refetchQueries: [{
       query: GET_CONTAINERS,
       variables: {
-        id: localStorage.getItem("user-id")
+        id: localStorage.getItem('user-id')
       }
     }]
   }),
@@ -12517,8 +12541,8 @@ function UserContainers() {
       createContainer = _useMutation2[0],
       containerdata = _useMutation2[1].containerdata;
 
-  if (loading) return "...loading";
-  if (error) return "...error";
+  if (loading) return '...loading';
+  if (error) return '...error';
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "My Containers"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, data && data.user.containers.map(function (container) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Link, {
       to: "/containers/".concat(container.id),
