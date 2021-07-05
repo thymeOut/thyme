@@ -89,6 +89,7 @@ const typeDefs = gql`
     ): AuthPayload!
     login(email: String!, password: String!): AuthPayload!
     createContainer(name: String!, type: ContainerType!, owner: ID!): Container!
+    addUserToContainer(email: String!, containerId: ID!): Container!
   }
   scalar Date
 `;
@@ -135,6 +136,7 @@ const rootResolver = {
   },
   Mutation: {
     async createUser(_, args) {
+      console.log(args)
       try {
         const user = await User.create({
           firstName: args.firstName,
@@ -142,6 +144,7 @@ const rootResolver = {
           email: args.email,
           password: args.password,
         });
+        console.log(user)
         const token = await user.generateToken();
 
         return { token, user };
@@ -162,6 +165,20 @@ const rootResolver = {
         })
         const user = await User.findByPk(args.owner)
         container.addUser(user.id, {through: {role: 'owner'}})
+        return container
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async addUserToContainer(_, args) {
+      try {
+        const container = await Container.findByPk(args.containerId)
+        const user = await User.findOne({
+          where: {
+            email: args.email
+          }
+        })
+        container.addUser(user.id, { through: { role: 'user' } })
         return container
       } catch (error) {
         console.log(error)
