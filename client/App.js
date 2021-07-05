@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import Routes from "./Routes";
 import NavBar from "./components/NavBar";
 
 export default function App() {
+  const token = window.localStorage.getItem('token');
+  const [isLoggedIn, setLoggedIn] = useState(!!token);
+
   return (
     <div>
-      <NavBar />
-      <Routes />
+      <NavBar isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} />
+      <Routes isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} />
     </div>
   );
 }
