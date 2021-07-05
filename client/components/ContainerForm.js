@@ -9,6 +9,15 @@ mutation addUserToContainer($email: String!, $containerId: ID!) {
 }
 `
 
+const CREATE_CONTAINER = gql`
+  mutation CreateContainer($name: String!, $type: ContainerType!, $owner: ID!) {
+    createContainer(name: $name, type: $type, owner: $owner) {
+      name
+      type
+    }
+  }
+`;
+
 const ContainerForm = (props) => {
     const [containerName, setContainerName] = useState('')
     const [containerType, setContainerType] = useState('fridge')
@@ -20,10 +29,24 @@ const ContainerForm = (props) => {
             console.log(users)
         }
     }
+
+    const [createContainer, { data, error, loading}] = useMutation(CREATE_CONTAINER, {
+        refetchQueries: [
+          {
+            query: props.GET_CONTAINERS,
+            variables: {
+              id: localStorage.getItem('user-id'),
+            },
+          },
+        ],
+      });
+
+
     useEffect(() => {
         console.log('state changing')
+        console.log(props.containerdata)
     }, [users])
-    console.log(users)
+    
     return (
 
         <form
@@ -31,7 +54,7 @@ const ContainerForm = (props) => {
             onSubmit={(e) => {
                 e.preventDefault();
                 props.setToggle(false)
-                props.createContainer({
+                createContainer({
                     variables: {
                         name: containerName,
                         type: containerType,

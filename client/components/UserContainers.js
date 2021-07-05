@@ -15,14 +15,7 @@ const GET_CONTAINERS = gql`
   }
 `;
 
-const CREATE_CONTAINER = gql`
-  mutation CreateContainer($name: String!, $type: ContainerType!, $owner: ID!) {
-    createContainer(name: $name, type: $type, owner: $owner) {
-      name
-      type
-    }
-  }
-`;
+
 
 export default function UserContainers() {
   const [toggle, setToggle] = useState(false);
@@ -31,17 +24,6 @@ export default function UserContainers() {
     variables: {
       id: localStorage.getItem('user-id'),
     },
-  });
-
-  const [createContainer, { containerdata }] = useMutation(CREATE_CONTAINER, {
-    refetchQueries: [
-      {
-        query: GET_CONTAINERS,
-        variables: {
-          id: localStorage.getItem('user-id'),
-        },
-      },
-    ],
   });
 
   if (loading) return '...loading';
@@ -60,8 +42,8 @@ export default function UserContainers() {
         <button onClick={() => setToggle(true)}> Add new container</button>
         {toggle && (
           <ContainerForm
-            createContainer={createContainer}
             setToggle={setToggle}
+            GET_CONTAINERS={GET_CONTAINERS}
           />
         )}
       </div>
