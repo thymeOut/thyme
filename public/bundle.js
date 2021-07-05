@@ -12087,6 +12087,17 @@ function Routes() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @apollo/client */ "./node_modules/graphql-tag/lib/index.js");
+var _templateObject;
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -12099,7 +12110,11 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
+
+
+var ADD_USERS_TO_CONTAINER = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\nmutation addUserToContainer($email: String!, $containerId: ID!) {\n    addUserToContainer(email: $email, containerId: $containerId ) {\n    email\n  }\n}\n"])));
 
 var ContainerForm = function ContainerForm(props) {
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
@@ -12112,6 +12127,26 @@ var ContainerForm = function ContainerForm(props) {
       containerType = _useState4[0],
       setContainerType = _useState4[1];
 
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+      _useState6 = _slicedToArray(_useState5, 2),
+      users = _useState6[0],
+      setUsers = _useState6[1];
+
+  var onKeyUp = function onKeyUp(e) {
+    console.log(e.target.value);
+
+    if (e.charCode === 13 && !users.find(function (user) {
+      return user === e.target.value;
+    })) {
+      setUsers([].concat(_toConsumableArray(users), [e.target.value]));
+      console.log(users);
+    }
+  };
+
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    console.log('state changing');
+  }, [users]);
+  console.log(users);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
     className: "container-form",
     onSubmit: function onSubmit(e) {
@@ -12144,6 +12179,15 @@ var ContainerForm = function ContainerForm(props) {
     },
     type: "text",
     placeholder: "Container Name"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", null, "Add users"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+    onKeyPress: onKeyUp,
+    type: "text"
+  }), users && users.map(function (user, idx) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+      key: idx,
+      onKeyPress: onKeyUp,
+      type: "text"
+    });
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
     type: "submit"
   }, "Create Container"));
