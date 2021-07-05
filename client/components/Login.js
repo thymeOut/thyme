@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router";
-import { gql, useMutation, useQuery } from "@apollo/client";
-
+import React, { useState } from 'react';
+import { useHistory } from 'react-router';
+import { gql, useMutation } from '@apollo/client';
 
 const SIGNUP_MUTATION = gql`
   mutation CreateUser(
@@ -18,7 +17,7 @@ const SIGNUP_MUTATION = gql`
     ) {
       token
       user {
-          id
+        id
       }
     }
   }
@@ -29,64 +28,69 @@ const LOGIN_MUTATION = gql`
     login(email: $email, password: $password) {
       token
       user {
-          id
-          isAdmin
+        id
+        isAdmin
       }
     }
   }
 `;
 
-function LoginForm() {
-    const history = useHistory()
-    const [formState, setFormState] = useState({
-      login: true,
-      email: "",
-      password: "",
-      firstName: "",
-      lastName: "",
-    });
-    const [login] = useMutation(LOGIN_MUTATION, {
-      variables: {
-        email: formState.email,
-        password: formState.password,
-      },
-      onCompleted: (login) => {
-        console.log(login.login.token)
-        localStorage.setItem("token", login.login.token);
-        localStorage.setItem("user-id", login.login.user.id);
-        history.push('/');
-      },
-    });
+function LoginForm(props) {
+  const history = useHistory();
+  const [formState, setFormState] = useState({
+    login: true,
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: '',
+  });
+  const [login] = useMutation(LOGIN_MUTATION, {
+    variables: {
+      email: formState.email,
+      password: formState.password,
+    },
+    onCompleted: (login) => {
+      console.log(login.login.token);
+      localStorage.setItem('token', login.login.token);
+      localStorage.setItem('user-id', login.login.user.id);
+      props.setLoggedIn(true);
+      history.push('/');
+    },
+  });
 
-    const [signup] = useMutation(SIGNUP_MUTATION, {
-      variables: {
-        firstName: formState.firstName,
-        lastName: formState.lastName,
-        email: formState.email,
-        password: formState.password,
-      },
-      onCompleted: (data) => {
-        console.log(data);
-        localStorage.setItem("token", data.createUser.token);
-        history.push('/');
-        console.log("signup");
-      },
-    });
+  const [signup] = useMutation(SIGNUP_MUTATION, {
+    variables: {
+      firstName: formState.firstName,
+      lastName: formState.lastName,
+      email: formState.email,
+      password: formState.password,
+    },
+    onCompleted: (data) => {
+      console.log(data);
+      localStorage.setItem('token', data.createUser.token);
+      localStorage.setItem('user-id', data.createUser.user.id);
+      props.setLoggedIn(true);
+      history.push('/');
+      console.log('signup');
+    },
+  });
 
-    return (<div>
+  return (
+    <div>
       <h2>Thyme</h2>
       <div className="form">
-        <h4>{formState.login ? "Login" : "Sign Up"}</h4>
-        <form className="form-elements"
+        <h4>{formState.login ? 'Login' : 'Sign Up'}</h4>
+        <form
+          className="form-elements"
           onSubmit={
             formState.login
               ? (e) => {
                   e.preventDefault();
-                  login;
+                  login();
                 }
               : (e) => {
                   e.preventDefault();
-                  signup;
+                  signup();
                 }
           }
         >
@@ -130,7 +134,7 @@ function LoginForm() {
             placeholder="Password"
           />
           <button type="submit" onClick={formState.login ? login : signup}>
-            {formState.login ? "Login" : "Register"}
+            {formState.login ? 'Login' : 'Register'}
           </button>
         </form>
         <div>
@@ -142,12 +146,12 @@ function LoginForm() {
               })
             }
           >
-            {formState.login ? "Register" : "Already Registered? Log in!"}
+            {formState.login ? 'Register' : 'Already Registered? Log in!'}
           </button>
         </div>
       </div>
-      </div>
-    );
-  }
+    </div>
+  );
+}
 
-  export default LoginForm;
+export default LoginForm;
