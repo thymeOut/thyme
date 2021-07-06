@@ -55,7 +55,16 @@ export default function SingleContainer(props) {
           data.container.items.map(item => {
             return (
               <div key={item.id}>
-                {item.name} - {item.containerItem.quantity}
+                <div>{item.name} - {item.containerItem.quantity}</div>
+                <div>
+                  {
+                    data.container.users.map(user => {
+                      if (user.id === item.containerItem.userId) {
+                        return <div>{user.firstName}</div>
+                      }
+                    })
+                  }
+                </div>
               </div>
             )
           })
