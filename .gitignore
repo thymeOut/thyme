@@ -19,5 +19,3 @@ yarn-error.log*
 webpack.config.json
 /public/bundle.js
 /public/bundle.js.map
-
-
