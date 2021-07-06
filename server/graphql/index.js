@@ -36,6 +36,7 @@ const typeDefs = gql`
     id: ID!
     name: String!
     type: ContainerType!
+    owner: User!
     users: [User!]
     items: [Item!]
     containerUsers: [ContainerUser]
@@ -89,7 +90,7 @@ const typeDefs = gql`
       lastName: String!
     ): AuthPayload!
     login(email: String!, password: String!): AuthPayload!
-    createContainer(name: String!, type: ContainerType!, owner: ID!): Container!
+    createContainer(name: String!, type: ContainerType!): Container!
     addUserToContainer(email: String!, containerId: ID!): Container!
   }
   scalar Date
@@ -124,14 +125,17 @@ const rootResolver = {
     },
 
     async container(_, args, context) {
-      if (!context.user.id) {
-        return null;
-      } else {
+      // if (!context.user.id) {
+      //   return null;
+      // } else {
         const data = await Container.findByPk(args.id, {
-          include: [Item, User],
+          include: [Item, User, {
+            model: User,
+            as: 'owner',
+          }],
         });
         return data;
-      }
+      // }
     },
 
     async searchContainer(_, args, context) {
@@ -160,20 +164,23 @@ const rootResolver = {
         console.error("error in createUser mutation");
       }
     },
+
     async login(_, args) {
       const data = await User.authenticate(args);
       return data;
     },
 
-    async createContainer(_, args) {
+    async createContainer(_, args, context) {
       try {
         const container = await Container.create({
           name: args.name,
-          type: args.type
-        })
-        const user = await User.findByPk(args.owner)
-        container.addUser(user.id, { through: { role: 'owner' } })
-        return container
+
+          type: args.type,
+          ownerId: context.user.id,
+        });
+        const user = await User.findByPk(context.user.id);
+        container.addUser(user.id, { through: { role: "owner" } });
+        return container;
       } catch (error) {
         console.log(error);
       }
