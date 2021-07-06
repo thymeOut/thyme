@@ -15,8 +15,6 @@ const GET_CONTAINERS = gql`
   }
 `;
 
-
-
 export default function UserContainers() {
   const [toggle, setToggle] = useState(false);
 

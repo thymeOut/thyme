@@ -1,27 +1,8 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import { gql, useMutation } from '@apollo/client';
+import { Link } from 'react-router-dom';
 
-const SIGNUP_MUTATION = gql`
-  mutation CreateUser(
-    $email: String!
-    $password: String!
-    $firstName: String!
-    $lastName: String!
-  ) {
-    createUser(
-      email: $email
-      password: $password
-      firstName: $firstName
-      lastName: $lastName
-    ) {
-      token
-      user {
-        id
-      }
-    }
-  }
-`;
 
 const LOGIN_MUTATION = gql`
   mutation LoginMutation($email: String!, $password: String!) {
@@ -38,12 +19,10 @@ const LOGIN_MUTATION = gql`
 function LoginForm(props) {
   const history = useHistory();
   const [formState, setFormState] = useState({
-    login: true,
     email: '',
-    password: '',
-    firstName: '',
-    lastName: '',
+    password: ''
   });
+
   const [login] = useMutation(LOGIN_MUTATION, {
     variables: {
       email: formState.email,
@@ -58,62 +37,20 @@ function LoginForm(props) {
     },
   });
 
-  const [signup] = useMutation(SIGNUP_MUTATION, {
-    variables: {
-      firstName: formState.firstName,
-      lastName: formState.lastName,
-      email: formState.email,
-      password: formState.password,
-    },
-    onCompleted: (data) => {
-      console.log(data);
-      localStorage.setItem('token', data.createUser.token);
-      localStorage.setItem('user-id', data.createUser.user.id);
-      props.setLoggedIn(true);
-      history.push('/');
-      console.log('signup');
-    },
-  });
+  const handleLogin = (e) => {
+    e.preventDefault()
+    login()
+  }
 
   return (
     <div>
       <h2>Thyme</h2>
       <div className="form">
-        <h4>{formState.login ? 'Login' : 'Sign Up'}</h4>
+        <h4>Login</h4>
         <form
           className="form-elements"
-          onSubmit={
-            formState.login
-              ? (e) => {
-                  e.preventDefault();
-                  login();
-                }
-              : (e) => {
-                  e.preventDefault();
-                  signup();
-                }
-          }
+          onSubmit={(e) => handleLogin(e)}
         >
-          {!formState.login && (
-            <div>
-              <input
-                value={formState.firstName}
-                onChange={(e) =>
-                  setFormState({ ...formState, firstName: e.target.value })
-                }
-                type="text"
-                placeholder="First Name"
-              />
-              <input
-                value={formState.lastName}
-                onChange={(e) =>
-                  setFormState({ ...formState, lastName: e.target.value })
-                }
-                type="text"
-                placeholder="Last Name"
-              />
-            </div>
-          )}
           <input
             value={formState.email}
             onChange={(e) =>
@@ -133,22 +70,16 @@ function LoginForm(props) {
             type="password"
             placeholder="Password"
           />
-          <button type="submit" onClick={formState.login ? login : signup}>
-            {formState.login ? 'Login' : 'Register'}
+          <button type="submit">
+            Login
           </button>
         </form>
-        <div>
-          <button
-            onClick={() =>
-              setFormState({
-                ...formState,
-                login: !formState.login,
-              })
-            }
-          >
-            {formState.login ? 'Register' : 'Already Registered? Log in!'}
+
+        <Link to="/register">
+          <button >
+            Register
           </button>
-        </div>
+        </Link>
       </div>
     </div>
   );

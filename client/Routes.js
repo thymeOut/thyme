@@ -4,6 +4,7 @@ import LandingPage from './components/LandingPage';
 import UserContainers from './components/UserContainers';
 import LoginForm from './components/Login';
 import SingleContainer from './components/SingleContainer';
+import RegisterForm from './components/Register';
 
 export default function Routes(props) {
   return (
@@ -14,6 +15,9 @@ export default function Routes(props) {
         <Route path="/containers/:id" component={SingleContainer} />
         <Route exact path="/login">
           <LoginForm setLoggedIn={props.setLoggedIn} />
+        </Route>
+        <Route exact path="/register">
+          <RegisterForm />
         </Route>
       </Switch>
     </div>
