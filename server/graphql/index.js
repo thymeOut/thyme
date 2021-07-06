@@ -12,6 +12,7 @@ const typeDefs = gql`
     containers: [Container]
     container(id: ID): Container
     searchContainer(name: String!): Container
+    items: [Item]
   }
 
   type AuthPayload {
@@ -144,6 +145,10 @@ const rootResolver = {
         include: [User, Item],
       });
       return data;
+    },
+
+    async items(_, args, context) {
+      return await Item.findAll();
     },
   },
   Mutation: {
