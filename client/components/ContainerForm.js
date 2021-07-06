@@ -10,8 +10,8 @@ mutation AddUserToContainer($email: String!, $containerId: ID!) {
 `
 
 const CREATE_CONTAINER = gql`
-  mutation CreateContainer($name: String!, $type: ContainerType!, $owner: ID!) {
-    createContainer(name: $name, type: $type, owner: $owner) {
+  mutation CreateContainer($name: String!, $type: ContainerType!) {
+    createContainer(name: $name, type: $type) {
       id
       name
       type
@@ -55,13 +55,12 @@ const ContainerForm = (props) => {
             className="container-form"
             onSubmit={(e) => {
                 e.preventDefault();
-                props.setToggle(false)
+                props.setCreateToggle(false)
 
                 createContainer({
                     variables: {
                         name: containerName,
                         type: containerType,
-                        owner: +localStorage.getItem("user-id")
                     },
                     update: (_, mutationResult) => {
 
