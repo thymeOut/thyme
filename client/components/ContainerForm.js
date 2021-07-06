@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useMutation, gql } from "@apollo/client";
 
-const ADD_USERS_TO_CONTAINER = gql`
-mutation addUserToContainer($email: String!, $containerId: ID!) {
+const ADD_USER_TO_CONTAINER = gql`
+mutation AddUserToContainer($email: String!, $containerId: ID!) {
     addUserToContainer(email: $email, containerId: $containerId ) {
-    email
+    id
   }
 }
 `
@@ -12,6 +12,7 @@ mutation addUserToContainer($email: String!, $containerId: ID!) {
 const CREATE_CONTAINER = gql`
   mutation CreateContainer($name: String!, $type: ContainerType!, $owner: ID!) {
     createContainer(name: $name, type: $type, owner: $owner) {
+      id
       name
       type
     }
@@ -30,40 +31,55 @@ const ContainerForm = (props) => {
         }
     }
 
-    const [createContainer, { data, error, loading}] = useMutation(CREATE_CONTAINER, {
+    const [createContainer, { data, error, loading }] = useMutation(CREATE_CONTAINER, {
         refetchQueries: [
-          {
-            query: props.GET_CONTAINERS,
-            variables: {
-              id: localStorage.getItem('user-id'),
+            {
+                query: props.GET_CONTAINERS,
+                variables: {
+                    id: localStorage.getItem('user-id'),
+                },
             },
-          },
         ],
-      });
+    });
 
+    const [addUserToContainer, { error: addUserError }] = useMutation(ADD_USER_TO_CONTAINER);
 
     useEffect(() => {
         console.log('state changing')
-        console.log(props.containerdata)
     }, [users])
-    
+
     return (
 
         <form
+
             className="container-form"
             onSubmit={(e) => {
                 e.preventDefault();
                 props.setToggle(false)
+
                 createContainer({
                     variables: {
                         name: containerName,
                         type: containerType,
                         owner: +localStorage.getItem("user-id")
                     },
-               });
+                    update: (_, mutationResult) => {
+
+                        users.forEach(email => {
+                            addUserToContainer({
+                                variables: {
+                                    email: email,
+                                    containerId: +mutationResult.data.createContainer.id
+                                }
+                            }
+                            )
+                        })
+                    },
+                })
 
             }}
         >
+
             <select onChange={(e) => {
                 setContainerType(e.target.value)
             }
@@ -82,11 +98,11 @@ const ContainerForm = (props) => {
                 placeholder="Container Name"
             />
             <label>Add users</label>
-            <input onKeyPress={onKeyUp} type='text' />
+            <input onKeyPress={onKeyUp} type='text' /> Click Enter to confirm (need to revist to allow for multiple entries)
 
             {users && users.map((user, idx) => {
                 return (
-                    <input key={idx} onKeyPress={onKeyUp} type='text' />
+                    <div><input key={idx} onKeyPress={onKeyUp} type='text'/> </div>
                 )
 
             })}
