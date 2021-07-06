@@ -11,6 +11,7 @@ const typeDefs = gql`
     user(id: ID): User
     containers: [Container]
     container(id: ID): Container
+    searchContainer(name: String!): Container
   }
 
   type AuthPayload {
@@ -133,10 +134,18 @@ const rootResolver = {
         return data;
       }
     },
+
+    async searchContainer(_, args, context) {
+      const data = await Container.findOne({
+        where: { name: args.name },
+        include: [User, Item],
+      });
+      return data;
+    },
   },
   Mutation: {
     async createUser(_, args) {
-      console.log(args)
+      console.log(args);
       try {
         const user = await User.create({
           firstName: args.firstName,
@@ -144,7 +153,7 @@ const rootResolver = {
           email: args.email,
           password: args.password,
         });
-        console.log(user)
+        console.log(user);
         const token = await user.generateToken();
 
         return { token, user };
@@ -161,29 +170,29 @@ const rootResolver = {
       try {
         const container = await Container.create({
           name: args.name,
-          type: args.type
-        })
-        const user = await User.findByPk(args.owner)
-        container.addUser(user.id, {through: {role: 'owner'}})
-        return container
+          type: args.type,
+        });
+        const user = await User.findByPk(args.owner);
+        container.addUser(user.id, { through: { role: "owner" } });
+        return container;
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
     async addUserToContainer(_, args) {
       try {
-        const container = await Container.findByPk(args.containerId)
+        const container = await Container.findByPk(args.containerId);
         const user = await User.findOne({
           where: {
-            email: args.email
-          }
-        })
-        container.addUser(user.id, { through: { role: 'user' } })
-        return container
+            email: args.email,
+          },
+        });
+        container.addUser(user.id, { through: { role: "user" } });
+        return container;
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    }
+    },
   },
 };
 
