@@ -25,12 +25,14 @@ export default function AddItemToContainer() {
 
   return (
     <React.Fragment>
-      <h2>Items to choose from:</h2>
+      <h2>Choose one of these items</h2>
       <div>
         {data.items.map((item) => {
           return <div key={item.id}>{item.name}</div>;
         })}
       </div>
+      <h3>...or, create a new one</h3>
+      <Link to="create">Create</Link>
     </React.Fragment>
   );
 }
