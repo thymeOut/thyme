@@ -5,6 +5,7 @@ import UserContainers from './components/UserContainers';
 import LoginForm from './components/Login';
 import SingleContainer from './components/SingleContainer';
 import RegisterForm from './components/Register';
+import JoinContainer from "./components/JoinContainer";
 
 export default function Routes(props) {
   return (
@@ -19,6 +20,7 @@ export default function Routes(props) {
         <Route exact path="/register">
           <RegisterForm />
         </Route>
+        <Route path="/search" component={JoinContainer} />
       </Switch>
     </div>
   );
