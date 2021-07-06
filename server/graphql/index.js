@@ -95,7 +95,6 @@ const typeDefs = gql`
   scalar Date
 `;
 
-// createContainer(name: String!, type: ContainerType ): Workspace
 
 const rootResolver = {
   Query: {
@@ -145,7 +144,7 @@ const rootResolver = {
   },
   Mutation: {
     async createUser(_, args) {
-      console.log(args);
+
       try {
         const user = await User.create({
           firstName: args.firstName,
@@ -153,9 +152,9 @@ const rootResolver = {
           email: args.email,
           password: args.password,
         });
-        console.log(user);
-        const token = await user.generateToken();
 
+        const token = await user.generateToken();
+        console.log('token--->', token)
         return { token, user };
       } catch (error) {
         console.error("error in createUser mutation");
@@ -170,11 +169,11 @@ const rootResolver = {
       try {
         const container = await Container.create({
           name: args.name,
-          type: args.type,
-        });
-        const user = await User.findByPk(args.owner);
-        container.addUser(user.id, { through: { role: "owner" } });
-        return container;
+          type: args.type
+        })
+        const user = await User.findByPk(args.owner)
+        container.addUser(user.id, { through: { role: 'owner' } })
+        return container
       } catch (error) {
         console.log(error);
       }

@@ -16,8 +16,6 @@ const GET_CONTAINERS = gql`
   }
 `;
 
-
-
 export default function UserContainers() {
   const [createToggle, setCreateToggle] = useState(false);
   const [joinToggle, setJoinToggle] = useState(false);
