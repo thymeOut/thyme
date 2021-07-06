@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, gql, useMutation } from "@apollo/client";
 import { Link } from "react-router-dom";
 import ContainerForm from "./ContainerForm";
@@ -16,7 +16,14 @@ const GET_CONTAINERS = gql`
   }
 `;
 
-
+const CREATE_CONTAINER = gql`
+  mutation CreateContainer($name: String!, $type: ContainerType!, $owner: ID!) {
+    createContainer(name: $name, type: $type, owner: $owner) {
+      name
+      type
+    }
+  }
+`;
 
 export default function UserContainers() {
   const [createToggle, setCreateToggle] = useState(false);
@@ -28,21 +35,19 @@ export default function UserContainers() {
     },
   });
 
-  const [createContainer, { containerdata }] = useMutation(CREATE_CONTAINER, {
-    refetchQueries: [
-      {
-        query: GET_CONTAINERS,
-        variables: {
-          id: localStorage.getItem("user-id"),
-        },
-      },
-    ],
-  });
+  // const [createContainer, { containerdata }] = useMutation(CREATE_CONTAINER, {
+  //   refetchQueries: [
+  //     {
+  //       query: GET_CONTAINERS,
+  //       variables: {
+  //         id: localStorage.getItem("user-id"),
+  //       },
+  //     },
+  //   ],
+  // });
 
   if (loading) return "...loading";
   if (error) return "...error";
-
-
   return (
     <div>
       <h2>My Containers</h2>
@@ -59,7 +64,7 @@ export default function UserContainers() {
         </button>
         {createToggle && (
           <ContainerForm
-            createContainer={createContainer}
+            // createContainer={createContainer}
             setCreateToggle={setCreateToggle}
           />
         )}

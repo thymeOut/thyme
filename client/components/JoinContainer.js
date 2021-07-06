@@ -14,12 +14,21 @@ const CONTAINER_SEARCH_QUERY = gql`
   }
 `;
 
-export default function Search() {
+const JOIN_CONTAINER = gql`
+  mutation joinContainer($userId: ID!, $containerId: ID!) {
+    joinContainer(userId: $userId, containerId: $containerId) {
+      id
+    }
+  }
+`;
+
+export default function Search(props) {
   const [searchFilter, setSearchFilter] = useState("");
   const [runQuery, { data, loading, error }] = useLazyQuery(
     CONTAINER_SEARCH_QUERY
   );
-  console.log(data);
+  console.log(props);
+  const [joinContainer, { error: addUserError }] = useMutation(JOIN_CONTAINER);
 
   if (error) return "...error";
   return (
@@ -41,7 +50,6 @@ export default function Search() {
               suspend: false,
             });
           }}
-          // value={searchFilter}
         >
           Search
         </button>
@@ -52,9 +60,21 @@ export default function Search() {
           <div>Type: {data.searchContainer.type}</div>
           <div>
             Items:
-            {data.searchContainer.items.map((item) => {
-              return <div>{item.name}</div>;
+            {data.searchContainer.items.map((item, index) => {
+              return <div key={index}>{item.name}</div>;
             })}
+            <button
+              onClick={() => {
+                joinContainer({
+                  variables: {
+                    userId: localStorage.getItem("user-id"),
+                    containerId: data.searchContainer.id,
+                  },
+                });
+              }}
+            >
+              Join This Container
+            </button>
           </div>
         </div>
       )}
