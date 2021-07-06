@@ -16,14 +16,7 @@ const GET_CONTAINERS = gql`
   }
 `;
 
-const CREATE_CONTAINER = gql`
-  mutation CreateContainer($name: String!, $type: ContainerType!, $owner: ID!) {
-    createContainer(name: $name, type: $type, owner: $owner) {
-      name
-      type
-    }
-  }
-`;
+
 
 export default function UserContainers() {
   const [createToggle, setCreateToggle] = useState(false);
@@ -48,6 +41,7 @@ export default function UserContainers() {
 
   if (loading) return "...loading";
   if (error) return "...error";
+
 
   return (
     <div>
