@@ -1,6 +1,6 @@
 "use strict";
 
-const { users, containers, items, containerUsers, containerItems } = require("./dummyData");
+const { users, containers, items, containerUsers, containerItems } = require("./data");
 const {
   db,
   models: { User, Container, Item, ContainerItem, ContainerUser },

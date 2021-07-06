@@ -16,8 +16,6 @@ const GET_CONTAINERS = gql`
   }
 `;
 
-
-
 export default function UserContainers() {
   const [createToggle, setCreateToggle] = useState(false);
   const [joinToggle, setJoinToggle] = useState(false);
@@ -26,17 +24,6 @@ export default function UserContainers() {
     variables: {
       id: localStorage.getItem("user-id"),
     },
-  });
-
-  const [createContainer, { containerdata }] = useMutation(CREATE_CONTAINER, {
-    refetchQueries: [
-      {
-        query: GET_CONTAINERS,
-        variables: {
-          id: localStorage.getItem("user-id"),
-        },
-      },
-    ],
   });
 
   if (loading) return "...loading";
@@ -59,8 +46,8 @@ export default function UserContainers() {
         </button>
         {createToggle && (
           <ContainerForm
-            createContainer={createContainer}
             setCreateToggle={setCreateToggle}
+            GET_CONTAINERS={GET_CONTAINERS}
           />
         )}
         <button onClick={() => setJoinToggle(true)}> Join a container</button>
