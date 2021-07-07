@@ -16,15 +16,6 @@ const GET_CONTAINERS = gql`
   }
 `;
 
-const CREATE_CONTAINER = gql`
-  mutation CreateContainer($name: String!, $type: ContainerType!, $owner: ID!) {
-    createContainer(name: $name, type: $type, owner: $owner) {
-      name
-      type
-    }
-  }
-`;
-
 export default function UserContainers() {
   const [createToggle, setCreateToggle] = useState(false);
   const [joinToggle, setJoinToggle] = useState(false);
@@ -34,17 +25,6 @@ export default function UserContainers() {
       id: localStorage.getItem("user-id"),
     },
   });
-
-  // const [createContainer, { containerdata }] = useMutation(CREATE_CONTAINER, {
-  //   refetchQueries: [
-  //     {
-  //       query: GET_CONTAINERS,
-  //       variables: {
-  //         id: localStorage.getItem("user-id"),
-  //       },
-  //     },
-  //   ],
-  // });
 
   if (loading) return "...loading";
   if (error) return "...error";
@@ -64,8 +44,8 @@ export default function UserContainers() {
         </button>
         {createToggle && (
           <ContainerForm
-            // createContainer={createContainer}
             setCreateToggle={setCreateToggle}
+            GET_CONTAINERS={GET_CONTAINERS}
           />
         )}
         <button onClick={() => setJoinToggle(true)}> Join a container</button>

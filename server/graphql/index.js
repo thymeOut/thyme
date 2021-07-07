@@ -36,6 +36,7 @@ const typeDefs = gql`
     id: ID!
     name: String!
     type: ContainerType!
+    owner: User!
     users: [User!]
     items: [Item!]
     containerUsers: [ContainerUser]
@@ -90,13 +91,12 @@ const typeDefs = gql`
     ): AuthPayload!
     login(email: String!, password: String!): AuthPayload!
     createContainer(name: String!, type: ContainerType!, owner: ID!): Container!
-    addUserToContainer(email: String!, containerId: ID!): Container
-    joinContainer(userId: ID!, containerId: ID!): Container!
+    addUserToContainer(email: String!, containerId: ID!): Container!
+    joinContainer(userId: ID!, containerId: ID!): Container
   }
   scalar Date
 `;
 
-// createContainer(name: String!, type: ContainerType ): Workspace
 
 const rootResolver = {
   Query: {
@@ -126,14 +126,17 @@ const rootResolver = {
     },
 
     async container(_, args, context) {
-      if (!context.user.id) {
-        return null;
-      } else {
+      // if (!context.user.id) {
+      //   return null;
+      // } else {
         const data = await Container.findByPk(args.id, {
-          include: [Item, User],
+          include: [Item, User, {
+            model: User,
+            as: 'owner',
+          }],
         });
         return data;
-      }
+      // }
     },
 
     async searchContainer(_, args, context) {
@@ -146,7 +149,7 @@ const rootResolver = {
   },
   Mutation: {
     async createUser(_, args) {
-      console.log(args);
+
       try {
         const user = await User.create({
           firstName: args.firstName,
@@ -154,26 +157,29 @@ const rootResolver = {
           email: args.email,
           password: args.password,
         });
-        console.log(user);
-        const token = await user.generateToken();
 
+        const token = await user.generateToken();
+        console.log('token--->', token)
         return { token, user };
       } catch (error) {
         console.error("error in createUser mutation");
       }
     },
+
     async login(_, args) {
       const data = await User.authenticate(args);
       return data;
     },
 
-    async createContainer(_, args) {
+    async createContainer(_, args, context) {
       try {
         const container = await Container.create({
           name: args.name,
+
           type: args.type,
+          ownerId: context.user.id,
         });
-        const user = await User.findByPk(args.owner);
+        const user = await User.findByPk(context.user.id);
         container.addUser(user.id, { through: { role: "owner" } });
         return container;
       } catch (error) {
@@ -194,7 +200,7 @@ const rootResolver = {
         console.log(error);
       }
     },
-    async joinContainer(_, args) {
+    async joinContainer(_, args, context) {
       try {
         const container = await Container.findByPk(args.containerId);
         const user = await User.findByPk(args.userId);

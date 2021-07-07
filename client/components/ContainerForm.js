@@ -10,8 +10,8 @@ const ADD_USER_TO_CONTAINER = gql`
 `;
 
 const CREATE_CONTAINER = gql`
-  mutation CreateContainer($name: String!, $type: ContainerType!, $owner: ID!) {
-    createContainer(name: $name, type: $type, owner: $owner) {
+  mutation CreateContainer($name: String!, $type: ContainerType!) {
+    createContainer(name: $name, type: $type) {
       id
       name
       type
@@ -112,3 +112,4 @@ const ContainerForm = (props) => {
 };
 
 export default ContainerForm;
+
