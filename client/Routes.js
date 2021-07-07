@@ -4,6 +4,7 @@ import LandingPage from './components/LandingPage';
 import UserContainers from './components/UserContainers';
 import LoginForm from './components/Login';
 import SingleContainer from './components/SingleContainer';
+import AllUsersData from './components/allUsersData';
 
 export default function Routes(props) {
   return (
@@ -11,6 +12,7 @@ export default function Routes(props) {
       <Switch>
         <Route exact path="/" component={LandingPage} />
         <Route exact path="/containers" component={UserContainers} />
+        <Route exact path="/allData" component={AllUsersData} />
         <Route path="/containers/:id" component={SingleContainer} />
         <Route exact path="/login">
           <LoginForm setLoggedIn={props.setLoggedIn} />

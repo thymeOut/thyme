@@ -99,14 +99,14 @@ const typeDefs = gql`
 const rootResolver = {
   Query: {
     async users(_, __, context) {
-      if (!context.user.isAdmin) {
-        return null;
-      } else {
+      // if (!context.user.isAdmin) {
+      //   return null;
+      // } else {
         const users = await User.findAll({
           include: Container,
         });
         return users;
-      }
+      // }
     },
 
     async user(_, args, context) {

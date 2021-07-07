@@ -12071,11 +12071,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": function() { return /* binding */ Routes; }
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
 /* harmony import */ var _components_LandingPage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/LandingPage */ "./client/components/LandingPage.js");
 /* harmony import */ var _components_UserContainers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/UserContainers */ "./client/components/UserContainers.js");
 /* harmony import */ var _components_Login__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/Login */ "./client/components/Login.js");
 /* harmony import */ var _components_SingleContainer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/SingleContainer */ "./client/components/SingleContainer.js");
+/* harmony import */ var _components_allUsersData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/allUsersData */ "./client/components/allUsersData.js");
+
 
 
 
@@ -12083,18 +12085,22 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function Routes(props) {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__.Route, {
     exact: true,
     path: "/",
     component: _components_LandingPage__WEBPACK_IMPORTED_MODULE_1__.default
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__.Route, {
     exact: true,
     path: "/containers",
     component: _components_UserContainers__WEBPACK_IMPORTED_MODULE_2__.default
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__.Route, {
+    exact: true,
+    path: "/allData",
+    component: _components_allUsersData__WEBPACK_IMPORTED_MODULE_5__.default
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__.Route, {
     path: "/containers/:id",
     component: _components_SingleContainer__WEBPACK_IMPORTED_MODULE_4__.default
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__.Route, {
     exact: true,
     path: "/login"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Login__WEBPACK_IMPORTED_MODULE_3__.default, {
@@ -12114,7 +12120,8 @@ function Routes(props) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @apollo/client */ "./node_modules/graphql-tag/lib/index.js");
-var _templateObject;
+/* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @apollo/client */ "./node_modules/@apollo/client/index.js");
+var _templateObject, _templateObject2;
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
@@ -12140,7 +12147,8 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 
 
 
-var ADD_USERS_TO_CONTAINER = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\nmutation addUserToContainer($email: String!, $containerId: ID!) {\n    addUserToContainer(email: $email, containerId: $containerId ) {\n    email\n  }\n}\n"])));
+var ADD_USER_TO_CONTAINER = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\nmutation AddUserToContainer($email: String!, $containerId: ID!) {\n    addUserToContainer(email: $email, containerId: $containerId ) {\n    id\n  }\n}\n"])));
+var CREATE_CONTAINER = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["\n  mutation CreateContainer($name: String!, $type: ContainerType!, $owner: ID!) {\n    createContainer(name: $name, type: $type, owner: $owner) {\n      id\n      name\n      type\n    }\n  }\n"])));
 
 var ContainerForm = function ContainerForm(props) {
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
@@ -12169,20 +12177,49 @@ var ContainerForm = function ContainerForm(props) {
     }
   };
 
+  var _useMutation = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_2__.useMutation)(CREATE_CONTAINER, {
+    refetchQueries: [{
+      query: props.GET_CONTAINERS,
+      variables: {
+        id: localStorage.getItem('user-id')
+      }
+    }]
+  }),
+      _useMutation2 = _slicedToArray(_useMutation, 2),
+      createContainer = _useMutation2[0],
+      _useMutation2$ = _useMutation2[1],
+      data = _useMutation2$.data,
+      error = _useMutation2$.error,
+      loading = _useMutation2$.loading;
+
+  var _useMutation3 = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_2__.useMutation)(ADD_USER_TO_CONTAINER),
+      _useMutation4 = _slicedToArray(_useMutation3, 2),
+      addUserToContainer = _useMutation4[0],
+      addUserError = _useMutation4[1].error;
+
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     console.log('state changing');
   }, [users]);
-  console.log(users);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
     className: "container-form",
     onSubmit: function onSubmit(e) {
       e.preventDefault();
       props.setToggle(false);
-      props.createContainer({
+      createContainer({
         variables: {
           name: containerName,
           type: containerType,
           owner: +localStorage.getItem("user-id")
+        },
+        update: function update(_, mutationResult) {
+          users.forEach(function (email) {
+            addUserToContainer({
+              variables: {
+                email: email,
+                containerId: +mutationResult.data.createContainer.id
+              }
+            });
+          });
         }
       });
     }
@@ -12208,12 +12245,12 @@ var ContainerForm = function ContainerForm(props) {
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", null, "Add users"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
     onKeyPress: onKeyUp,
     type: "text"
-  }), users && users.map(function (user, idx) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+  }), " Click Enter to confirm (need to revist to allow for multiple entries)", users && users.map(function (user, idx) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
       key: idx,
       onKeyPress: onKeyUp,
       type: "text"
-    });
+    }), " ");
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
     type: "submit"
   }, "Create Container"));
@@ -12536,7 +12573,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @apollo/client */ "./node_modules/@apollo/client/index.js");
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var _ContainerForm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ContainerForm */ "./client/components/ContainerForm.js");
-var _templateObject, _templateObject2;
+var _templateObject;
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -12557,7 +12594,6 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 
 
 var GET_CONTAINERS = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_2__.default)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  query User($id: ID!) {\n    user(id: $id) {\n      id\n      containers {\n        id\n        name\n      }\n    }\n  }\n"])));
-var CREATE_CONTAINER = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_2__.default)(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["\n  mutation CreateContainer($name: String!, $type: ContainerType!, $owner: ID!) {\n    createContainer(name: $name, type: $type, owner: $owner) {\n      name\n      type\n    }\n  }\n"])));
 function UserContainers() {
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
       _useState2 = _slicedToArray(_useState, 2),
@@ -12573,20 +12609,14 @@ function UserContainers() {
       error = _useQuery.error,
       data = _useQuery.data;
 
-  var _useMutation = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_3__.useMutation)(CREATE_CONTAINER, {
-    refetchQueries: [{
-      query: GET_CONTAINERS,
-      variables: {
-        id: localStorage.getItem('user-id')
-      }
-    }]
-  }),
-      _useMutation2 = _slicedToArray(_useMutation, 2),
-      createContainer = _useMutation2[0],
-      containerdata = _useMutation2[1].containerdata;
+  if (loading) {
+    return '...loading';
+  }
 
-  if (loading) return '...loading';
-  if (error) return '...error';
+  if (error) {
+    return '...error';
+  }
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "My Containers"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, data && data.user.containers.map(function (container) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Link, {
       to: "/containers/".concat(container.id),
@@ -12597,9 +12627,57 @@ function UserContainers() {
       return setToggle(true);
     }
   }, " Add new container"), toggle && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_ContainerForm__WEBPACK_IMPORTED_MODULE_1__.default, {
-    createContainer: createContainer,
-    setToggle: setToggle
+    setToggle: setToggle,
+    GET_CONTAINERS: GET_CONTAINERS
   })));
+}
+
+/***/ }),
+
+/***/ "./client/components/allUsersData.js":
+/*!*******************************************!*\
+  !*** ./client/components/allUsersData.js ***!
+  \*******************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ AllUsersData; }
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @apollo/client */ "./node_modules/graphql-tag/lib/index.js");
+/* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @apollo/client */ "./node_modules/@apollo/client/index.js");
+var _templateObject;
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+
+
+var GET_ALL_USERS_DATA = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_1__.default)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  query Users{\n    users{\n        firstName\n      containers{\n        name\n      }\n     }\n  }\n"])));
+function AllUsersData() {
+  var _useQuery = (0,_apollo_client__WEBPACK_IMPORTED_MODULE_2__.useQuery)(GET_ALL_USERS_DATA),
+      loading = _useQuery.loading,
+      error = _useQuery.error,
+      data = _useQuery.data;
+
+  if (loading) {
+    return 'loading..';
+  }
+
+  if (error) {
+    return 'loading..';
+  }
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, data.users.map(function (user, idx) {
+    var _user$containers;
+
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      key: idx
+    }, user.firstName), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, (_user$containers = user.containers) === null || _user$containers === void 0 ? void 0 : _user$containers.map(function (container) {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, container.name);
+    })));
+  }));
 }
 
 /***/ }),
