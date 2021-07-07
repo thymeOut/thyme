@@ -90,7 +90,7 @@ const typeDefs = gql`
       lastName: String!
     ): AuthPayload!
     login(email: String!, password: String!): AuthPayload!
-    createContainer(name: String!, type: ContainerType!, owner: ID!): Container!
+    createContainer(name: String!, type: ContainerType!): Container!
     addUserToContainer(email: String!, containerId: ID!): Container!
     joinContainer(userId: ID!, containerId: ID!): Container
   }
@@ -126,9 +126,9 @@ const rootResolver = {
     },
 
     async container(_, args, context) {
-      // if (!context.user.id) {
-      //   return null;
-      // } else {
+      if (!context.user.id) {
+        return null;
+      } else {
         const data = await Container.findByPk(args.id, {
           include: [Item, User, {
             model: User,
@@ -136,7 +136,7 @@ const rootResolver = {
           }],
         });
         return data;
-      // }
+      }
     },
 
     async searchContainer(_, args, context) {
@@ -175,7 +175,6 @@ const rootResolver = {
       try {
         const container = await Container.create({
           name: args.name,
-
           type: args.type,
           ownerId: context.user.id,
         });
