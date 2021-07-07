@@ -59,12 +59,10 @@ const ContainerForm = (props) => {
       onSubmit={(e) => {
         e.preventDefault();
         props.setCreateToggle(false);
-
         createContainer({
           variables: {
             name: containerName,
-            type: containerType,
-            owner: +localStorage.getItem("user-id"),
+            type: containerType
           },
           update: (_, mutationResult) => {
             users.forEach((email) => {
