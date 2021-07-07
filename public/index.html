@@ -17,9 +17,17 @@
       rel="stylesheet"
       crossorigin="anonymous"
     />
+    <link rel="manifest" href="/manifest.json" />
     <script defer src="/bundle.js"></script>
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js');
+        });
+      }
+    </script>
   </body>
 </html>

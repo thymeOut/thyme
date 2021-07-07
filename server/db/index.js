@@ -15,6 +15,9 @@ Item.belongsToMany(Container, { through: ContainerItem });
 User.hasMany(ContainerItem);
 ContainerItem.belongsTo(User);
 
+// Container.belongsTo(User, { as: 'owner' });
+// User.hasMany(Container, { foreignKey: 'ownerId' });
+
 module.exports = {
   db,
   models: {
