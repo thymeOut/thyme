@@ -1,9 +1,9 @@
-const { gql } = require("@apollo/client");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const { gql } = require('@apollo/client');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const {
   models: { User, Container, Item, ContainerItem, ContainerUser },
-} = require("../db/");
+} = require('../db/');
 
 const typeDefs = gql`
   type Query {
@@ -92,12 +92,10 @@ const typeDefs = gql`
     ): AuthPayload!
     login(email: String!, password: String!): AuthPayload!
     createContainer(name: String!, type: ContainerType!): Container!
-    addUserToContainer(email: String!, containerId: ID!): Container!
-    joinContainer(userId: ID!, containerId: ID!): Container
+    addUserToContainer(email: String, containerId: ID!): Container!
   }
   scalar Date
 `;
-
 
 const rootResolver = {
   Query: {
@@ -119,7 +117,6 @@ const rootResolver = {
         const data = await User.findByPk(args.id, {
           include: Container,
         });
-        console.log(data.containers);
         return data;
       }
     },
@@ -153,7 +150,6 @@ const rootResolver = {
   },
   Mutation: {
     async createUser(_, args) {
-
       try {
         const user = await User.create({
           firstName: args.firstName,
@@ -163,10 +159,10 @@ const rootResolver = {
         });
 
         const token = await user.generateToken();
-        console.log('token--->', token)
+        console.log('token--->', token);
         return { token, user };
       } catch (error) {
-        console.error("error in createUser mutation");
+        console.error('error in createUser mutation');
       }
     },
 
@@ -183,32 +179,27 @@ const rootResolver = {
           ownerId: context.user.id,
         });
         const user = await User.findByPk(context.user.id);
-        container.addUser(user.id, { through: { role: "owner" } });
+        container.addUser(user.id, { through: { role: 'owner' } });
         return container;
       } catch (error) {
         console.log(error);
       }
     },
-    async addUserToContainer(_, args) {
+    async addUserToContainer(_, args,context) {
       try {
         const container = await Container.findByPk(args.containerId);
+        if (args.email){       
         const user = await User.findOne({
           where: {
             email: args.email,
           },
         });
-        container.addUser(user.id, { through: { role: "user" } });
+        container.addUser(user.id, { through: { role: 'user' } });   
         return container;
-      } catch (error) {
-        console.log(error);
       }
-    },
-    async joinContainer(_, args, context) {
-      try {
-        const container = await Container.findByPk(args.containerId);
-        const user = await User.findByPk(args.userId);
-        console.log(user);
-        container.addUser(user.id, { through: { role: "user" } });
+        const user = await User.findByPk(context.user.id);
+        container.addUser(user.id, { through: { role: 'user' } });
+        return container;
       } catch (error) {
         console.log(error);
       }

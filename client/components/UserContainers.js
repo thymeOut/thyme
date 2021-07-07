@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useQuery, gql, useMutation } from "@apollo/client";
-import { Link } from "react-router-dom";
-import ContainerForm from "./ContainerForm";
-import JoinContainer from "./JoinContainer";
+import React, { useState, useEffect } from 'react';
+import { useQuery, gql, useMutation } from '@apollo/client';
+import { Link } from 'react-router-dom';
+import ContainerForm from './ContainerForm';
+import JoinContainer from './JoinContainer';
 
 const GET_CONTAINERS = gql`
   query User($id: ID!) {
@@ -22,12 +22,12 @@ export default function UserContainers() {
 
   const { loading, error, data } = useQuery(GET_CONTAINERS, {
     variables: {
-      id: localStorage.getItem("user-id"),
+      id: localStorage.getItem('user-id'),
     },
   });
 
-  if (loading) return "...loading";
-  if (error) return "...error";
+  if (loading) return '...loading';
+  if (error) return '...error';
   return (
     <div>
       <h2>My Containers</h2>
@@ -39,7 +39,7 @@ export default function UserContainers() {
             </Link>
           ))}
         <button onClick={() => setCreateToggle(true)}>
-          {" "}
+          {' '}
           Add new container
         </button>
         {createToggle && (
@@ -49,7 +49,12 @@ export default function UserContainers() {
           />
         )}
         <button onClick={() => setJoinToggle(true)}> Join a container</button>
-        {joinToggle && <JoinContainer setJoinToggle={setJoinToggle} />}
+        {joinToggle && (
+          <JoinContainer
+            setJoinToggle={setJoinToggle}
+            GET_CONTAINERS={GET_CONTAINERS}
+          />
+        )}
       </div>
     </div>
   );

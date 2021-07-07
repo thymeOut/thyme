@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useLazyQuery, gql, useMutation } from "@apollo/client";
+import React, { useState, useEffect } from 'react';
+import { useLazyQuery, gql, useMutation } from '@apollo/client';
 
 const CONTAINER_SEARCH_QUERY = gql`
   query Container($name: String!) {
@@ -14,30 +14,41 @@ const CONTAINER_SEARCH_QUERY = gql`
   }
 `;
 
-const JOIN_CONTAINER = gql`
-  mutation joinContainer($userId: ID!, $containerId: ID!) {
-    joinContainer(userId: $userId, containerId: $containerId) {
+const ADD_USER_TO_CONTAINER = gql`
+  mutation AddUserToContainer($containerId: ID!) {
+    addUserToContainer(containerId: $containerId) {
       id
     }
   }
 `;
 
 export default function Search(props) {
-  const [searchFilter, setSearchFilter] = useState("");
+  const [searchFilter, setSearchFilter] = useState('');
   const [runQuery, { data, loading, error }] = useLazyQuery(
     CONTAINER_SEARCH_QUERY
   );
-  console.log(props);
-  const [joinContainer, { error: addUserError }] = useMutation(JOIN_CONTAINER);
+  const [addUserToContainer, { error: addUserError2 }] = useMutation(
+    ADD_USER_TO_CONTAINER,
+    {
+      refetchQueries: [
+        {
+          query: props.GET_CONTAINERS,
+          variables: {
+            id: localStorage.getItem('user-id'),
+          },
+        },
+      ],
+    }
+  );
+  if (error) return '...error';
 
-  if (error) return "...error";
   return (
     <>
-      <div className="Search">
+      <div className='Search'>
         <label>Search for a Container </label>
         <input
-          type="text"
-          id="searchBar"
+          type='text'
+          id='searchBar'
           onChange={(event) => {
             setSearchFilter(event.target.value);
           }}
@@ -64,10 +75,10 @@ export default function Search(props) {
               return <div key={index}>{item.name}</div>;
             })}
             <button
-              onClick={() => {
-                joinContainer({
+              onClick={(e) => {
+                props.setJoinToggle(false);
+                addUserToContainer({
                   variables: {
-                    userId: localStorage.getItem("user-id"),
                     containerId: data.searchContainer.id,
                   },
                 });
