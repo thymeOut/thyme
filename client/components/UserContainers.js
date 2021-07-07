@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, gql, useMutation } from "@apollo/client";
 import { Link } from "react-router-dom";
 import ContainerForm from "./ContainerForm";
@@ -28,8 +28,6 @@ export default function UserContainers() {
 
   if (loading) return "...loading";
   if (error) return "...error";
-
-
   return (
     <div>
       <h2>My Containers</h2>

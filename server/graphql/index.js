@@ -90,8 +90,9 @@ const typeDefs = gql`
       lastName: String!
     ): AuthPayload!
     login(email: String!, password: String!): AuthPayload!
-    createContainer(name: String!, type: ContainerType!): Container!
+    createContainer(name: String!, type: ContainerType!, owner: ID!): Container!
     addUserToContainer(email: String!, containerId: ID!): Container!
+    joinContainer(userId: ID!, containerId: ID!): Container
   }
   scalar Date
 `;
@@ -195,6 +196,16 @@ const rootResolver = {
         });
         container.addUser(user.id, { through: { role: "user" } });
         return container;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async joinContainer(_, args, context) {
+      try {
+        const container = await Container.findByPk(args.containerId);
+        const user = await User.findByPk(args.userId);
+        console.log(user);
+        container.addUser(user.id, { through: { role: "user" } });
       } catch (error) {
         console.log(error);
       }
