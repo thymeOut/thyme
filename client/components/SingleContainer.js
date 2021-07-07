@@ -70,6 +70,7 @@ export default function SingleContainer(props) {
           })
         }
       </div>
+      <Link to={`${containerId}/add`}>Add an item</Link>
       <Link to="/containers">Back to all containers</Link>
     </div>
   );
