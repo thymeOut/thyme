@@ -26,8 +26,12 @@ export default function UserContainers() {
     },
   });
 
-  if (loading) return '...loading';
-  if (error) return '...error';
+  if (loading) {
+     return '...loading';
+  }
+  if (error) {
+     return '...error';
+  }
   return (
     <div>
       <h2>My Containers</h2>

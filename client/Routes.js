@@ -4,6 +4,7 @@ import LandingPage from './components/LandingPage';
 import UserContainers from './components/UserContainers';
 import LoginForm from './components/Login';
 import SingleContainer from './components/SingleContainer';
+import AllUsersData from './components/allUsersData';
 import AddItemToContainer from './components/AddItemToContainer';
 import CreateItem from './components/CreateItem';
 import RegisterForm from './components/Register';
@@ -15,6 +16,7 @@ export default function Routes(props) {
       <Switch>
         <Route exact path="/" component={LandingPage} />
         <Route exact path="/containers" component={UserContainers} />
+        <Route exact path="/allData" component={AllUsersData} />
         <Route exact path="/containers/:id" component={SingleContainer} />
         <Route exact path="/containers/:id/add" component={AddItemToContainer} />
         <Route exact path="/containers/:id/create" component={CreateItem} />
