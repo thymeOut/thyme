@@ -116,9 +116,11 @@ const rootResolver = {
       if (context.user.id !== +args.id && !context.user.isAdmin) {
         return null;
       } else {
-        return await User.findByPk(args.id, {
+        const data = await User.findByPk(args.id, {
           include: Container,
         });
+        console.log(data.containers);
+        return data;
       }
     },
 
@@ -131,10 +133,7 @@ const rootResolver = {
         return null;
       } else {
         const data = await Container.findByPk(args.id, {
-          include: [Item, User, {
-            model: User,
-            as: 'owner',
-          }],
+          include: [Item, User],
         });
         return data;
       }
