@@ -35,10 +35,10 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app });
 
-app.get("*", function (req, res) {
-  console.log("fljkhewlkfajhelkjrhg");
-  res.sendFile(path.join(__dirname, "../public/index.html"));
-});
+// app.get("*", function (req, res) {
+//   console.log("fljkhewlkfajhelkjrhg");
+//   res.sendFile(path.join(__dirname, "../public/index.html"));
+// });
 
 app.use(function (err, req, res, next) {
   console.error(err);
