@@ -31,7 +31,7 @@
   },
   "scripts": {
     "seed": "node script/seed.js",
-    "start:server": "node server",
+    "start": "node server",
     "start:dev": "webpack -w & JWT=shh nodemon server"
   },
   "eslintConfig": {
