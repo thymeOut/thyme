@@ -2,6 +2,13 @@ const Sequelize = require("sequelize");
 const db = require("../db");
 
 const ContainerItem = db.define("containerItem", {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+    unique: true
+  },
   originalQuantity: {
     type: Sequelize.INTEGER,
     allowNull: false,

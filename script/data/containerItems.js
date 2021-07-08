@@ -27,14 +27,14 @@ const containerItems = [
   {
     userId: 2,
     containerId: 2,
-    itemId: 4,
+    itemId: 3,
     originalQuantity: 22,
     itemStatus: 'REMOVED'
   },
   {
     userId: 1,
     containerId: 1,
-    itemId: 4,
+    itemId: 3,
     originalQuantity: 234,
     itemStatus: 'REMOVED'
   },
