@@ -10,6 +10,11 @@ const Container = db.define("container", {
     type: Sequelize.ENUM('fridge', 'pantry', 'freezer', 'minifridge'),
     allowNull: false,
     defaultValue: 'fridge',
+  },
+  isActive: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: true,
   }
 });
 
