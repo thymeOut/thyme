@@ -100,14 +100,14 @@ const typeDefs = gql`
 const rootResolver = {
   Query: {
     async users(_, __, context) {
-      // if (!context.user.isAdmin) {
-      //   return null;
-      // } else {
+      if (!context.user.isAdmin) {
+        return null;
+      } else {
         const users = await User.findAll({
           include: Container,
         });
         return users;
-      // }
+      }
     },
 
     async user(_, args, context) {
@@ -188,13 +188,13 @@ const rootResolver = {
     async addUserToContainer(_, args,context) {
       try {
         const container = await Container.findByPk(args.containerId);
-        if (args.email){       
+        if (args.email){
         const user = await User.findOne({
           where: {
             email: args.email,
           },
         });
-        container.addUser(user.id, { through: { role: 'user' } });   
+        container.addUser(user.id, { through: { role: 'user' } });
         return container;
       }
         const user = await User.findByPk(context.user.id);
