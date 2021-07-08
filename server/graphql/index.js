@@ -46,10 +46,12 @@ const typeDefs = gql`
 
   type ContainerItem {
     id: ID!
-    quantity: Int!
+    originalQuantity: Int!
+    quantityUsed: Int!
     expiration: Date
     imageUrl: String
     container: Container
+    itemStatus: ItemStatus!
     item: Item
     user: User
     userId: ID!
@@ -76,6 +78,12 @@ const typeDefs = gql`
     pantry
     minifridge
     freezer
+  }
+
+  enum ItemStatus {
+    ACTIVE
+    EXPIRED
+    REMOVED
   }
 
   enum Role {

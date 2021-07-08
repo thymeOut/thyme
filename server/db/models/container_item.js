@@ -2,9 +2,14 @@ const Sequelize = require("sequelize");
 const db = require("../db");
 
 const ContainerItem = db.define("containerItem", {
-  quantity: {
+  originalQuantity: {
     type: Sequelize.INTEGER,
     allowNull: false,
+  },
+  quantityUsed: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    defaultValue: 0
   },
   expiration: {
     type: Sequelize.DATE,
