@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import Routes from "./Routes";
 import NavBar from "./components/NavBar";
+import { UserContext } from "./UserContext";
 
 export default function App() {
   const token = window.localStorage.getItem('token');
   const [isLoggedIn, setLoggedIn] = useState(!!token);
 
   return (
-    <div>
-      <NavBar isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} />
-      <Routes isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} />
-    </div>
+    <UserContext.Provider value={{ isLoggedIn, setLoggedIn }}>
+      <NavBar />
+      <Routes />
+    </UserContext.Provider>
   );
 }
 

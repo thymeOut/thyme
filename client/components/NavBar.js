@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../UserContext';
 
 export default function NavBar(props) {
-  const { isLoggedIn, setLoggedIn } = props;
+  const { isLoggedIn, setLoggedIn } = useContext(UserContext);
 
   const handleLogout = () => {
     window.localStorage.removeItem('token');
