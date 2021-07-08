@@ -9,8 +9,8 @@ const ContainerItem = require("./models/container_item");
 User.belongsToMany(Container, { through: ContainerUser });
 Container.belongsToMany(User, { through: ContainerUser });
 
-Container.belongsToMany(Item, { through: ContainerItem });
-Item.belongsToMany(Container, { through: ContainerItem });
+Container.belongsToMany(Item, { through: {model: ContainerItem, unique: false} });
+Item.belongsToMany(Container, { through: {model: ContainerItem, unique: false} });
 
 User.hasMany(ContainerItem);
 ContainerItem.belongsTo(User);
