@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router';
 import { gql, useMutation } from '@apollo/client';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../UserContext';
 
 
 const LOGIN_MUTATION = gql`
@@ -16,7 +17,9 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
-function LoginForm(props) {
+function LoginForm() {
+  const { isLoggedIn, setLoggedIn } = useContext(UserContext);
+
   const history = useHistory();
   const [formState, setFormState] = useState({
     email: '',
@@ -32,7 +35,7 @@ function LoginForm(props) {
       console.log(login.login.token);
       localStorage.setItem('token', login.login.token);
       localStorage.setItem('user-id', login.login.user.id);
-      props.setLoggedIn(true);
+      setLoggedIn(true);
       history.push('/');
     },
   });
@@ -44,7 +47,6 @@ function LoginForm(props) {
 
   return (
     <div>
-      <h2>Thyme</h2>
       <div className="form">
         <h4>Login</h4>
         <form
