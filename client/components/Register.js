@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router';
 import { gql, useMutation } from '@apollo/client';
+import { UserContext } from '../UserContext';
 
 const SIGNUP_MUTATION = gql`
   mutation CreateUser(
@@ -23,85 +24,83 @@ const SIGNUP_MUTATION = gql`
   }
 `;
 
-function RegisterForm(props) {
-    const history = useHistory();
-    const [formState, setFormState] = useState({
-        email: '',
-        password: '',
-        firstName: '',
-        lastName: '',
-    });
+function RegisterForm() {
+  const { isLoggedIn, setLoggedIn } = useContext(UserContext);
 
-    const [signup] = useMutation(SIGNUP_MUTATION, {
-        variables: {
-            firstName: formState.firstName,
-            lastName: formState.lastName,
-            email: formState.email,
-            password: formState.password,
-        },
-        onCompleted: (data) => {
-            console.log(data);
-            localStorage.setItem('token', data.createUser.token);
-            localStorage.setItem('user-id', data.createUser.user.id);
-            history.push('/login');
-            console.log('signup');
-        },
-    });
+  const history = useHistory();
+  const [formState, setFormState] = useState({
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: '',
+  });
 
-    const handleRegister = (e) => {
-        e.preventDefault()
-        signup()
-    }
+  const [signup] = useMutation(SIGNUP_MUTATION, {
+    variables: {
+      firstName: formState.firstName,
+      lastName: formState.lastName,
+      email: formState.email,
+      password: formState.password,
+    },
+    onCompleted: (data) => {
+      console.log(data);
+      localStorage.setItem('token', data.createUser.token);
+      localStorage.setItem('user-id', data.createUser.user.id);
+      setLoggedIn(true);
+      history.push('/');
+      console.log('signup');
+    },
+  });
 
-    return (
-        <div>
-            <h2>Thyme</h2>
-            <div className="form">
-                <h4>Sign Up</h4>
-                <form
-                    className="form-elements"
-                    onSubmit={(e) => handleRegister(e)}
-                >
-                    <input
-                        value={formState.firstName}
-                        onChange={(e) =>
-                            setFormState({ ...formState, firstName: e.target.value })
-                        }
-                        type="text"
-                        placeholder="First Name"
-                    />
-                    <input
-                        value={formState.lastName}
-                        onChange={(e) =>
-                            setFormState({ ...formState, lastName: e.target.value })
-                        }
-                        type="text"
-                        placeholder="Last Name"
-                    />
+  const handleRegister = (e) => {
+    e.preventDefault();
+    signup();
+  };
 
-                    <input
-                        value={formState.email}
-                        onChange={(e) =>
-                            setFormState({ ...formState, email: e.target.value })
-                        }
-                        type="text"
-                        placeholder="Email"
-                    />
-                    <input
-                        value={formState.password}
-                        onChange={(e) =>
-                            setFormState({...formState, password: e.target.value })
-                        }
-                        type="password"
-                        placeholder="Password"
-                    />
-                    <button type="submit">
-                        Register
-                    </button>
-                </form>
-            </div>
-        </div>
-    );
+  return (
+    <div>
+      <h2>Thyme</h2>
+      <div className="form">
+        <h4>Sign Up</h4>
+        <form className="form-elements" onSubmit={(e) => handleRegister(e)}>
+          <input
+            value={formState.firstName}
+            onChange={(e) =>
+              setFormState({ ...formState, firstName: e.target.value })
+            }
+            type="text"
+            placeholder="First Name"
+          />
+          <input
+            value={formState.lastName}
+            onChange={(e) =>
+              setFormState({ ...formState, lastName: e.target.value })
+            }
+            type="text"
+            placeholder="Last Name"
+          />
+
+          <input
+            value={formState.email}
+            onChange={(e) =>
+              setFormState({ ...formState, email: e.target.value })
+            }
+            type="text"
+            placeholder="Email"
+          />
+          <input
+            value={formState.password}
+            onChange={(e) =>
+              setFormState({ ...formState, password: e.target.value })
+            }
+            type="password"
+            placeholder="Password"
+          />
+          <button type="submit">Register</button>
+        </form>
+      </div>
+    </div>
+  );
 }
 
 export default RegisterForm;
