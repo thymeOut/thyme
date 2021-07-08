@@ -11,6 +11,10 @@ const ContainerItem = db.define("containerItem", {
   },
   imageUrl: {
     type: Sequelize.TEXT,
+  },
+  itemStatus: {
+    type: Sequelize.ENUM('ACTIVE', 'EXPIRED', 'REMOVED'),
+    allowNull: false
   }
 });
 
