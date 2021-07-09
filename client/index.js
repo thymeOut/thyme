@@ -30,10 +30,7 @@ const httpLink = new HttpLink({
 const link = ApolloLink.from([errorLink, httpLink]);
 
 const client = new ApolloClient({
-  uri: 'http://localhost:3000/graphql',
-  headers: {
-    authorization: localStorage.getItem('token') || '',
-  },
+  link,
   cache: new InMemoryCache(),
   resolvers: {},
 });

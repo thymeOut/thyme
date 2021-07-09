@@ -224,7 +224,6 @@ const rootResolver = {
       }
     },
     async addItemToContainer(_, args, context) {
-      console.log(args);
       try {
         const containerItem = await ContainerItem.create({
           userId: context.user.id,
@@ -233,16 +232,6 @@ const rootResolver = {
           containerId: args.containerId,
           itemId: args.itemId,
         });
-        // const container = await Container.findByPk(args.containerId);
-        // const item = await Item.findByPk(args.itemId);
-        // container.addItem(item, {
-        //   through: {
-        //     userId: context.user.id,
-        //     originalQuantity: args.originalQuantity,
-        //     itemStatus: args.itemStatus,
-        //   },
-        // });
-        console.log(containerItem);
         return containerItem;
       } catch (error) {
         console.log(error);
