@@ -1,5 +1,4 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import moment from 'moment';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import {
@@ -154,9 +153,9 @@ export default function SingleContainer(props) {
                   </Typography>
                   <Typography>
                     {item.containerItem.expiration
-                      ? `Expiration: ${moment().format(
+                      ? `Expiration: ${
                           item.containerItem.expiration
-                        )}`
+                        }`
                       : ''}
                   </Typography>
                 </CardContent>
