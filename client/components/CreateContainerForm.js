@@ -6,7 +6,6 @@ import Button from "@material-ui/core/Button";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 
 const ADD_USER_TO_CONTAINER = gql`
@@ -86,7 +85,6 @@ const ContainerForm = (props) => {
   }, [users]);
 
   return (
-    <ClickAwayListener onClickAway={() => props.setCreateToggle(false)}>
       <form onSubmit={handleContainerSubmit} className={classes.root}>
         <Grid
           container
@@ -127,7 +125,6 @@ const ContainerForm = (props) => {
           </Button>
         </DialogActions>
       </form>
-    </ClickAwayListener>
   );
 };
 

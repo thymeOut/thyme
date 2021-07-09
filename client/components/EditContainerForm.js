@@ -42,6 +42,7 @@ const EditContainerForm = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    props.setEditToggle(false)
     updateContainer(
         {
             variables: {

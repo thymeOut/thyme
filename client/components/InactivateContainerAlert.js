@@ -32,7 +32,7 @@ const InactivateContainer = (props) => {
   };
 
   return (
-    <form>
+    <form >
       If you would like to inactive {props.container.name}, please enter it
       here:
       <TextField onInput={(e) => setContainerName(e.target.value)}></TextField>

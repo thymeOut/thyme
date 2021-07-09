@@ -15,6 +15,7 @@ const CONTAINER_SEARCH_QUERY = gql`
       id
       name
       type
+      isActive
       items {
         name
       }
@@ -36,7 +37,6 @@ export default function Search(props) {
   const [runQuery, { data, loading, error }] = useLazyQuery(
     CONTAINER_SEARCH_QUERY
   );
-
   const [addUserToContainer, { error: addUserError }] = useMutation(
     ADD_USER_TO_CONTAINER,
     {
@@ -69,7 +69,6 @@ export default function Search(props) {
   const handleJoinContainer = (e, id) => {
     e.preventDefault();
     try {
-      console.log(id)
       addUserToContainer({
         variables: {
           containerId: id,
@@ -79,16 +78,10 @@ export default function Search(props) {
       console.log("errorasldkjfhlakwhe");
     }
   };
-
   return (
     <>
       <ClickAwayListener onClickAway={() => props.setJoinToggle(false)}>
-        <form
-          onSubmit={
-            console.log("submit")
-            // handleJoinContainer
-          }
-        >
+        <form>
           <InputBase
             type="text"
             id="searchBar"
@@ -100,14 +93,27 @@ export default function Search(props) {
           <IconButton type="submit" aria-label="search" onClick={handleSearch}>
             <SearchIcon />
           </IconButton>
-          {data?.searchContainer.map((container) => {
-            return <div key={container.id}>{container.name}
-            <Button onClick={(e)=>handleJoinContainer(e, container.id)} color="primary">
-              Request to Join
-            </Button>
-            </div>;
-            
-          })}
+          {data?.searchContainer
+            .filter(
+              (container) =>
+                container.isActive &&
+                !props.currentContainers.find(
+                  (currentContainer) => currentContainer.id === container.id
+                )
+            )
+            .map((container) => {
+              return (
+                <div key={container.id}>
+                  {container.name}
+                  <Button
+                    onClick={(e) => handleJoinContainer(e, container.id)}
+                    color="primary"
+                  >
+                    Request to Join
+                  </Button>
+                </div>
+              );
+            })}
 
           <DialogActions>
             <Button onClick={() => props.setJoinToggle(false)} color="primary">

@@ -109,7 +109,7 @@ export default function UserContainers() {
       )}
       {joinToggle && (
         <Dialog open={joinToggle}>
-          <JoinContainer setJoinToggle={setJoinToggle}/>
+          <JoinContainer setJoinToggle={setJoinToggle} GET_CONTAINERS={GET_CONTAINERS} currentContainers={data.user.containers}/>
         </Dialog>
       )}
       <Grid container spacing={3}>
