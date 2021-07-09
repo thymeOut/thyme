@@ -36,14 +36,17 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EditItem(props) {
   const classes = useStyles();
-  const item = props.location.state.item;
+  const { item, users } = props.location.state;
   const { containerItem } = item;
 
   const [expiration, setExpiration] = useState(
     new Date(containerItem.expiration)
   );
   const [imageUrl, setImageUrl] = useState(containerItem.imageUrl);
-  const [ownerId, setOwnerId] = useState(containerItem.ownerId);
+  const [owner, setOwner] = useState(
+    users.find((user) => user.id === containerItem.userId)
+  );
+  console.log(owner);
 
   console.log(expiration.toISOString().slice(0, 10));
 
@@ -74,17 +77,13 @@ export default function EditItem(props) {
               </Button>
             </Grid>
             <Grid item xs={12} sm={4}>
-              <TextField id="select" label="Age" value="20" select>
-                <MenuItem value="10">Ten</MenuItem>
-                <MenuItem value="20">Twenty</MenuItem>
+              <TextField id="select" label="Owner" value={owner.id} select>
+                {
+                  users.map(user => (
+                    <MenuItem key={user.id} value={user.id}>{user.firstName}</MenuItem>
+                  ))
+                }
               </TextField>
-            </Grid>
-
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
-              />
             </Grid>
           </Grid>
           <Button
@@ -94,15 +93,8 @@ export default function EditItem(props) {
             color="primary"
             className={classes.submit}
           >
-            Sign Up
+            Done editing
           </Button>
-          <Grid container justifyContent="flex-end">
-            <Grid item>
-              <Link href="#" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
         </form>
       </div>
     </Container>

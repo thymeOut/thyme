@@ -18,6 +18,7 @@ import {
 function ItemCard(props) {
   const containerId = props.match.params.id;
   const { item, classes, users } = props;
+  console.log(users);
 
   return (
     <Grid item key={item.id} xs={12} sm={6} md={4}>
@@ -59,7 +60,7 @@ function ItemCard(props) {
             size="small"
             color="primary"
             component={Link}
-            to={{ pathname: `${containerId}/edititem/${item.id}`, state: { item: item } }}
+            to={{ pathname: `${containerId}/edititem/${item.id}`, state: { item: item, users: users } }}
           >
             Edit
           </Button>
