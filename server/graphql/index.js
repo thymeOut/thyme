@@ -1,6 +1,7 @@
 const { gql } = require('@apollo/client');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const containerUsers = require('../../script/data/containerUsers');
 const {
   models: { User, Container, Item, ContainerItem, ContainerUser },
 } = require('../db/');
@@ -37,10 +38,12 @@ const typeDefs = gql`
     id: ID!
     name: String!
     type: ContainerType!
+    imageUrl: String!
+    isActive: Boolean!
     owner: User!
     users: [User!]
     items: [Item!]
-    containerUsers: [ContainerUser]
+    containerUser: ContainerUser
     containerItems: [ContainerItem]
   }
 
@@ -91,6 +94,13 @@ const typeDefs = gql`
     owner
   }
 
+  input ContainerInput {
+    name: String
+    type: ContainerType
+    imageUrl: String
+    isActive: Boolean 
+  }
+
   type Mutation {
     createUser(
       email: String!
@@ -101,6 +111,7 @@ const typeDefs = gql`
     login(email: String!, password: String!): AuthPayload!
     createContainer(name: String!, type: ContainerType!): Container!
     addUserToContainer(email: String, containerId: ID!): Container!
+    updateContainer(id: ID!, input: ContainerInput ): Container
   }
   scalar Date
 `;
@@ -212,6 +223,17 @@ const rootResolver = {
         console.log(error);
       }
     },
+    async updateContainer(_, args, context){
+      console.log('test')
+      try {
+        const container = await Container.findByPk(args.id)
+        console.log(args)
+        return await container.update(args.input)
+
+      } catch (error) {
+        
+      }
+    }
   },
 };
 
