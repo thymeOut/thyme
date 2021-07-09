@@ -1,10 +1,10 @@
-const { gql } = require('@apollo/client');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const containerUsers = require('../../script/data/containerUsers');
+const { gql } = require("@apollo/client");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const containerUsers = require("../../script/data/containerUsers");
 const {
   models: { User, Container, Item, ContainerItem, ContainerUser },
-} = require('../db/');
+} = require("../db/");
 
 const typeDefs = gql`
   type Query {
@@ -12,7 +12,7 @@ const typeDefs = gql`
     user(id: ID): User
     containers: [Container]
     container(id: ID): Container
-    searchContainer(name: String!): Container
+    searchContainer(name: String!): [Container]
     items: [Item]
   }
 
@@ -98,7 +98,7 @@ const typeDefs = gql`
     name: String
     type: ContainerType
     imageUrl: String
-    isActive: Boolean 
+    isActive: Boolean
   }
 
   type Mutation {
@@ -111,7 +111,7 @@ const typeDefs = gql`
     login(email: String!, password: String!): AuthPayload!
     createContainer(name: String!, type: ContainerType!): Container!
     addUserToContainer(email: String, containerId: ID!): Container!
-    updateContainer(id: ID!, input: ContainerInput ): Container
+    updateContainer(id: ID!, input: ContainerInput): Container
   }
   scalar Date
 `;
@@ -156,7 +156,7 @@ const rootResolver = {
     },
 
     async searchContainer(_, args, context) {
-      const data = await Container.findOne({
+      const data = await Container.findAll({
         where: { name: args.name },
         include: [User, Item],
       });
@@ -178,10 +178,10 @@ const rootResolver = {
         });
 
         const token = await user.generateToken();
-        console.log('token--->', token);
+        console.log("token--->", token);
         return { token, user };
       } catch (error) {
-        console.error('error in createUser mutation');
+        console.error("error in createUser mutation");
       }
     },
 
@@ -198,42 +198,41 @@ const rootResolver = {
           ownerId: context.user.id,
         });
         const user = await User.findByPk(context.user.id);
-        container.addUser(user.id, { through: { role: 'owner' } });
+        container.addUser(user.id, { through: { role: "owner" } });
         return container;
       } catch (error) {
         console.log(error);
       }
     },
-    async addUserToContainer(_, args,context) {
-      try {
-        const container = await Container.findByPk(args.containerId);
-        if (args.email){
-        const user = await User.findOne({
-          where: {
-            email: args.email,
-          },
-        });
-        container.addUser(user.id, { through: { role: 'user' } });
-        return container;
-      }
-        const user = await User.findByPk(context.user.id);
-        container.addUser(user.id, { through: { role: 'user' } });
-        return container;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async updateContainer(_, args, context){
+    async addUserToContainer(_, args, context) {
       console.log('test')
       try {
-        const container = await Container.findByPk(args.id)
-        console.log(args)
-        return await container.update(args.input)
-
+        const container = await Container.findByPk(args.containerId);
+        if (args.email) {
+          const user = await User.findOne({
+            where: {
+              email: args.email,
+            },
+          });
+          container.addUser(user.id, { through: { role: "user" } });
+          return container;
+        } else {
+          const user = await User.findByPk(context.user.id);
+          container.addUser(user.id, { through: { role: "user" } });
+          return container;
+        }
       } catch (error) {
-        
+        console.log(error);
       }
-    }
+    },
+    async updateContainer(_, args, context) {
+      console.log("test");
+      try {
+        const container = await Container.findByPk(args.id);
+        console.log(args);
+        return await container.update(args.input);
+      } catch (error) {}
+    },
   },
 };
 
