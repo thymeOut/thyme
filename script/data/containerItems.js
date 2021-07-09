@@ -4,7 +4,8 @@ const containerItems = [
     containerId: 1,
     itemId: 1,
     originalQuantity: 1,
-    itemStatus: 'EXPIRED'
+    itemStatus: 'EXPIRED',
+    expiration: new Date(2019, 10, 24)
   },
   {
     userId: 1,
@@ -12,7 +13,8 @@ const containerItems = [
     itemId: 2,
     originalQuantity: 3,
     quantityUsed: 2,
-    itemStatus: 'ACTIVE'
+    itemStatus: 'ACTIVE',
+    expiration: Date.now(),
   },
 
   //eggs
