@@ -14,6 +14,7 @@ const typeDefs = gql`
     container(id: ID): Container
     searchContainer(name: String!): Container
     items: [Item]
+    containerItem(id: ID): Item
   }
 
   type AuthPayload {
@@ -98,7 +99,7 @@ const typeDefs = gql`
     name: String
     type: ContainerType
     imageUrl: String
-    isActive: Boolean 
+    isActive: Boolean
   }
 
   type Mutation {
@@ -166,6 +167,27 @@ const rootResolver = {
     async items(_, args, context) {
       return await Item.findAll();
     },
+
+    async containerItem(_, args, context) {
+      try {
+        if (!context.user.id) {
+          return null;
+        } else {
+          const data = await Item.findOne({
+            include: {
+              model: Container,
+              through: {
+                where: {
+                  id: args.id
+                }
+              }
+            }
+          })
+        }
+      } catch (error) {
+        console.error('error in containerItem query!');
+      }
+    }
   },
   Mutation: {
     async createUser(_, args) {
@@ -204,6 +226,7 @@ const rootResolver = {
         console.log(error);
       }
     },
+
     async addUserToContainer(_, args,context) {
       try {
         const container = await Container.findByPk(args.containerId);
@@ -223,6 +246,7 @@ const rootResolver = {
         console.log(error);
       }
     },
+
     async updateContainer(_, args, context){
       console.log('test')
       try {
@@ -231,9 +255,17 @@ const rootResolver = {
         return await container.update(args.input)
 
       } catch (error) {
-        
+
       }
-    }
+    },
+
+    // async updateContainerItem(_, args, context) {
+    //   try {
+
+    //   } catch (error) {
+    //     console.error('error in updateContainerItem mutation resolver');
+    //   }
+    // }
   },
 };
 
