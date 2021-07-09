@@ -15,6 +15,8 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
+import ItemCardGrid from './ItemCardGrid';
+
 const GET_CONTAINER = gql`
   query Container($id: ID!) {
     container(id: $id) {
@@ -89,7 +91,6 @@ export default function SingleContainer(props) {
   const { container } = data;
   const { items, name, users } = container;
 
-  console.log(data);
   return (
     <main>
       <div className={classes.heroContent}>
@@ -128,58 +129,11 @@ export default function SingleContainer(props) {
             </Grid>
           </div>
         </Container>
+
+        <ItemCardGrid classes={classes} items={items} users={users} />
       </div>
 
-      <Container className={classes.cardGrid} maxWidth="md">
-        <Grid container spacing={4}>
-          {items.map((item) => (
-            <Grid item key={item.id} xs={12} sm={6} md={4}>
-              <Card className={classes.card}>
-                <CardMedia
-                  className={classes.cardMedia}
-                  image={item.imageUrl}
-                  title={item.name}
-                />
-                <CardContent className={classes.cardContent}>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    {item.name}
-                  </Typography>
-                  <Typography>
-                    {users.map((user) => {
-                      if (user.id === item.containerItem.userId) {
-                        return user.firstName;
-                      }
-                    })}
-                  </Typography>
-                  <Typography>
-                    {item.containerItem.expiration
-                      ? `Expiration: ${
-                          item.containerItem.expiration
-                        }`
-                      : ''}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <ButtonGroup size="small" color="primary">
-                    <Button>-</Button>
-                    <Button>
-                      {item.containerItem.originalQuantity -
-                        item.containerItem.quantityUsed}
-                    </Button>
-                    <Button>+</Button>
-                  </ButtonGroup>
-                  <Button size="small" color="primary">
-                    Edit
-                  </Button>
-                  <Button size="small" color="primary">
-                    Remove
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
+
     </main>
   );
 }
