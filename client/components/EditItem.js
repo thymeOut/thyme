@@ -40,21 +40,27 @@ export default function EditItem(props) {
   const { containerItem } = item;
 
   const [expiration, setExpiration] = useState(
-    new Date(containerItem.expiration)
+    new Date(containerItem.expiration).toISOString().slice(0, 10)
   );
   const [imageUrl, setImageUrl] = useState(containerItem.imageUrl);
   const [ownerId, setOwnerId] = useState(containerItem.userId);
   console.log(ownerId);
 
   const handleChange = (event) => {
-    console.log(event.target.value);
+    console.log(event.target.name);
 
     if (event.target.name === 'owner') {
       setOwnerId(event.target.value);
+    } else if (event.target.name === 'expiration') {
+      setExpiration(event.target.value);
     }
   };
 
-  console.log(expiration.toISOString().slice(0, 10));
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  }
+
+  console.log(expiration);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -71,7 +77,7 @@ export default function EditItem(props) {
                 type="date"
                 name="expiration"
                 onChange={handleChange}
-                defaultValue={expiration.toISOString().slice(0, 10)}
+                defaultValue={expiration}
                 className={classes.textField}
                 InputLabelProps={{
                   shrink: true,
