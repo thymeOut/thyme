@@ -10,7 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { MenuItem } from '@material-ui/core';
+import { MenuItem, Select } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
@@ -43,10 +43,16 @@ export default function EditItem(props) {
     new Date(containerItem.expiration)
   );
   const [imageUrl, setImageUrl] = useState(containerItem.imageUrl);
-  const [owner, setOwner] = useState(
-    users.find((user) => user.id === containerItem.userId)
-  );
-  console.log(owner);
+  const [ownerId, setOwnerId] = useState(containerItem.userId);
+  console.log(ownerId);
+
+  const handleChange = (event) => {
+    console.log(event.target.value);
+
+    if (event.target.name === 'owner') {
+      setOwnerId(event.target.value);
+    }
+  };
 
   console.log(expiration.toISOString().slice(0, 10));
 
@@ -63,6 +69,8 @@ export default function EditItem(props) {
                 id="date"
                 label="Expiration"
                 type="date"
+                name="expiration"
+                onChange={handleChange}
                 defaultValue={expiration.toISOString().slice(0, 10)}
                 className={classes.textField}
                 InputLabelProps={{
@@ -77,13 +85,19 @@ export default function EditItem(props) {
               </Button>
             </Grid>
             <Grid item xs={12} sm={4}>
-              <TextField id="select" label="Owner" value={owner.id} select>
-                {
-                  users.map(user => (
-                    <MenuItem key={user.id} value={user.id}>{user.firstName}</MenuItem>
-                  ))
-                }
-              </TextField>
+              <Select
+                id="select"
+                label="Owner"
+                name="owner"
+                value={ownerId}
+                onChange={handleChange}
+              >
+                {users.map((user) => (
+                  <MenuItem key={user.id} value={user.id}>
+                    {user.firstName}
+                  </MenuItem>
+                ))}
+              </Select>
             </Grid>
           </Grid>
           <Button
