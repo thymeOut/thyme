@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useMutation, gql } from "@apollo/client";
+import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
 
 const ADD_USER_TO_CONTAINER = gql`
   mutation AddUserToContainer($email: String!, $containerId: ID!) {
@@ -54,6 +56,7 @@ const ContainerForm = (props) => {
   }, [users]);
 
   return (
+    <Paper elevation={3}>
     <form
       className="container-form"
       onSubmit={(e) => {
@@ -77,6 +80,12 @@ const ContainerForm = (props) => {
         });
       }}
     >
+      <input
+        value={containerName}
+        onChange={(e) => setContainerName(e.target.value)}
+        type="text"
+        placeholder="Container Name"
+      />
       <select
         onChange={(e) => {
           setContainerType(e.target.value);
@@ -87,12 +96,7 @@ const ContainerForm = (props) => {
         <option value="pantry">Pantry</option>
         <option value="minifridge">Mini-fridge</option>
       </select>
-      <input
-        value={containerName}
-        onChange={(e) => setContainerName(e.target.value)}
-        type="text"
-        placeholder="Container Name"
-      />
+      
       <label>Add users</label>
       <input onKeyPress={onKeyUp} type="text" /> Click Enter to confirm (need to
       revist to allow for multiple entries)
@@ -106,6 +110,7 @@ const ContainerForm = (props) => {
         })}
       <button type="submit">Create Container</button>
     </form>
+    </Paper>
   );
 };
 
