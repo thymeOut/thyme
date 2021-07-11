@@ -22,12 +22,37 @@ const EditContainerMenu = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
+  const [updateContainer] = useMutation(UPDATE_CONTAINER, {
+    refetchQueries: [
+      {
+        query: props.GET_CONTAINERS,
+        variables: {
+          id: localStorage.getItem("user-id"),
+        },
+      },
+    ],
+  }); 
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = (e) => {
     setAnchorEl(null);
+  };
+
+  const handleActivate = (e) => {
+    e.preventDefault();
+    updateContainer(
+        {
+            variables: {
+                id: props.container.id,
+                input: {
+                  isActive: true
+                }, 
+            }
+        }
+    )
   };
 
   return (
@@ -79,14 +104,22 @@ const EditContainerMenu = (props) => {
         >
           Edit Container
         </MenuItem>
-        <MenuItem
+        {props.container.isActive ? (<MenuItem
           onClick={() => {
             handleClose();
             setInactiveToggle(true);
           }}
         >
           Inactivate
-        </MenuItem>
+        </MenuItem>): 
+        (<MenuItem
+        onClick={(e) => {
+          handleClose();
+          handleActivate(e)
+        }}
+      >
+        Activate
+      </MenuItem>)}
       </Menu>
     </div>
   );

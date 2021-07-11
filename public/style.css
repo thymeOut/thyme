@@ -133,3 +133,9 @@ nav a {
   margin-right: 10%;
   margin-left: 10%;
 }
+
+.all-container-header {
+  display: flex;
+  justify-content: space-around;
+  margin: 10px;
+}

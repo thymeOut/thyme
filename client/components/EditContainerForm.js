@@ -27,7 +27,8 @@ const EditContainerForm = (props) => {
     variables: {
       id: props.container.id,
       input: {
-        containerName: false,
+        name: containerName,
+        type: containerType
       },
     },
     refetchQueries: [

@@ -26,7 +26,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
 import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
@@ -74,6 +75,7 @@ export default function UserContainers() {
   const [createToggle, setCreateToggle] = useState(false);
   const [joinToggle, setJoinToggle] = useState(false);
   const [addToggle, setAddToggle] = useState(false);
+  const [containerStatus, setContainerStatus] = useState(true);
 
   const classes = useStyles();
 
@@ -81,7 +83,7 @@ export default function UserContainers() {
     variables: {
       id: localStorage.getItem("user-id"),
     },
-  })
+  });
 
   if (loading) {
     return "...loading";
@@ -93,64 +95,82 @@ export default function UserContainers() {
   return (
     <div>
       <h2>My Containers</h2>
-
-      <ButtonGroup variant="outlined" color="primary">
-        <Button onClick={() => setCreateToggle(!createToggle)}>
-          Add new container
-        </Button>
-        <Button onClick={() => setJoinToggle(!joinToggle)}>
-          Join a container
-        </Button>
-      </ButtonGroup>
+      <div className="all-container-header">
+        <ButtonGroup variant="outlined" color="primary">
+          <Button onClick={() => setCreateToggle(!createToggle)}>
+            Add new container
+          </Button>
+          <Button onClick={() => setJoinToggle(!joinToggle)}>
+            Join a container
+          </Button>
+        </ButtonGroup>
+        <Select
+          native
+          onChange={(e) => setContainerStatus(e.target.value)}
+          label="Container Status"
+        >
+          <option value={true}>Active Containers</option>
+          <option value={false}>Inactive Containers</option>
+        </Select>
+      </div>
       {createToggle && (
         <Dialog open={createToggle}>
-          <ContainerForm setCreateToggle={setCreateToggle} GET_CONTAINERS={GET_CONTAINERS}/>
+          <ContainerForm
+            setCreateToggle={setCreateToggle}
+            GET_CONTAINERS={GET_CONTAINERS}
+          />
         </Dialog>
       )}
       {joinToggle && (
         <Dialog open={joinToggle}>
-          <JoinContainer setJoinToggle={setJoinToggle} GET_CONTAINERS={GET_CONTAINERS} currentContainers={data.user.containers}/>
+          <JoinContainer
+            setJoinToggle={setJoinToggle}
+            GET_CONTAINERS={GET_CONTAINERS}
+            currentContainers={data.user.containers}
+          />
         </Dialog>
       )}
       <Grid container spacing={3}>
-        {data &&
-          data.user.containers
-            .filter((container) => container.isActive)
-            .map((container) => (
-              <Grid item xs={3} key={container.id}>
-                <Card className={classes.root}>
-                  <CardHeader
-                    title={container.name}
-                    action={
-                      container.containerUser.role === "owner" ? (
-                        <EditContainerMenu
-                          container={container}
-                          GET_CONTAINERS={GET_CONTAINERS}
-                        />
-                      ) : null
-                    }
-                  />
-                  <CardMedia
-                    className={classes.media}
-                    image={container.imageUrl}
-                  />
-                  <Link to={`/containers/${container.id}`}>
-                    <div>{container.name}</div>
-                  </Link>
+        {data?.user.containers
+          .filter(
+            (container) =>
+              container.isActive.toString() === containerStatus.toString()
+          )
+          .map((container) => (
+            <Grid item xs={3} key={container.id}>
+              <Card className={classes.root}>
+                <CardHeader
+                  title={container.name}
+                  action={
+                    container.containerUser.role === "owner" ? (
+                      <EditContainerMenu
+                        container={container}
+                        GET_CONTAINERS={GET_CONTAINERS}
+                      />
+                    ) : null
+                  }
+                />
+                <CardMedia
+                  className={classes.media}
+                  image={container.imageUrl}
+                />
+                <Link to={`/containers/${container.id}`}>
+                  <div>{container.name}</div>
+                </Link>
 
-                  <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
-                  </IconButton>
+                <IconButton aria-label="add to favorites">
+                  <FavoriteIcon />
+                </IconButton>
 
-                  <IconButton
-                    aria-label="show more"
-                    onClick={() => setAddToggle(!addToggle)}
-                  >
-                    <ShareIcon />
-                  </IconButton>
-                </Card>
-              </Grid>
-            ))}
+                <IconButton
+                  aria-label="show more"
+                  onClick={() => setAddToggle(!addToggle)}
+                >
+                  <ShareIcon />
+                </IconButton>
+              </Card>
+            </Grid>
+          ))}
       </Grid>
     </div>
   );
