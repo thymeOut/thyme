@@ -15,7 +15,6 @@ const ContainerItem = db.define("containerItem", {
   },
   quantityUsed: {
     type: Sequelize.INTEGER,
-    allowNull: true,
     defaultValue: 0
   },
   expiration: {
