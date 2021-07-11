@@ -15,6 +15,10 @@ const typeDefs = gql`
     container(id: ID): Container
     searchContainer(name: String!): [Container]
     items: [Item]
+    // Need to merge these two together
+    containerItem(id: ID): Item
+    item(id: ID): Item
+
   }
 
   type AuthPayload {
@@ -51,13 +55,13 @@ const typeDefs = gql`
   type ContainerItem {
     id: ID!
     originalQuantity: Int!
-    quantityUsed: Int!
+    quantityUsed: Int
     expiration: Date
     imageUrl: String
-    container: Container
     itemStatus: ItemStatus!
     item: Item
     user: User
+    container:Container!
     userId: ID!
   }
 
@@ -107,6 +111,12 @@ const typeDefs = gql`
     id: ID
     email: String
     role: Role!
+
+  input ContainerItemInput {
+    quantityUsed: Int
+    expiration: Date
+    imageUrl: String
+    ownerId: ID
   }
 
   type Mutation {
@@ -120,6 +130,13 @@ const typeDefs = gql`
     createContainer(name: String!, type: ContainerType!): Container!
     addUserToContainer(containerId: ID!, input: UserInput): Container!
     updateContainer(id: ID!, input: ContainerInput): Container
+    addItemToContainer(
+      containerId: ID!
+      itemId: ID!
+      originalQuantity: Int!
+      itemStatus: ItemStatus!
+    ): ContainerItem!
+    updateContainerItem(id: ID!, input: ContainerItemInput): ContainerItem
   }
   scalar Date
 `;
@@ -170,10 +187,34 @@ const rootResolver = {
       });
       return data;
     },
-
+    async item(_, args, context) {
+      let data = await Item.findByPk(args.id);
+      return data;
+    },
     async items(_, args, context) {
       return await Item.findAll();
     },
+
+    async containerItem(_, args, context) {
+      try {
+        if (!context.user.id) {
+          return null;
+        } else {
+          const data = await Item.findOne({
+            include: {
+              model: Container,
+              through: {
+                where: {
+                  id: args.id
+                }
+              }
+            }
+          })
+        }
+      } catch (error) {
+        console.error('error in containerItem query!');
+      }
+    }
   },
   Mutation: {
     async createUser(_, args) {
@@ -243,13 +284,41 @@ const rootResolver = {
         console.log(error);
       }
     },
+ 
     async updateContainer(_, args, context) {
-      console.log("test");
       try {
         const container = await Container.findByPk(args.id);
         return await container.update(args.input);
       } catch (error) {}
     },
+
+    async addItemToContainer(_, args, context) {
+      try {
+        const containerItem = await ContainerItem.create({
+          userId: context.user.id,
+          originalQuantity: args.originalQuantity,
+          itemStatus: args.itemStatus,
+          containerId: args.containerId,
+          itemId: args.itemId,
+        });
+        return containerItem;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async updateContainerItem(_, args, context) {
+      console.log(args)
+      try {
+        console.log(args);
+        // const containerItem = await ContainerItem.findByPk(args.id);
+        // console.log(args);
+        // console.log(containerItem);
+        // return await containerItem.update(args.input);
+      } catch (error) {
+        console.error('error in updateContainerItem mutation resolver');
+      }
+    }
   },
 };
 
