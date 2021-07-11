@@ -1,10 +1,11 @@
-const { gql } = require('@apollo/client');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const containerUsers = require('../../script/data/containerUsers');
+const { gql } = require("@apollo/client");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const containerUsers = require("../../script/data/containerUsers");
 const {
   models: { User, Container, Item, ContainerItem, ContainerUser },
-} = require('../db/');
+} = require("../db/");
+const { Op } = require("sequelize");
 
 const typeDefs = gql`
   type Query {
@@ -12,7 +13,7 @@ const typeDefs = gql`
     user(id: ID): User
     containers: [Container]
     container(id: ID): Container
-    searchContainer(name: String!): Container
+    searchContainer(name: String!): [Container]
     items: [Item]
     // Need to merge these two together
     containerItem(id: ID): Item
@@ -96,6 +97,7 @@ const typeDefs = gql`
   enum Role {
     user
     owner
+    pending
   }
 
   input ContainerInput {
@@ -104,6 +106,11 @@ const typeDefs = gql`
     imageUrl: String
     isActive: Boolean
   }
+
+  input UserInput {
+    id: ID
+    email: String
+    role: Role!
 
   input ContainerItemInput {
     quantityUsed: Int
@@ -121,15 +128,14 @@ const typeDefs = gql`
     ): AuthPayload!
     login(email: String!, password: String!): AuthPayload!
     createContainer(name: String!, type: ContainerType!): Container!
-    addUserToContainer(email: String, containerId: ID!): Container!
+    addUserToContainer(containerId: ID!, input: UserInput): Container!
+    updateContainer(id: ID!, input: ContainerInput): Container
     addItemToContainer(
       containerId: ID!
       itemId: ID!
       originalQuantity: Int!
       itemStatus: ItemStatus!
     ): ContainerItem!
-
-    updateContainer(id: ID!, input: ContainerInput ): Container
     updateContainerItem(id: ID!, input: ContainerItemInput): ContainerItem
   }
   scalar Date
@@ -175,7 +181,7 @@ const rootResolver = {
     },
 
     async searchContainer(_, args, context) {
-      const data = await Container.findOne({
+      const data = await Container.findAll({
         where: { name: args.name },
         include: [User, Item],
       });
@@ -221,10 +227,10 @@ const rootResolver = {
         });
 
         const token = await user.generateToken();
-        console.log('token--->', token);
+        console.log("token--->", token);
         return { token, user };
       } catch (error) {
-        console.error('error in createUser mutation');
+        console.error("error in createUser mutation");
       }
     },
 
@@ -241,33 +247,50 @@ const rootResolver = {
           ownerId: context.user.id,
         });
         const user = await User.findByPk(context.user.id);
-        container.addUser(user.id, { through: { role: 'owner' } });
+        container.addUser(user.id, { through: { role: "owner" } });
         return container;
       } catch (error) {
         console.log(error);
       }
     },
-
     async addUserToContainer(_, args, context) {
+
+      const searchEmail = args.input.email ? args.input.email : ''
+      const searchUserId = args.input.id ? args.input.id : 9999999999
+
       try {
+        if( args.input.role === 'owner' ){
+          throw new Error('Invalid Request! Nice try buckaroo')
+        } 
         const container = await Container.findByPk(args.containerId);
-        if (args.email) {
-          const user = await User.findOne({
-            where: {
-              email: args.email,
-            },
-          });
-          container.addUser(user.id, { through: { role: 'user' } });
-          return container;
+
+        const user = await User.findOne({
+          where: {
+            [Op.or]: [
+              {email: searchEmail},
+              {id: searchUserId}
+            ]
+          }
+        });
+
+        if (context.user.id === container.ownerId) {
+          container.addUser(user.id, { through: { role: args.input.role } });
+        } else {
+          container.addUser(user.id, { through: { role: 'pending' } });
+          console.log('You are not the owner of this container, adding user as pending')
         }
-        const user = await User.findByPk(context.user.id);
-        container.addUser(user.id, { through: { role: 'user' } });
         return container;
       } catch (error) {
         console.log(error);
       }
     },
-
+ 
+    async updateContainer(_, args, context) {
+      try {
+        const container = await Container.findByPk(args.id);
+        return await container.update(args.input);
+      } catch (error) {}
+    },
 
     async addItemToContainer(_, args, context) {
       try {
@@ -281,18 +304,6 @@ const rootResolver = {
         return containerItem;
       } catch (error) {
         console.log(error);
-      }
-    },
-
-    async updateContainer(_, args, context){
-      console.log('test')
-      try {
-        const container = await Container.findByPk(args.id)
-        console.log(args)
-        return await container.update(args.input)
-
-      } catch (error) {
-
       }
     },
 

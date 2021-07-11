@@ -17,7 +17,12 @@ module.exports = {
                         '@babel/preset-react'
                     ]
                 }
-            }
+            },
+            {
+                test: /\.(graphql|gql)$/,
+                exclude: /node_modules/,
+                loader: 'graphql-tag/loader',
+              },
         ]
     },
 }

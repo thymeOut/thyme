@@ -133,3 +133,18 @@ nav a {
   margin-right: 10%;
   margin-left: 10%;
 }
+
+.all-container-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: 10px;
+}
+
+.divider {
+  margin: 100px
+}
+
+.all-container-view {
+  margin: 20px;
+}

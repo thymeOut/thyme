@@ -19,6 +19,9 @@ const Container = db.define("container", {
   imageUrl: {
     type: Sequelize.STRING,
     defaultValue: 'https://static3.depositphotos.com/1000749/116/v/950/depositphotos_1161071-stock-illustration-refrigerator.jpg'
+  },
+  ownerId: {
+    type: Sequelize.INTEGER
   }
 });
 
