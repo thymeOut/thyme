@@ -12,6 +12,8 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "apollo-link": "^1.2.14",
+    "apollo-link-error": "^1.1.13",
     "apollo-server-express": "^2.25.2",
     "bcrypt": "^5.0.1",
     "bootstrap": "^5.0.2",

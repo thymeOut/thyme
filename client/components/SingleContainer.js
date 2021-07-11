@@ -1,6 +1,7 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import { Link } from 'react-router-dom';
+
 import {
   Button,
   ButtonGroup,
@@ -17,7 +18,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import ItemCardGrid from './ItemCardGrid';
 
-const GET_CONTAINER = gql`
+export const GET_CONTAINER = gql`
   query Container($id: ID!) {
     container(id: $id) {
       id
@@ -78,16 +79,19 @@ const useStyles = makeStyles((theme) => ({
 export default function SingleContainer(props) {
   const containerId = props.match.params.id;
   const classes = useStyles();
-
   const { loading, error, data } = useQuery(GET_CONTAINER, {
     variables: {
       id: containerId,
     },
   });
+  if (loading) {
+    return '...loading';
+  }
 
-  if (loading) return '...loading';
-  if (error) return '...error';
-
+  if (error) {
+    return '...error';
+  }
+  
   const { container } = data;
   const { items, name, users } = container;
 
@@ -129,11 +133,10 @@ export default function SingleContainer(props) {
             </Grid>
           </div>
         </Container>
-
+        
         <ItemCardGrid classes={classes} items={items} users={users} />
       </div>
-
-
     </main>
+
   );
 }
