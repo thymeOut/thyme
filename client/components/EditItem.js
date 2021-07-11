@@ -13,6 +13,17 @@ import Typography from '@material-ui/core/Typography';
 import { MenuItem, Select } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { useMutation, gql } from '@apollo/client';
+import { useHistory } from 'react-router';
+
+
+const UPDATE_CONTAINER_ITEM = gql`
+  mutation updateContainerItem($id: ID!, $input: ContainerItemInput) {
+    updateContainerItem(id: $id, input: $input) {
+      name
+    }
+  }
+`;
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EditItem(props) {
+  const history = useHistory();
   const classes = useStyles();
   const { item, users } = props.location.state;
   const { containerItem } = item;
@@ -56,9 +68,25 @@ export default function EditItem(props) {
     }
   };
 
+  const [submitUpdate] = useMutation(UPDATE_CONTAINER_ITEM, {
+    id: containerItem.id,
+    input: {
+      expiration: expiration,
+      imageUrl: imageUrl,
+      userId: ownerId,
+    },
+    onCompleted: (submitUpdate) => {
+      console.log(submitUpdate);
+      history.push('..');
+    }
+  });
+
   const handleSubmit = (event) => {
     event.preventDefault();
-  }
+    console.log("submitting update...")
+    console.log("event -->", event)
+    submitUpdate();
+  };
 
   console.log(expiration);
 
@@ -68,7 +96,7 @@ export default function EditItem(props) {
         <Typography component="h1" variant="h5">
           Edit item
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={4}>
               <TextField

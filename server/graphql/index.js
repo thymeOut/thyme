@@ -102,6 +102,13 @@ const typeDefs = gql`
     isActive: Boolean
   }
 
+  input ContainerItemInput {
+    quantityUsed: Int
+    expiration: Date
+    imageUrl: String
+    ownerId: ID
+  }
+
   type Mutation {
     createUser(
       email: String!
@@ -113,6 +120,7 @@ const typeDefs = gql`
     createContainer(name: String!, type: ContainerType!): Container!
     addUserToContainer(email: String, containerId: ID!): Container!
     updateContainer(id: ID!, input: ContainerInput ): Container
+    updateContainerItem(id: ID!, input: ContainerItemInput): ContainerItem
   }
   scalar Date
 `;
@@ -259,13 +267,18 @@ const rootResolver = {
       }
     },
 
-    // async updateContainerItem(_, args, context) {
-    //   try {
-
-    //   } catch (error) {
-    //     console.error('error in updateContainerItem mutation resolver');
-    //   }
-    // }
+    async updateContainerItem(_, args, context) {
+      console.log(args)
+      try {
+        console.log(args);
+        // const containerItem = await ContainerItem.findByPk(args.id);
+        // console.log(args);
+        // console.log(containerItem);
+        // return await containerItem.update(args.input);
+      } catch (error) {
+        console.error('error in updateContainerItem mutation resolver');
+      }
+    }
   },
 };
 
