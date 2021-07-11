@@ -14,6 +14,8 @@ const typeDefs = gql`
     container(id: ID): Container
     searchContainer(name: String!): Container
     items: [Item]
+    item(id: ID): Item
+    containerItem(id: ID): ContainerItem
   }
 
   type AuthPayload {
@@ -50,13 +52,13 @@ const typeDefs = gql`
   type ContainerItem {
     id: ID!
     originalQuantity: Int!
-    quantityUsed: Int!
+    quantityUsed: Int
     expiration: Date
     imageUrl: String
-    container: Container
     itemStatus: ItemStatus!
     item: Item
     user: User
+    container:Container!
     userId: ID!
   }
 
@@ -111,7 +113,15 @@ const typeDefs = gql`
     login(email: String!, password: String!): AuthPayload!
     createContainer(name: String!, type: ContainerType!): Container!
     addUserToContainer(email: String, containerId: ID!): Container!
+    addItemToContainer(
+      containerId: ID!
+      itemId: ID!
+      originalQuantity: Int!
+      itemStatus: ItemStatus!
+    ): ContainerItem!
+
     updateContainer(id: ID!, input: ContainerInput ): Container
+
   }
   scalar Date
 `;
@@ -162,7 +172,10 @@ const rootResolver = {
       });
       return data;
     },
-
+    async item(_, args, context) {
+      let data = await Item.findByPk(args.id);
+      return data;
+    },
     async items(_, args, context) {
       return await Item.findAll();
     },
@@ -204,18 +217,18 @@ const rootResolver = {
         console.log(error);
       }
     },
-    async addUserToContainer(_, args,context) {
+    async addUserToContainer(_, args, context) {
       try {
         const container = await Container.findByPk(args.containerId);
-        if (args.email){
-        const user = await User.findOne({
-          where: {
-            email: args.email,
-          },
-        });
-        container.addUser(user.id, { through: { role: 'user' } });
-        return container;
-      }
+        if (args.email) {
+          const user = await User.findOne({
+            where: {
+              email: args.email,
+            },
+          });
+          container.addUser(user.id, { through: { role: 'user' } });
+          return container;
+        }
         const user = await User.findByPk(context.user.id);
         container.addUser(user.id, { through: { role: 'user' } });
         return container;
@@ -223,6 +236,22 @@ const rootResolver = {
         console.log(error);
       }
     },
+
+    async addItemToContainer(_, args, context) {
+      try {
+        const containerItem = await ContainerItem.create({
+          userId: context.user.id,
+          originalQuantity: args.originalQuantity,
+          itemStatus: args.itemStatus,
+          containerId: args.containerId,
+          itemId: args.itemId,
+        });
+        return containerItem;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     async updateContainer(_, args, context){
       console.log('test')
       try {

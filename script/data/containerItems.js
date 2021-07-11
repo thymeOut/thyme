@@ -24,21 +24,21 @@ const containerItems = [
     itemId: 3,
     originalQuantity: 12,
     quantityUsed: 5,
-    itemStatus: 'EXPIRED'
+    itemStatus: 'EXPIRED',
   },
   {
     userId: 2,
     containerId: 2,
     itemId: 3,
     originalQuantity: 22,
-    itemStatus: 'REMOVED'
+    itemStatus: 'REMOVED',
   },
   {
     userId: 1,
     containerId: 1,
     itemId: 3,
     originalQuantity: 234,
-    itemStatus: 'REMOVED'
+    itemStatus: 'REMOVED',
   },
 ];
 

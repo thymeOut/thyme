@@ -4,11 +4,12 @@ import LandingPage from './components/LandingPage';
 import UserContainers from './components/UserContainers';
 import LoginForm from './components/Login';
 import SingleContainer from './components/SingleContainer';
-import AllUsersData from './components/allUsersData';
+import AllUsersData from './components/AllUsersData';
 import AddItemToContainer from './components/AddItemToContainer';
 import CreateItem from './components/CreateItem';
 import RegisterForm from './components/Register';
 import JoinContainer from "./components/JoinContainer";
+import SingleItemAdd from './components/SingleItemAdd';
 
 export default function Routes(props) {
   return (
@@ -27,6 +28,7 @@ export default function Routes(props) {
           <RegisterForm />
         </Route>
         <Route path="/search" component={JoinContainer} />
+        <Route path='/add' component={SingleItemAdd}/>
       </Switch>
     </div>
   );
