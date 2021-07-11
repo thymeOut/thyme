@@ -15,7 +15,6 @@ const typeDefs = gql`
     container(id: ID): Container
     searchContainer(name: String!): [Container]
     items: [Item]
-    // Need to merge these two together
     containerItem(id: ID): Item
     item(id: ID): Item
 
@@ -111,6 +110,7 @@ const typeDefs = gql`
     id: ID
     email: String
     role: Role!
+  }
 
   input ContainerItemInput {
     quantityUsed: Int
@@ -261,7 +261,7 @@ const rootResolver = {
       try {
         if( args.input.role === 'owner' ){
           throw new Error('Invalid Request! Nice try buckaroo')
-        } 
+        }
         const container = await Container.findByPk(args.containerId);
 
         const user = await User.findOne({
@@ -284,7 +284,7 @@ const rootResolver = {
         console.log(error);
       }
     },
- 
+
     async updateContainer(_, args, context) {
       try {
         const container = await Container.findByPk(args.id);
