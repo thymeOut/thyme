@@ -5,6 +5,7 @@ const containerUsers = require("../../script/data/containerUsers");
 const {
   models: { User, Container, Item, ContainerItem, ContainerUser },
 } = require("../db/");
+const { Op } = require("sequelize");
 
 const typeDefs = gql`
   type Query {
@@ -92,6 +93,7 @@ const typeDefs = gql`
   enum Role {
     user
     owner
+    pending
   }
 
   input ContainerInput {
@@ -99,6 +101,12 @@ const typeDefs = gql`
     type: ContainerType
     imageUrl: String
     isActive: Boolean
+  }
+
+  input UserInput {
+    id: ID
+    email: String
+    role: Role!
   }
 
   type Mutation {
@@ -110,7 +118,7 @@ const typeDefs = gql`
     ): AuthPayload!
     login(email: String!, password: String!): AuthPayload!
     createContainer(name: String!, type: ContainerType!): Container!
-    addUserToContainer(email: String, containerId: ID!): Container!
+    addUserToContainer(containerId: ID!, input: UserInput): Container!
     updateContainer(id: ID!, input: ContainerInput): Container
   }
   scalar Date
@@ -205,23 +213,33 @@ const rootResolver = {
       }
     },
     async addUserToContainer(_, args, context) {
-      console.log('test')
+      const email = args.input.email ? args.email : null
+      const id = args.input.id ? args.input.id : context.user.id
       try {
-        const container = await Container.findByPk(args.containerId);
-        if (args.email) {
-          const user = await User.findOne({
-            where: {
-              email: args.email,
-            },
-          });
-          container.addUser(user.id, { through: { role: "user" } });
-          return container;
+        // if a user joins a container but is not the owner, then pending
+        // if a user adds a user, then user
+        if( args.input.role === 'owner' ){
+          throw new Error('Invalid Request! Nice try buckaroo')
+        } 
+        const container = await Container.findByPk(args.containerId, {});
+
+        const user = await User.findOne({
+          where: {
+            [Op.or]: [{ email: email }, { id: id }],
+          },
+          include: Container
+        });
+
+        if (user.containers.find(container => container.id === args.containerId && container.ownerId === id)){
+          container.addUser(user.id, { through: { role: args.input.role } });
         } else {
-          const user = await User.findByPk(context.user.id);
-          container.addUser(user.id, { through: { role: "user" } });
-          return container;
+          container.addUser(user.id, { through: { role: 'pending' } });
+          console.log('You are not the owner of this container, adding user as pending')
         }
+
+        return container;
       } catch (error) {
+        console.log('something fudged up')
         console.log(error);
       }
     },
@@ -229,7 +247,6 @@ const rootResolver = {
       console.log("test");
       try {
         const container = await Container.findByPk(args.id);
-        console.log(args);
         return await container.update(args.input);
       } catch (error) {}
     },

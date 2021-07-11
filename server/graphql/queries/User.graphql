@@ -1,0 +1,16 @@
+
+  query User($id: ID!) {
+    user(id: $id) {
+      id
+      containers {
+        id
+        name
+        imageUrl
+        isActive
+        type
+        containerUser {
+          role
+        }
+      }
+    }
+  }

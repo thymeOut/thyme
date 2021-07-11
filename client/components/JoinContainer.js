@@ -24,8 +24,8 @@ const CONTAINER_SEARCH_QUERY = gql`
 `;
 
 const ADD_USER_TO_CONTAINER = gql`
-  mutation AddUserToContainer($containerId: ID!) {
-    addUserToContainer(containerId: $containerId) {
+  mutation AddUserToContainer($containerId: ID!, $input: UserInput) {
+    addUserToContainer(containerId: $containerId, input: $input) {
       id
     }
   }
@@ -72,6 +72,9 @@ export default function Search(props) {
       addUserToContainer({
         variables: {
           containerId: id,
+          input:{
+            role:'pending'
+          } 
         },
       });
     } catch (error) {
