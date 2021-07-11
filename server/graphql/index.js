@@ -213,33 +213,33 @@ const rootResolver = {
       }
     },
     async addUserToContainer(_, args, context) {
-      const email = args.input.email ? args.email : null
-      const id = args.input.id ? args.input.id : context.user.id
+
+      const searchEmail = args.input.email ? args.input.email : ''
+      const searchUserId = args.input.id ? args.input.id : 9999999999
+
       try {
-        // if a user joins a container but is not the owner, then pending
-        // if a user adds a user, then user
         if( args.input.role === 'owner' ){
           throw new Error('Invalid Request! Nice try buckaroo')
         } 
-        const container = await Container.findByPk(args.containerId, {});
+        const container = await Container.findByPk(args.containerId);
 
         const user = await User.findOne({
           where: {
-            [Op.or]: [{ email: email }, { id: id }],
-          },
-          include: Container
+            [Op.or]: [
+              {email: searchEmail},
+              {id: searchUserId}
+            ]
+          }
         });
 
-        if (user.containers.find(container => container.id === args.containerId && container.ownerId === id)){
+        if (context.user.id === container.ownerId) {
           container.addUser(user.id, { through: { role: args.input.role } });
         } else {
           container.addUser(user.id, { through: { role: 'pending' } });
           console.log('You are not the owner of this container, adding user as pending')
         }
-
         return container;
       } catch (error) {
-        console.log('something fudged up')
         console.log(error);
       }
     },

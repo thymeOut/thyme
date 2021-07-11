@@ -73,6 +73,7 @@ export default function Search(props) {
         variables: {
           containerId: id,
           input:{
+            id: localStorage.getItem("user-id"),
             role:'pending'
           } 
         },

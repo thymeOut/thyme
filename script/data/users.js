@@ -22,4 +22,14 @@ const users = [
   },
 ];
 
+for (let index = 3; index < 20; index++) {
+  users.push({
+    firstName: `Test${index}`,
+    lastName: 'World',
+    email: `test${index}@world.com`,
+    password: 'pw',
+    isAdmin: false,
+  })
+}
+
 module.exports = users;
