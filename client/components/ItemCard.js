@@ -14,11 +14,19 @@ import {
   Typography,
   Container,
 } from '@material-ui/core';
+import { formatDistance, subDays } from 'date-fns';
 
 function ItemCard(props) {
   const containerId = props.match.params.id;
   const { item, classes, users } = props;
   console.log(users);
+  const formattedExpiration = item.containerItem.expiration
+    ? formatDistance(new Date(item.containerItem.expiration), new Date(), {
+        addSuffix: true,
+      })
+    : '';
+
+  console.log(formattedExpiration);
 
   return (
     <Grid item key={item.id} xs={12} sm={6} md={4}>
@@ -42,9 +50,7 @@ function ItemCard(props) {
             })}
           </Typography>
           <Typography>
-            {item.containerItem.expiration
-              ? `Expiration: ${item.containerItem.expiration}`
-              : ''}
+            {formattedExpiration}
           </Typography>
         </CardContent>
         <CardActions>
@@ -60,7 +66,10 @@ function ItemCard(props) {
             size="small"
             color="primary"
             component={Link}
-            to={{ pathname: `${containerId}/edititem/${item.id}`, state: { item: item, users: users } }}
+            to={{
+              pathname: `${containerId}/edititem/${item.id}`,
+              state: { item: item, users: users },
+            }}
           >
             Edit
           </Button>

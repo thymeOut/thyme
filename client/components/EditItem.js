@@ -52,10 +52,8 @@ export default function EditItem(props) {
   );
   const [imageUrl, setImageUrl] = useState(containerItem.imageUrl);
   const [ownerId, setOwnerId] = useState(containerItem.userId);
-  console.log(ownerId);
 
   const handleChange = (event) => {
-    console.log(event.target.value);
 
     if (event.target.name === 'owner') {
       setOwnerId(event.target.value);
@@ -74,7 +72,6 @@ export default function EditItem(props) {
       },
     },
     onCompleted: (submitUpdate) => {
-      console.log(submitUpdate);
       history.push('..');
     },
   });
@@ -85,8 +82,6 @@ export default function EditItem(props) {
     console.log('event -->', event);
     submitUpdate();
   };
-
-  console.log(expiration);
 
   return (
     <Container component="main" maxWidth="xs">
