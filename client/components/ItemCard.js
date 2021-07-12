@@ -14,11 +14,91 @@ import {
   Typography,
   Container,
 } from '@material-ui/core';
+import { formatDistance } from 'date-fns';
+import { GET_CONTAINER } from './SingleContainer';
+
+const UPDATE_CONTAINER_ITEM = gql`
+  mutation updateContainerItem($id: ID!, $input: ContainerItemInput) {
+    updateContainerItem(id: $id, input: $input) {
+      id
+      quantityUsed
+    }
+  }
+`;
 
 function ItemCard(props) {
   const containerId = props.match.params.id;
   const { item, classes, users } = props;
   console.log(users);
+  const formattedExpiration = item.containerItem.expiration
+    ? formatDistance(new Date(item.containerItem.expiration), new Date(), {
+        addSuffix: true,
+      })
+    : '';
+
+  const [quantityUsed, setQuantityUsed] = useState(
+    item.containerItem.quantityUsed
+  );
+
+  const [updateQuantity] = useMutation(UPDATE_CONTAINER_ITEM, {
+    variables: {
+      id: item.containerItem.id,
+      input: {
+        quantityUsed: quantityUsed,
+      },
+    },
+    // onCompleted: (updateQuantity) => {
+    //   // onComplete actions can go here
+    // },
+  });
+
+  const [removeItem] = useMutation(UPDATE_CONTAINER_ITEM, {
+    variables: {
+      id: item.containerItem.id,
+      input: {
+        itemStatus: 'REMOVED',
+      },
+    },
+    refetchQueries: [
+      {
+        query: GET_CONTAINER, variables: {
+          id: containerId
+        }
+      }
+    ]
+  });
+
+  const handleDecrement = () => {
+    console.log('decrementing...')
+    setQuantityUsed(quantityUsed + 1);
+    console.log('new state value: ', quantityUsed);
+    updateQuantity({
+      variables: {
+        id: item.containerItem.id,
+        input: {
+          quantityUsed: quantityUsed + 1,
+        },
+      },
+    });
+  };
+
+  const handleIncrement = () => {
+    setQuantityUsed(quantityUsed - 1);
+    updateQuantity({
+      variables: {
+        id: item.containerItem.id,
+        input: {
+          quantityUsed: quantityUsed - 1,
+        },
+      },
+    });
+  };
+
+  const handleRemove = () => {
+    removeItem();
+  }
+
+  console.log(item.containerItem)
 
   return (
     <Grid item key={item.id} xs={12} sm={6} md={4}>
@@ -41,30 +121,29 @@ function ItemCard(props) {
               }
             })}
           </Typography>
-          <Typography>
-            {item.containerItem.expiration
-              ? `Expiration: ${item.containerItem.expiration}`
-              : ''}
-          </Typography>
+          <Typography>{formattedExpiration}</Typography>
         </CardContent>
         <CardActions>
           <ButtonGroup size="small" color="primary">
-            <Button>-</Button>
+            <Button onClick={handleDecrement}>-</Button>
             <Button>
               {item.containerItem.originalQuantity -
                 item.containerItem.quantityUsed}
             </Button>
-            <Button>+</Button>
+            <Button onClick={handleIncrement}>+</Button>
           </ButtonGroup>
           <Button
             size="small"
             color="primary"
             component={Link}
-            to={{ pathname: `${containerId}/edititem/${item.id}`, state: { item: item, users: users } }}
+            to={{
+              pathname: `${containerId}/edititem/${item.id}`,
+              state: { item: item, users: users },
+            }}
           >
             Edit
           </Button>
-          <Button size="small" color="primary">
+          <Button size="small" color="primary" onClick={handleRemove}>
             Remove
           </Button>
         </CardActions>
