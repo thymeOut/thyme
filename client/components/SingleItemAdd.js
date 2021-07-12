@@ -38,6 +38,8 @@ export default function SingleItemAdd(props) {
     },
   });
 
+
+
   const [addItem, { error: addItemError }] = useMutation(
     ADD_ITEM,
     {

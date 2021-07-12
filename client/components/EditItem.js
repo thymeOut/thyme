@@ -20,7 +20,7 @@ import { useHistory } from 'react-router';
 const UPDATE_CONTAINER_ITEM = gql`
   mutation updateContainerItem($id: ID!, $input: ContainerItemInput) {
     updateContainerItem(id: $id, input: $input) {
-      name
+      id
     }
   }
 `;

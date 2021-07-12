@@ -1,11 +1,11 @@
-const { gql } = require("@apollo/client");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const containerUsers = require("../../script/data/containerUsers");
+const { gql } = require('@apollo/client');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const containerUsers = require('../../script/data/containerUsers');
 const {
   models: { User, Container, Item, ContainerItem, ContainerUser },
-} = require("../db/");
-const { Op } = require("sequelize");
+} = require('../db/');
+const { Op } = require('sequelize');
 
 const typeDefs = gql`
   type Query {
@@ -15,10 +15,9 @@ const typeDefs = gql`
     container(id: ID): Container
     searchContainer(name: String!): [Container]
     items: [Item]
-    // Need to merge these two together
     containerItem(id: ID): Item
     item(id: ID): Item
-
+    containerItems(id: ID): [ContainerItem]
   }
 
   type AuthPayload {
@@ -59,10 +58,11 @@ const typeDefs = gql`
     expiration: Date
     imageUrl: String
     itemStatus: ItemStatus!
-    item: Item
+    item(id:ID): Item
     user: User
-    container:Container!
+    container: Container!
     userId: ID!
+    itemId:ID
   }
 
   type ContainerUser {
@@ -111,6 +111,7 @@ const typeDefs = gql`
     id: ID
     email: String
     role: Role!
+  }
 
   input ContainerItemInput {
     quantityUsed: Int
@@ -189,6 +190,7 @@ const rootResolver = {
     },
     async item(_, args, context) {
       let data = await Item.findByPk(args.id);
+      console.log('inside item')
       return data;
     },
     async items(_, args, context) {
@@ -205,16 +207,34 @@ const rootResolver = {
               model: Container,
               through: {
                 where: {
-                  id: args.id
-                }
-              }
-            }
-          })
+                  id: args.id,
+                },
+              },
+            },
+          });
+          console.log('inside containeritem');
         }
       } catch (error) {
         console.error('error in containerItem query!');
       }
-    }
+    },
+    async containerItems(_, args, context) {
+      console.log('inside containeritems');
+      try {
+        if (!context.user.id) {
+          return null;
+        } else {
+          const data = await ContainerItem.findAll({
+            where: {
+              containerId: args.id,
+            },
+          });
+          return data;
+        }
+      } catch (error) {
+        console.error('error in containerItem query!');
+      }
+    },
   },
   Mutation: {
     async createUser(_, args) {
@@ -227,10 +247,10 @@ const rootResolver = {
         });
 
         const token = await user.generateToken();
-        console.log("token--->", token);
+        console.log('token--->', token);
         return { token, user };
       } catch (error) {
-        console.error("error in createUser mutation");
+        console.error('error in createUser mutation');
       }
     },
 
@@ -247,44 +267,42 @@ const rootResolver = {
           ownerId: context.user.id,
         });
         const user = await User.findByPk(context.user.id);
-        container.addUser(user.id, { through: { role: "owner" } });
+        container.addUser(user.id, { through: { role: 'owner' } });
         return container;
       } catch (error) {
         console.log(error);
       }
     },
     async addUserToContainer(_, args, context) {
-
-      const searchEmail = args.input.email ? args.input.email : ''
-      const searchUserId = args.input.id ? args.input.id : 9999999999
+      const searchEmail = args.input.email ? args.input.email : '';
+      const searchUserId = args.input.id ? args.input.id : 9999999999;
 
       try {
-        if( args.input.role === 'owner' ){
-          throw new Error('Invalid Request! Nice try buckaroo')
-        } 
+        if (args.input.role === 'owner') {
+          throw new Error('Invalid Request! Nice try buckaroo');
+        }
         const container = await Container.findByPk(args.containerId);
 
         const user = await User.findOne({
           where: {
-            [Op.or]: [
-              {email: searchEmail},
-              {id: searchUserId}
-            ]
-          }
+            [Op.or]: [{ email: searchEmail }, { id: searchUserId }],
+          },
         });
 
         if (context.user.id === container.ownerId) {
           container.addUser(user.id, { through: { role: args.input.role } });
         } else {
           container.addUser(user.id, { through: { role: 'pending' } });
-          console.log('You are not the owner of this container, adding user as pending')
+          console.log(
+            'You are not the owner of this container, adding user as pending'
+          );
         }
         return container;
       } catch (error) {
         console.log(error);
       }
     },
- 
+
     async updateContainer(_, args, context) {
       try {
         const container = await Container.findByPk(args.id);
@@ -294,12 +312,16 @@ const rootResolver = {
 
     async addItemToContainer(_, args, context) {
       try {
+        const item = await Item.findOrCreate({
+          where: { id: args.itemId },
+          defaults: { name: args.itemName },
+        });
         const containerItem = await ContainerItem.create({
           userId: context.user.id,
           originalQuantity: args.originalQuantity,
           itemStatus: args.itemStatus,
           containerId: args.containerId,
-          itemId: args.itemId,
+          itemId: item[0].dataValues.id,
         });
         return containerItem;
       } catch (error) {
@@ -308,7 +330,7 @@ const rootResolver = {
     },
 
     async updateContainerItem(_, args, context) {
-      console.log(args)
+      console.log(args);
       try {
         console.log(args);
         // const containerItem = await ContainerItem.findByPk(args.id);
@@ -318,7 +340,7 @@ const rootResolver = {
       } catch (error) {
         console.error('error in updateContainerItem mutation resolver');
       }
-    }
+    },
   },
 };
 
