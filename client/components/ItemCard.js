@@ -14,7 +14,8 @@ import {
   Typography,
   Container,
 } from '@material-ui/core';
-import { formatDistance, subDays } from 'date-fns';
+import { formatDistance } from 'date-fns';
+import { GET_CONTAINER } from './SingleContainer';
 
 const UPDATE_CONTAINER_ITEM = gql`
   mutation updateContainerItem($id: ID!, $input: ContainerItemInput) {
@@ -41,27 +42,63 @@ function ItemCard(props) {
 
   const [updateQuantity] = useMutation(UPDATE_CONTAINER_ITEM, {
     variables: {
-      id: containerId,
+      id: item.containerItem.id,
       input: {
         quantityUsed: quantityUsed,
       },
     },
-    onCompleted: (updateQuantity) => {
-      // onComplete actions can go here
+    // onCompleted: (updateQuantity) => {
+    //   // onComplete actions can go here
+    // },
+  });
+
+  const [removeItem] = useMutation(UPDATE_CONTAINER_ITEM, {
+    variables: {
+      id: item.containerItem.id,
+      input: {
+        itemStatus: 'REMOVED',
+      },
     },
+    refetchQueries: [
+      {
+        query: GET_CONTAINER, variables: {
+          id: containerId
+        }
+      }
+    ]
   });
 
   const handleDecrement = () => {
     console.log('decrementing...')
     setQuantityUsed(quantityUsed + 1);
     console.log('new state value: ', quantityUsed);
-    updateQuantity();
+    updateQuantity({
+      variables: {
+        id: item.containerItem.id,
+        input: {
+          quantityUsed: quantityUsed + 1,
+        },
+      },
+    });
   };
 
   const handleIncrement = () => {
     setQuantityUsed(quantityUsed - 1);
-    updateQuantity();
+    updateQuantity({
+      variables: {
+        id: item.containerItem.id,
+        input: {
+          quantityUsed: quantityUsed - 1,
+        },
+      },
+    });
   };
+
+  const handleRemove = () => {
+    removeItem();
+  }
+
+  console.log(item.containerItem)
 
   return (
     <Grid item key={item.id} xs={12} sm={6} md={4}>
@@ -106,7 +143,7 @@ function ItemCard(props) {
           >
             Edit
           </Button>
-          <Button size="small" color="primary">
+          <Button size="small" color="primary" onClick={handleRemove}>
             Remove
           </Button>
         </CardActions>

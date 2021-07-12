@@ -38,6 +38,7 @@ export const GET_CONTAINER = gql`
           originalQuantity
           quantityUsed
           expiration
+          itemStatus
         }
       }
     }
@@ -91,7 +92,7 @@ export default function SingleContainer(props) {
   if (error) {
     return '...error';
   }
-  
+
   const { container } = data;
   const { items, name, users } = container;
 
@@ -133,7 +134,7 @@ export default function SingleContainer(props) {
             </Grid>
           </div>
         </Container>
-        
+
         <ItemCardGrid classes={classes} items={items} users={users} />
       </div>
     </main>

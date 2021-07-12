@@ -116,6 +116,7 @@ const typeDefs = gql`
     expiration: Date
     imageUrl: String
     userId: ID
+    itemStatus: ItemStatus
   }
 
   type Mutation {
