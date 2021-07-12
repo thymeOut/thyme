@@ -1,9 +1,6 @@
 const { gql } = require("@apollo/client");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const containerUsers = require("../../script/data/containerUsers");
 const {
-  models: { User, Container, Item, ContainerItem, ContainerUser },
+  models: { User, Container, Item, ContainerItem },
 } = require("../db/");
 const { Op } = require("sequelize");
 

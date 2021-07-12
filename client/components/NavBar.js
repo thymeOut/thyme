@@ -4,10 +4,11 @@ import { UserContext } from '../UserContext';
 
 export default function NavBar() {
   const { isLoggedIn, setLoggedIn } = useContext(UserContext);
-
+  console.log(window.localStorage.isAdmin)
   const handleLogout = () => {
     window.localStorage.removeItem('token');
     window.localStorage.removeItem('user-id');
+    window.localStorage.removeItem('isAdmin')
     setLoggedIn(false);
   };
 
@@ -16,13 +17,11 @@ export default function NavBar() {
       <nav>
         <h1 id="name">Thyme</h1>
           <Link to="/">Home</Link>
-          <a>About Us</a>
-          <a>Contact</a>
+        {window.localStorage.getItem('isAdmin') && <Link to="/allData">Admin</Link>}
         {isLoggedIn ? (
           <>
             {/* The navbar will show these links after you log in */}
             <Link to="/containers">My Containers</Link>
-            <a>Profile</a>
             <Link to="/" onClick={handleLogout}>
               Logout
             </Link>
