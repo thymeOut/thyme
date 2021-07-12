@@ -16,6 +16,15 @@ import {
 } from '@material-ui/core';
 import { formatDistance, subDays } from 'date-fns';
 
+const UPDATE_CONTAINER_ITEM = gql`
+  mutation updateContainerItem($id: ID!, $input: ContainerItemInput) {
+    updateContainerItem(id: $id, input: $input) {
+      id
+      quantityUsed
+    }
+  }
+`;
+
 function ItemCard(props) {
   const containerId = props.match.params.id;
   const { item, classes, users } = props;
@@ -26,7 +35,33 @@ function ItemCard(props) {
       })
     : '';
 
-  console.log(formattedExpiration);
+  const [quantityUsed, setQuantityUsed] = useState(
+    item.containerItem.quantityUsed
+  );
+
+  const [updateQuantity] = useMutation(UPDATE_CONTAINER_ITEM, {
+    variables: {
+      id: containerId,
+      input: {
+        quantityUsed: quantityUsed,
+      },
+    },
+    onCompleted: (updateQuantity) => {
+      // onComplete actions can go here
+    },
+  });
+
+  const handleDecrement = () => {
+    console.log('decrementing...')
+    setQuantityUsed(quantityUsed + 1);
+    console.log('new state value: ', quantityUsed);
+    updateQuantity();
+  };
+
+  const handleIncrement = () => {
+    setQuantityUsed(quantityUsed - 1);
+    updateQuantity();
+  };
 
   return (
     <Grid item key={item.id} xs={12} sm={6} md={4}>
@@ -49,18 +84,16 @@ function ItemCard(props) {
               }
             })}
           </Typography>
-          <Typography>
-            {formattedExpiration}
-          </Typography>
+          <Typography>{formattedExpiration}</Typography>
         </CardContent>
         <CardActions>
           <ButtonGroup size="small" color="primary">
-            <Button>-</Button>
+            <Button onClick={handleDecrement}>-</Button>
             <Button>
               {item.containerItem.originalQuantity -
                 item.containerItem.quantityUsed}
             </Button>
-            <Button>+</Button>
+            <Button onClick={handleIncrement}>+</Button>
           </ButtonGroup>
           <Button
             size="small"
