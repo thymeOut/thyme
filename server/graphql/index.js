@@ -116,7 +116,7 @@ const typeDefs = gql`
     quantityUsed: Int
     expiration: Date
     imageUrl: String
-    ownerId: ID
+    userId: ID
   }
 
   type Mutation {
@@ -311,10 +311,10 @@ const rootResolver = {
       console.log(args)
       try {
         console.log(args);
-        // const containerItem = await ContainerItem.findByPk(args.id);
-        // console.log(args);
-        // console.log(containerItem);
-        // return await containerItem.update(args.input);
+        const containerItem = await ContainerItem.findByPk(args.id);
+        console.log(args);
+        console.log(containerItem);
+        return await containerItem.update(args.input);
       } catch (error) {
         console.error('error in updateContainerItem mutation resolver');
       }
