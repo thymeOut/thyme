@@ -65,6 +65,7 @@ const typeDefs = gql`
     user: User
     container: Container!
     containerId: ID!
+    itemId: ID!
     userId: ID!
   }
 
@@ -210,6 +211,7 @@ const rootResolver = {
               containerId: args.containerId,
             },
           });
+          return data;
         }
       } catch (error) {
         console.error('error in containerItems query!');

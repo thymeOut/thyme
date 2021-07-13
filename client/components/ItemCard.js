@@ -15,7 +15,7 @@ import {
   Container,
 } from '@material-ui/core';
 import { formatDistance } from 'date-fns';
-import { GET_CONTAINER } from './SingleContainer';
+import { GET_CONTAINER, GET_CONTAINER_ITEMS } from './SingleContainer';
 
 const UPDATE_CONTAINER_ITEM = gql`
   mutation updateContainerItem($id: ID!, $input: ContainerItemInput) {
@@ -33,19 +33,19 @@ function ItemCard(props) {
   const containerId = props.match.params.id;
   const { item, classes, users } = props;
   console.log(users);
-  const formattedExpiration = item.containerItem.expiration
-    ? formatDistance(new Date(item.containerItem.expiration), new Date(), {
+  const formattedExpiration = item.expiration
+    ? formatDistance(new Date(item.expiration), new Date(), {
         addSuffix: true,
       })
     : '';
 
   const [quantityUsed, setQuantityUsed] = useState(
-    item.containerItem.quantityUsed
+    item.quantityUsed
   );
 
   const [updateQuantity] = useMutation(UPDATE_CONTAINER_ITEM, {
     variables: {
-      id: item.containerItem.id,
+      id: item.id,
       input: {
         quantityUsed: quantityUsed,
       },
@@ -57,7 +57,7 @@ function ItemCard(props) {
 
   const [removeItem] = useMutation(UPDATE_CONTAINER_ITEM, {
     variables: {
-      id: item.containerItem.id,
+      id: item.id,
       input: {
         itemStatus: 'REMOVED',
       },
@@ -69,6 +69,12 @@ function ItemCard(props) {
           id: containerId,
         },
       },
+      {
+        query: GET_CONTAINER_ITEMS,
+        variables: {
+          containerId: containerId,
+        }
+      }
     ],
   });
 
@@ -76,12 +82,12 @@ function ItemCard(props) {
     setQuantityUsed(quantityUsed + 1);
 
     // this is smelly. refactor after MVP accomplished.
-    if (quantityUsed === item.containerItem.originalQuantity - 1) {
+    if (quantityUsed === item.originalQuantity - 1) {
       handleRemove();
     } else {
       updateQuantity({
         variables: {
-          id: item.containerItem.id,
+          id: item.id,
           input: {
             quantityUsed: quantityUsed + 1,
           },
@@ -94,7 +100,7 @@ function ItemCard(props) {
     setQuantityUsed(quantityUsed - 1);
     updateQuantity({
       variables: {
-        id: item.containerItem.id,
+        id: item.id,
         input: {
           quantityUsed: quantityUsed - 1,
         },
@@ -106,7 +112,7 @@ function ItemCard(props) {
     removeItem();
   };
 
-  console.log(item.containerItem.userId);
+  console.log(item.userId);
 
   return (
     <Grid item key={item.id} xs={12} sm={6} md={4}>
@@ -122,7 +128,7 @@ function ItemCard(props) {
           </Typography>
           <Typography>
             {users.map((user) => {
-              if (user.id === item.containerItem.userId) {
+              if (user.id === item.userId) {
                 return user.firstName;
               } else {
                 return '';
@@ -131,13 +137,13 @@ function ItemCard(props) {
           </Typography>
           <Typography>{formattedExpiration}</Typography>
         </CardContent>
-        {localId === item.containerItem.userId && (
+        {localId === item.userId && (
           <CardActions>
             <ButtonGroup size="small" color="primary">
               <Button onClick={handleDecrement}>-</Button>
               <Button>
-                {item.containerItem.originalQuantity -
-                  item.containerItem.quantityUsed}
+                {item.originalQuantity -
+                  item.quantityUsed}
               </Button>
               <Button onClick={handleIncrement}>+</Button>
             </ButtonGroup>

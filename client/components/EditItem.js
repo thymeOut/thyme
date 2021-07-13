@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useMutation, gql } from '@apollo/client';
 import { useHistory } from 'react-router';
-import { GET_CONTAINER } from './SingleContainer';
+import { GET_CONTAINER, GET_CONTAINER_ITEMS } from './SingleContainer';
 
 const UPDATE_CONTAINER_ITEM = gql`
   mutation updateContainerItem($id: ID!, $input: ContainerItemInput) {
@@ -46,16 +46,14 @@ export default function EditItem(props) {
   const history = useHistory();
   const classes = useStyles();
   const { item, users, containerId } = props.location.state;
-  const { containerItem } = item;
 
   const [expiration, setExpiration] = useState(
-    new Date(containerItem.expiration).toISOString().slice(0, 10)
+    new Date(item.expiration).toISOString().slice(0, 10)
   );
-  const [imageUrl, setImageUrl] = useState(containerItem.imageUrl);
-  const [ownerId, setOwnerId] = useState(containerItem.userId);
+  const [imageUrl, setImageUrl] = useState(item.imageUrl);
+  const [ownerId, setOwnerId] = useState(item.userId);
 
   const handleChange = (event) => {
-
     if (event.target.name === 'owner') {
       setOwnerId(event.target.value);
     } else if (event.target.name === 'expiration') {
@@ -65,7 +63,7 @@ export default function EditItem(props) {
 
   const [submitUpdate] = useMutation(UPDATE_CONTAINER_ITEM, {
     variables: {
-      id: containerItem.id,
+      id: item.id,
       input: {
         expiration: new Date(expiration),
         imageUrl: imageUrl,
@@ -77,6 +75,12 @@ export default function EditItem(props) {
         query: GET_CONTAINER,
         variables: {
           id: containerId,
+        },
+      },
+      {
+        query: GET_CONTAINER_ITEMS,
+        variables: {
+          containerId: containerId,
         },
       },
     ],
