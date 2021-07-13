@@ -85,7 +85,7 @@ export default function EditItem(props) {
       },
     ],
     onCompleted: (submitUpdate) => {
-      history.push('..');
+      history.push(`/containers/${containerId}`);
     },
   });
 

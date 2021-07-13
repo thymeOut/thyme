@@ -71,6 +71,7 @@ const typeDefs = gql`
     role: Role!
     container: Container
     user: User
+    ownerId: ID!
   }
 
   type Item {
@@ -279,7 +280,7 @@ const rootResolver = {
     //2. (Since I can't comment within schema), create mutation within schema
     //Format =>
     /*
-                 parameter   
+                 parameter
                     |   type                     return obj
                     |    |                          |
         updateUser(id: ID!, input: UserInfoInput): User
