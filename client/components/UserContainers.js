@@ -72,6 +72,7 @@ export default function UserContainers() {
     return "...loading";
   }
   if (error) {
+    console.log(error)
     return "...error";
   }
 
