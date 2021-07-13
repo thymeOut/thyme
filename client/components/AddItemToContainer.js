@@ -100,7 +100,7 @@ export default function AddItemToContainer(props) {
         })}
       </div>
       <h3>...or, create a new one</h3>
-      <Link to='create'>Create</Link>
+      <Link to={{ pathname: 'create', state: { containerId: containerId }}} >Create</Link>
       {addToggle && (
         <SingleItemAdd
           setAddToggle={setAddToggle}

@@ -77,7 +77,7 @@ const typeDefs = gql`
   type Item {
     id: ID!
     name: String!
-    imageUrl: String!
+    imageUrl: String
     containerItem: ContainerItem
     users: [User]
     containers: [Container]
@@ -147,6 +147,10 @@ const typeDefs = gql`
       originalQuantity: Int!
       itemStatus: ItemStatus!
     ): ContainerItem!
+    createItem(
+      name: String!
+      imageUrl: String
+    ): Item!
     updateContainerItem(id: ID!, input: ContainerItemInput): ContainerItem
     updateUser(id: ID!, input: UserInfoInput): User
   }
@@ -353,6 +357,23 @@ const rootResolver = {
         const container = await Container.findByPk(args.id);
         return await container.update(args.input);
       } catch (error) {}
+    },
+
+    async createItem(_, args, context) {
+      try {
+        if (args.imageUrl) {
+          return await Item.create({
+          name: args.name,
+          imageUrl: args.imageUrl,
+        });
+        } else {
+          return await Item.create({
+          name: args.name,
+        });
+        }
+      } catch (error) {
+        console.error("error creating item in GraphQL");
+      }
     },
 
     async addItemToContainer(_, args, context) {
