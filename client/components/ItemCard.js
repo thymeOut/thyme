@@ -61,25 +61,30 @@ function ItemCard(props) {
     },
     refetchQueries: [
       {
-        query: GET_CONTAINER, variables: {
-          id: containerId
-        }
-      }
-    ]
+        query: GET_CONTAINER,
+        variables: {
+          id: containerId,
+        },
+      },
+    ],
   });
 
   const handleDecrement = () => {
-    console.log('decrementing...')
     setQuantityUsed(quantityUsed + 1);
-    console.log('new state value: ', quantityUsed);
-    updateQuantity({
-      variables: {
-        id: item.containerItem.id,
-        input: {
-          quantityUsed: quantityUsed + 1,
+
+    // this is smelly. refactor after MVP accomplished.
+    if (quantityUsed === item.containerItem.originalQuantity - 1) {
+      handleRemove();
+    } else {
+      updateQuantity({
+        variables: {
+          id: item.containerItem.id,
+          input: {
+            quantityUsed: quantityUsed + 1,
+          },
         },
-      },
-    });
+      });
+    }
   };
 
   const handleIncrement = () => {
@@ -96,9 +101,9 @@ function ItemCard(props) {
 
   const handleRemove = () => {
     removeItem();
-  }
+  };
 
-  console.log(item.containerItem)
+  console.log(item.containerItem);
 
   return (
     <Grid item key={item.id} xs={12} sm={6} md={4}>
