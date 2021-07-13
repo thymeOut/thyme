@@ -76,9 +76,11 @@ export default function UserContainers() {
     return "...error";
   }
 
+  console.log(data)
   return (
     <div className="all-container-view">
       <h2>My Containers</h2>
+      
       <div className="all-container-header">
         <ButtonGroup variant="outlined" color="primary">
           <Button onClick={() => setCreateToggle(!createToggle)}>
