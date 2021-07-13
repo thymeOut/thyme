@@ -122,11 +122,12 @@ export default function UserContainers() {
                   (container) =>
                     container.isActive.toString() ===
                       containerStatus.toString()
-                    //   &&
-                    // container.containerUser.role === membership.role
+                      &&
+                    container.containerUser.role === membership.role
                 )
                 .map((container) => (
                   <Grid item xs={6} sm={3} key={container.id}>
+                    {console.log(container)}
                     <Card className={classes.root}>
                       <CardHeader
                         title={

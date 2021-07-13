@@ -12,6 +12,9 @@ query User($id: ID!) {
       imageUrl
       type
       ownerId
+      containerUser {
+        role
+      }
     }
     containerItems {
       id
