@@ -12,16 +12,18 @@ const GET_ITEM = gql`
   }
 `;
 
-const ADD_ITEM = gql`
+export const ADD_ITEM = gql`
   mutation AddItemToContainer(
     $containerId: ID!
     $itemId: ID!
     $originalQuantity: Int!
+    $expiration: Date
     $itemStatus: ItemStatus!
   ) {
     addItemToContainer(
       containerId: $containerId
       itemId: $itemId
+      expiration: $expiration
       originalQuantity: $originalQuantity
       itemStatus: $itemStatus
     ) {
