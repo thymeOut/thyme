@@ -148,3 +148,14 @@ nav a {
 .all-container-view {
   margin: 20px;
 }
+
+.admin-dash {
+  display: flex;
+}
+
+.admin-item {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+}
