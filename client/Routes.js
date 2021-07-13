@@ -30,7 +30,7 @@ export default function Routes(props) {
           <RegisterForm />
         </Route>
         <Route path="/search" component={JoinContainer} />
-        <Route path='/add' component={SingleItemAdd}/>
+        {/* <Route path='/add' component={SingleItemAdd}/> */}
       </Switch>
     </div>
   );

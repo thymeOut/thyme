@@ -28,20 +28,15 @@ const UPDATE_CONTAINER_ITEM = gql`
 
 function ItemCard(props) {
   const localId = window.localStorage.getItem('user-id');
-
-  console.log(localId, "<--- localId")
   const containerId = props.match.params.id;
   const { item, classes, users } = props;
-  console.log(users);
   const formattedExpiration = item.expiration
     ? formatDistance(new Date(item.expiration), new Date(), {
         addSuffix: true,
       })
     : '';
 
-  const [quantityUsed, setQuantityUsed] = useState(
-    item.quantityUsed
-  );
+  const [quantityUsed, setQuantityUsed] = useState(item.quantityUsed);
 
   const [updateQuantity] = useMutation(UPDATE_CONTAINER_ITEM, {
     variables: {
@@ -73,8 +68,8 @@ function ItemCard(props) {
         query: GET_CONTAINER_ITEMS,
         variables: {
           containerId: containerId,
-        }
-      }
+        },
+      },
     ],
   });
 
@@ -112,8 +107,6 @@ function ItemCard(props) {
     removeItem();
   };
 
-  console.log(item.userId);
-
   return (
     <Grid item key={item.id} xs={12} sm={6} md={4}>
       <Card className={classes.card}>
@@ -123,7 +116,7 @@ function ItemCard(props) {
           title={item.name}
         />
         <CardContent className={classes.cardContent}>
-          <Typography gutterBottom variant="h5" component="h2">
+          <Typography gutterBottom variant='h5' component='h2'>
             {item.name}
           </Typography>
           <Typography>
@@ -139,17 +132,14 @@ function ItemCard(props) {
         </CardContent>
         {localId === item.userId && (
           <CardActions>
-            <ButtonGroup size="small" color="primary">
+            <ButtonGroup size='small' color='primary'>
               <Button onClick={handleDecrement}>-</Button>
-              <Button>
-                {item.originalQuantity -
-                  item.quantityUsed}
-              </Button>
+              <Button>{item.originalQuantity - item.quantityUsed}</Button>
               <Button onClick={handleIncrement}>+</Button>
             </ButtonGroup>
             <Button
-              size="small"
-              color="primary"
+              size='small'
+              color='primary'
               component={Link}
               to={{
                 pathname: `${containerId}/edititem/${item.id}`,
@@ -158,7 +148,7 @@ function ItemCard(props) {
             >
               Edit
             </Button>
-            <Button size="small" color="primary" onClick={handleRemove}>
+            <Button size='small' color='primary' onClick={handleRemove}>
               Remove
             </Button>
           </CardActions>

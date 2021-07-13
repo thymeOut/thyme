@@ -315,12 +315,16 @@ const rootResolver = {
 
     async addItemToContainer(_, args, context) {
       try {
+        const item = await Item.findOrCreate({
+          where: { id: args.itemId },
+          defaults: { name: args.itemName },
+        });
         const containerItem = await ContainerItem.create({
           userId: context.user.id,
           originalQuantity: args.originalQuantity,
           itemStatus: args.itemStatus,
           containerId: args.containerId,
-          itemId: args.itemId,
+          itemId: item[0].dataValues.id,
         });
         return containerItem;
       } catch (error) {
