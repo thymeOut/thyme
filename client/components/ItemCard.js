@@ -27,6 +27,9 @@ const UPDATE_CONTAINER_ITEM = gql`
 `;
 
 function ItemCard(props) {
+  const localId = window.localStorage.getItem('user-id');
+
+  console.log(localId, "<--- localId")
   const containerId = props.match.params.id;
   const { item, classes, users } = props;
   console.log(users);
@@ -61,25 +64,30 @@ function ItemCard(props) {
     },
     refetchQueries: [
       {
-        query: GET_CONTAINER, variables: {
-          id: containerId
-        }
-      }
-    ]
+        query: GET_CONTAINER,
+        variables: {
+          id: containerId,
+        },
+      },
+    ],
   });
 
   const handleDecrement = () => {
-    console.log('decrementing...')
     setQuantityUsed(quantityUsed + 1);
-    console.log('new state value: ', quantityUsed);
-    updateQuantity({
-      variables: {
-        id: item.containerItem.id,
-        input: {
-          quantityUsed: quantityUsed + 1,
+
+    // this is smelly. refactor after MVP accomplished.
+    if (quantityUsed === item.containerItem.originalQuantity - 1) {
+      handleRemove();
+    } else {
+      updateQuantity({
+        variables: {
+          id: item.containerItem.id,
+          input: {
+            quantityUsed: quantityUsed + 1,
+          },
         },
-      },
-    });
+      });
+    }
   };
 
   const handleIncrement = () => {
@@ -96,9 +104,9 @@ function ItemCard(props) {
 
   const handleRemove = () => {
     removeItem();
-  }
+  };
 
-  console.log(item.containerItem)
+  console.log(item.containerItem.userId);
 
   return (
     <Grid item key={item.id} xs={12} sm={6} md={4}>
@@ -123,30 +131,32 @@ function ItemCard(props) {
           </Typography>
           <Typography>{formattedExpiration}</Typography>
         </CardContent>
-        <CardActions>
-          <ButtonGroup size="small" color="primary">
-            <Button onClick={handleDecrement}>-</Button>
-            <Button>
-              {item.containerItem.originalQuantity -
-                item.containerItem.quantityUsed}
+        {localId === item.containerItem.userId && (
+          <CardActions>
+            <ButtonGroup size="small" color="primary">
+              <Button onClick={handleDecrement}>-</Button>
+              <Button>
+                {item.containerItem.originalQuantity -
+                  item.containerItem.quantityUsed}
+              </Button>
+              <Button onClick={handleIncrement}>+</Button>
+            </ButtonGroup>
+            <Button
+              size="small"
+              color="primary"
+              component={Link}
+              to={{
+                pathname: `${containerId}/edititem/${item.id}`,
+                state: { item: item, users: users, containerId: containerId },
+              }}
+            >
+              Edit
             </Button>
-            <Button onClick={handleIncrement}>+</Button>
-          </ButtonGroup>
-          <Button
-            size="small"
-            color="primary"
-            component={Link}
-            to={{
-              pathname: `${containerId}/edititem/${item.id}`,
-              state: { item: item, users: users },
-            }}
-          >
-            Edit
-          </Button>
-          <Button size="small" color="primary" onClick={handleRemove}>
-            Remove
-          </Button>
-        </CardActions>
+            <Button size="small" color="primary" onClick={handleRemove}>
+              Remove
+            </Button>
+          </CardActions>
+        )}
       </Card>
     </Grid>
   );
