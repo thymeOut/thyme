@@ -45,7 +45,8 @@ export default function AllUsersData() {
     return "loading..";
   }
   if (error) {
-    return "loading..";
+    console.log(error)
+    return "Error";
   }
   console.log(data)
 
@@ -64,7 +65,7 @@ export default function AllUsersData() {
           </TableRow>
           </TableHead>
           <TableBody>
-          {data.users.map((user) => (
+          {data?.users.map((user) => (
             <TableRow key={user.id}>
               <TableCell component="th" scope="row">
                 {user.id}
