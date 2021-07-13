@@ -1,5 +1,6 @@
 {
   "name": "thyme",
+  "homepage": "https://thyme-out.herokuapp.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -13,6 +14,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "apollo-link": "^1.2.14",
+    "apollo-link-context": "^1.0.20",
     "apollo-link-error": "^1.1.13",
     "apollo-server-express": "^2.25.2",
     "bcrypt": "^5.0.1",

@@ -4,7 +4,6 @@ import { gql, useMutation } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../UserContext';
 
-
 const LOGIN_MUTATION = gql`
   mutation LoginMutation($email: String!, $password: String!) {
     login(email: $email, password: $password) {
@@ -18,7 +17,7 @@ const LOGIN_MUTATION = gql`
 `;
 
 function LoginForm() {
-  const { isLoggedIn, setLoggedIn } = useContext(UserContext);
+  const { setLoggedIn } = useContext(UserContext);
 
   const history = useHistory();
   const [formState, setFormState] = useState({
@@ -35,6 +34,7 @@ function LoginForm() {
       console.log(login.login.token);
       localStorage.setItem('token', login.login.token);
       localStorage.setItem('user-id', login.login.user.id);
+      localStorage.setItem('isAdmin', login.login.user.isAdmin)
       setLoggedIn(true);
       history.push('/');
     },
