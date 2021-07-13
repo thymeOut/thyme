@@ -75,6 +75,7 @@ export default function UserContainers() {
     console.log(error)
     return "...error";
   }
+  console.log(localStorage.getItem("user-id"))
 
   console.log(data)
   return (
