@@ -124,14 +124,10 @@ export default function SingleContainer(props) {
     return '...error';
   }
 
-
-
   const { container } = itemData;
 
-  const containerItems = containerItemData.containerItems.map(cItem => {
-    let item = container.items.filter(item => item.id === cItem.itemId)[0];
-
-    console.log(item);
+  const containerItems = containerItemData.containerItems.map((cItem) => {
+    let item = container.items.filter((item) => item.id === cItem.itemId)[0];
 
     return {
       id: cItem.id,
@@ -148,42 +144,39 @@ export default function SingleContainer(props) {
     };
   });
 
-  console.log("container items --->", containerItems);
-
-  console.log(containerItemData);
   const { items, name, users } = container;
 
   return (
     <main>
       <div className={classes.heroContent}>
-        <Container maxWidth="sm">
+        <Container maxWidth='sm'>
           <Typography
-            component="h1"
-            variant="h2"
-            align="center"
-            color="textPrimary"
+            component='h1'
+            variant='h2'
+            align='center'
+            color='textPrimary'
             gutterBottom
           >
             {name}
           </Typography>
           <div className={classes.heroButtons}>
-            <Grid container spacing={2} justifyContent="center">
+            <Grid container spacing={2} justifyContent='center'>
               <Grid item>
                 <Button
-                  variant="contained"
-                  color="primary"
+                  variant='contained'
+                  color='primary'
                   component={Link}
-                  to={`${containerId}/add`}
+                  to={{ pathname: `${container.id}/add`, state: { containerId: container.id } }}
                 >
                   Add item
                 </Button>
               </Grid>
               <Grid item>
                 <Button
-                  variant="outlined"
-                  color="primary"
+                  variant='outlined'
+                  color='primary'
                   component={Link}
-                  to="/containers"
+                  to='/containers'
                 >
                   Back
                 </Button>
@@ -192,7 +185,11 @@ export default function SingleContainer(props) {
           </div>
         </Container>
 
-        <ItemCardGrid classes={classes} containerItems={containerItems} users={users} />
+        <ItemCardGrid
+          classes={classes}
+          containerItems={containerItems}
+          users={users}
+        />
       </div>
     </main>
   );
