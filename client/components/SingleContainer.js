@@ -95,20 +95,62 @@ const useStyles = makeStyles((theme) => ({
 export default function SingleContainer(props) {
   const containerId = props.match.params.id;
   const classes = useStyles();
-  const { loading, error, data } = useQuery(GET_CONTAINER, {
+
+  const {
+    loading: itemLoading,
+    error: itemError,
+    data: itemData,
+  } = useQuery(GET_CONTAINER, {
     variables: {
       id: containerId,
     },
   });
-  if (loading) {
+
+  const {
+    loading: containerItemLoading,
+    error: containerItemError,
+    data: containerItemData,
+  } = useQuery(GET_CONTAINER_ITEMS, {
+    variables: {
+      containerId: containerId,
+    },
+  });
+
+  if (itemLoading || containerItemLoading) {
     return '...loading';
   }
 
-  if (error) {
+  if (itemError || containerItemError) {
     return '...error';
   }
 
-  const { container } = data;
+
+
+  const { container } = itemData;
+
+  const containerItems = containerItemData.containerItems.map(cItem => {
+    let item = container.items.filter(item => item.id === cItem.itemId)[0];
+
+    console.log(item);
+
+    return {
+      id: cItem.id,
+      itemId: item.id,
+      userId: cItem.userId,
+      containerId: cItem.containerId,
+      name: item.name,
+      imageUrl: item.imageUrl,
+      containerItemImageUrl: cItem.imageUrl,
+      originalQuantity: cItem.originalQuantity,
+      quantityUsed: cItem.quantityUsed,
+      expiration: cItem.expiration,
+      itemStatus: cItem.itemStatus,
+    };
+  });
+
+  console.log("container items --->", containerItems);
+
+  console.log(containerItemData);
   const { items, name, users } = container;
 
   return (
@@ -150,9 +192,8 @@ export default function SingleContainer(props) {
           </div>
         </Container>
 
-        <ItemCardGrid classes={classes} items={items} users={users} />
+        <ItemCardGrid classes={classes} containerItems={containerItems} users={users} />
       </div>
     </main>
-
   );
 }
