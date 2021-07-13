@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { MenuItem, Select } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -16,11 +13,10 @@ import Container from '@material-ui/core/Container';
 import { useMutation, gql } from '@apollo/client';
 import { useHistory } from 'react-router';
 
-
 const UPDATE_CONTAINER_ITEM = gql`
   mutation updateContainerItem($id: ID!, $input: ContainerItemInput) {
     updateContainerItem(id: $id, input: $input) {
-      name
+      id
     }
   }
 `;
@@ -56,10 +52,8 @@ export default function EditItem(props) {
   );
   const [imageUrl, setImageUrl] = useState(containerItem.imageUrl);
   const [ownerId, setOwnerId] = useState(containerItem.userId);
-  console.log(ownerId);
 
   const handleChange = (event) => {
-    console.log(event.target.name);
 
     if (event.target.name === 'owner') {
       setOwnerId(event.target.value);
@@ -69,26 +63,25 @@ export default function EditItem(props) {
   };
 
   const [submitUpdate] = useMutation(UPDATE_CONTAINER_ITEM, {
-    id: containerItem.id,
-    input: {
-      expiration: expiration,
-      imageUrl: imageUrl,
-      userId: ownerId,
+    variables: {
+      id: containerItem.id,
+      input: {
+        expiration: new Date(expiration),
+        imageUrl: imageUrl,
+        userId: ownerId,
+      },
     },
     onCompleted: (submitUpdate) => {
-      console.log(submitUpdate);
       history.push('..');
-    }
+    },
   });
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("submitting update...")
-    console.log("event -->", event)
+    console.log('submitting update...');
+    console.log('event -->', event);
     submitUpdate();
   };
-
-  console.log(expiration);
 
   return (
     <Container component="main" maxWidth="xs">
