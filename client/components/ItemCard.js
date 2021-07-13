@@ -143,7 +143,7 @@ function ItemCard(props) {
             component={Link}
             to={{
               pathname: `${containerId}/edititem/${item.id}`,
-              state: { item: item, users: users },
+              state: { item: item, users: users, containerId: containerId },
             }}
           >
             Edit

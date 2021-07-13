@@ -12,6 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useMutation, gql } from '@apollo/client';
 import { useHistory } from 'react-router';
+import { GET_CONTAINER } from './SingleContainer';
 
 const UPDATE_CONTAINER_ITEM = gql`
   mutation updateContainerItem($id: ID!, $input: ContainerItemInput) {
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 export default function EditItem(props) {
   const history = useHistory();
   const classes = useStyles();
-  const { item, users } = props.location.state;
+  const { item, users, containerId } = props.location.state;
   const { containerItem } = item;
 
   const [expiration, setExpiration] = useState(
@@ -71,6 +72,14 @@ export default function EditItem(props) {
         userId: ownerId,
       },
     },
+    refetchQueries: [
+      {
+        query: GET_CONTAINER,
+        variables: {
+          id: containerId,
+        },
+      },
+    ],
     onCompleted: (submitUpdate) => {
       history.push('..');
     },
