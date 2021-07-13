@@ -17,11 +17,13 @@ export const ADD_ITEM = gql`
     $containerId: ID!
     $itemId: ID!
     $originalQuantity: Int!
+    $expiration: Date
     $itemStatus: ItemStatus!
   ) {
     addItemToContainer(
       containerId: $containerId
       itemId: $itemId
+      expiration: $expiration
       originalQuantity: $originalQuantity
       itemStatus: $itemStatus
     ) {

@@ -16,7 +16,6 @@ import Container from '@material-ui/core/Container';
 import regeneratorRuntime from 'regenerator-runtime';
 import { useHistory } from 'react-router';
 
-
 const CREATE_ITEM = gql`
   mutation createItem($name: String!) {
     createItem(name: $name) {
@@ -50,10 +49,11 @@ export default function CreateItem(props) {
   const history = useHistory();
 
   const { containerId } = props.location.state;
-  console.log("container id --->", containerId)
+  console.log('container id --->', containerId);
 
   const [name, setName] = useState('');
   const [expiration, setExpiration] = useState('');
+  const [quantity, setQuantity] = useState(1);
   const [id, setId] = useState(0);
 
   const handleChange = (event) => {
@@ -61,6 +61,8 @@ export default function CreateItem(props) {
       setName(event.target.value);
     } else if (event.target.name === 'expiration') {
       setExpiration(event.target.value);
+    } else if (event.target.name === 'quantity') {
+      setQuantity(event.target.value);
     }
   };
 
@@ -74,7 +76,8 @@ export default function CreateItem(props) {
     variables: {
       containerId: containerId,
       itemId: id,
-      originalQuantity: 1,
+      originalQuantity: +quantity,
+      expiration: new Date(expiration),
       itemStatus: 'ACTIVE',
     },
     refetchQueries: [
@@ -89,17 +92,19 @@ export default function CreateItem(props) {
         variables: {
           containerId: containerId,
         },
-      }
+      },
     ],
     onCompleted: (addItem) => {
       history.push(`/containers/${containerId}`);
-    }
+    },
   });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = await submitCreate();
     setId(data.data.createItem.id);
+    console.log(expiration);
+    console.log(new Date(expiration));
     addItem();
   };
 
@@ -119,6 +124,15 @@ export default function CreateItem(props) {
                 name="name"
                 onChange={handleChange}
                 value={name}
+                className={classes.textField}
+              ></TextField>
+              <TextField
+                id="quantity"
+                label="Quantity"
+                type="text"
+                name="quantity"
+                onChange={handleChange}
+                value={quantity}
                 className={classes.textField}
               ></TextField>
             </Grid>

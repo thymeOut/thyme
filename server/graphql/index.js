@@ -145,6 +145,7 @@ const typeDefs = gql`
       containerId: ID!
       itemId: ID!
       originalQuantity: Int!
+      expiration: Date
       itemStatus: ItemStatus!
     ): ContainerItem!
     createItem(
@@ -387,6 +388,7 @@ const rootResolver = {
           originalQuantity: args.originalQuantity,
           itemStatus: args.itemStatus,
           containerId: args.containerId,
+          expiration: args.expiration,
           itemId: item[0].dataValues.id,
         });
         return containerItem;
