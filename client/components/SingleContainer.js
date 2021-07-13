@@ -45,6 +45,21 @@ export const GET_CONTAINER = gql`
   }
 `;
 
+export const GET_CONTAINER_ITEMS = gql`
+  query ContainerItems($containerId: ID!) {
+    containerItems(containerId: $containerId) {
+      id
+      userId
+      itemId
+      containerId
+      originalQuantity
+      quantityUsed
+      expiration
+      itemStatus
+    }
+  }
+`;
+
 const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(2),

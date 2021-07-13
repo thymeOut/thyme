@@ -15,6 +15,7 @@ const typeDefs = gql`
     container(id: ID): Container
     searchContainer(name: String!): [Container]
     items: [Item]
+    containerItems(containerId: ID): [ContainerItem]
     containerItem(id: ID): Item
     item(id: ID): Item
   }
@@ -60,6 +61,7 @@ const typeDefs = gql`
     item: Item
     user: User
     container: Container!
+    containerId: ID!
     userId: ID!
   }
 
@@ -195,6 +197,22 @@ const rootResolver = {
       return await Item.findAll();
     },
 
+    async containerItems(_, args, context) {
+      try {
+        if (!context.user.id) {
+          return null;
+        } else {
+          const data = await ContainerItem.findAll({
+            where: {
+              containerId: args.containerId,
+            },
+          });
+        }
+      } catch (error) {
+        console.error('error in containerItems query!');
+      }
+    },
+
     async containerItem(_, args, context) {
       try {
         if (!context.user.id) {
@@ -310,7 +328,7 @@ const rootResolver = {
       try {
         const containerItem = await ContainerItem.findByPk(args.id);
         const data = await containerItem.update(args.input);
-        console.log("new container item -->", data);
+        console.log('new container item -->', data);
         return data;
       } catch (error) {
         console.error('error in updateContainerItem mutation resolver');
