@@ -8,6 +8,8 @@ query User($id: ID!) {
     containers {
       id
       name
+      isActive
+      imageUrl
       type
       ownerId
     }
