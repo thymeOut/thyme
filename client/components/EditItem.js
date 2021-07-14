@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import { MenuItem, Select } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { useMutation, gql } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useHistory } from 'react-router';
 import ContainerQuery from '../../server/graphql/queries/Container.graphql';
 import ContainerItems from '../../server/graphql/queries/ContainerItems.graphql';
@@ -40,7 +40,7 @@ export default function EditItem(props) {
   const [expiration, setExpiration] = useState(
     new Date(item.expiration).toISOString().slice(0, 10)
   );
-  const [imageUrl, setImageUrl] = useState(item.imageUrl);
+  const [imageUrl] = useState(item.imageUrl);
   const [ownerId, setOwnerId] = useState(item.userId);
 
   const handleChange = (event) => {
