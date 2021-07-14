@@ -16,7 +16,6 @@ export default function NavBar() {
       <nav>
         <h1 id="name">Thyme</h1>
           <Link to="/">Home</Link>
-          {console.log(window.localStorage.getItem('isAdmin'))}
         {window.localStorage.getItem('isAdmin') === "true" && <Link to="/admin">Admin</Link>}
         {isLoggedIn ? (
           <>

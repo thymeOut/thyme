@@ -48,7 +48,6 @@ export default function AllUsersData() {
     console.log(error)
     return "Error";
   }
-  console.log(data)
 
 
   return (

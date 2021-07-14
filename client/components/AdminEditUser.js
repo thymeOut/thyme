@@ -7,6 +7,8 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
+import {Button} from '@material-ui/core'
+import {Link} from 'react-router-dom'
 
 import EditContainerMenu from "./EditContainerMenu";
 import UserSettingForm from "./UserSettingForm";
@@ -34,13 +36,11 @@ function TabPanel(props) {
 }
 
 export default function AdminEditUser(props) {
-  const [containerData, setContainerData] = useState(null);
-  const [itemData, setItemData] = useState(null);
+
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  console.log(props);
 
   const { loading, error, data } = useQuery(User, {
     variables: {
@@ -57,6 +57,10 @@ export default function AdminEditUser(props) {
 
   return (
     <Paper>
+      <Button variant='contained'
+                  color='primary'
+                  component={Link}
+                  to={{ pathname: `/admin` }}>Back</Button>
       <Tabs
         value={value}
         onChange={handleChange}
@@ -65,17 +69,12 @@ export default function AdminEditUser(props) {
         centered
       >
         <Tab label="Containers" />
-        <Tab label="Container Items" />
         <Tab label="Accounts Settings" />
       </Tabs>
       <TabPanel value={value} index={0}>
         <AdminUserContainers user={data.user} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        coming soon...
-        {/* <AdminUserContainers user={data.user} /> */}
-      </TabPanel>
-      <TabPanel value={value} index={2}>
         <UserSettingForm user={data.user} />
       </TabPanel>
     </Paper>
