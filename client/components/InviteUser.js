@@ -37,6 +37,9 @@ export default function InviteUser(props) {
       <Button onClick={(e) => inviteUsers(e)} color="primary">
         Invite!
       </Button>
+      <Button onClick={(e) => props.setShareToggle(false)} color="primary">
+        Cancel
+      </Button>
     </form>
   );
 }

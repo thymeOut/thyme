@@ -91,13 +91,7 @@ const ContainerForm = (props) => {
         justifyContent="center"
         alignItems="flex-start"
       >
-        <TextField
-          value={containerName}
-          required
-          id="standard-required"
-          label="Container Name"
-          onChange={(e) => setContainerName(e.target.value)}
-        />
+        
         <TextField
           id="container-type"
           select
@@ -107,13 +101,21 @@ const ContainerForm = (props) => {
             setContainerType(e.target.value);
           }}
           helperText="Container Type"
-          variant="outlined"
+          variant="filled"
         >
           <MenuItem value="fridge">Fridge</MenuItem>
           <MenuItem value="freezer">Freezer</MenuItem>
           <MenuItem value="pantry">Pantry</MenuItem>
           <MenuItem value="minifridge">Mini-fridge</MenuItem>
         </TextField>
+        <TextField
+          value={containerName}
+          required
+          variant="filled"
+          id="standard-required"
+          label="Name Your Container"
+          onChange={(e) => setContainerName(e.target.value)}
+        />
         <div className="form-title">Invite Users:</div>
         <EmailForm setAddedUsers={setAddedUsers} addedUsers={addedUsers}/>
       </Grid>
