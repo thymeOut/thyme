@@ -5,7 +5,6 @@ const processExpiredFood = async () => {
   const data = await ContainerItem.findAll({
     where: {
       itemStatus: "ACTIVE",
-      // rank < 1000 OR rank IS NULL
       expiration: {
         [Op.lt]: Date.now()
       },
