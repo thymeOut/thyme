@@ -7,6 +7,8 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
+import {Button} from '@material-ui/core'
+import {Link} from 'react-router-dom'
 
 import EditContainerMenu from "./EditContainerMenu";
 import UserSettingForm from "./UserSettingForm";
@@ -55,6 +57,10 @@ export default function AdminEditUser(props) {
 
   return (
     <Paper>
+      <Button variant='contained'
+                  color='primary'
+                  component={Link}
+                  to={{ pathname: `/admin` }}>Back</Button>
       <Tabs
         value={value}
         onChange={handleChange}
