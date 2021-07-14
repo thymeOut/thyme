@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { gql, useMutation, useQuery, useLazyQuery } from "@apollo/client";
-import Grid from "@material-ui/core/Grid";
+import React, { useState } from "react";
+import { gql, useMutation, useLazyQuery } from "@apollo/client";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
+
 import DialogActions from "@material-ui/core/DialogActions";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
@@ -75,7 +74,7 @@ export default function Search(props) {
           input:{
             id: localStorage.getItem("user-id"),
             role:'pending'
-          } 
+          }
         },
       });
     } catch (error) {

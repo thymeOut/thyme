@@ -16,11 +16,9 @@ export default function NavBar() {
       <nav>
         <h1 id="name">Thyme</h1>
           <Link to="/">Home</Link>
-          {console.log(window.localStorage.getItem('isAdmin'))}
         {window.localStorage.getItem('isAdmin') === "true" && <Link to="/admin">Admin</Link>}
         {isLoggedIn ? (
           <>
-            {/* The navbar will show these links after you log in */}
             <Link to="/containers">My Containers</Link>
             <Link to="/" onClick={handleLogout}>
               Logout
@@ -28,7 +26,7 @@ export default function NavBar() {
           </>
         ) : (
           <>
-            {/* The navbar will show these links before you log in */}
+
             <Link to="/login" id="loginButton">
               Login/Sign Up
             </Link>

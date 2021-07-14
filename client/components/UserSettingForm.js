@@ -44,7 +44,6 @@ const UserSettingForm = (props) => {
   const handleAdminChange = (event) => {
     setAccountData({ ...accountData, isAdmin: !accountData.isAdmin });
   };
-  console.log(accountData);
 
   return (
     <form>
