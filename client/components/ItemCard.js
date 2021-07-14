@@ -1,6 +1,6 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { withRouter } from 'react-router';
-import { useQuery, gql, useMutation } from '@apollo/client';
+import { gql, useMutation } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import {
   Button,
@@ -10,21 +10,12 @@ import {
   CardContent,
   CardMedia,
   Grid,
-  Toolbar,
   Typography,
-  Container,
 } from '@material-ui/core';
 import { formatDistance } from 'date-fns';
-import { GET_CONTAINER, GET_CONTAINER_ITEMS } from './SingleContainer';
-
-const UPDATE_CONTAINER_ITEM = gql`
-  mutation updateContainerItem($id: ID!, $input: ContainerItemInput) {
-    updateContainerItem(id: $id, input: $input) {
-      id
-      quantityUsed
-    }
-  }
-`;
+import ContainerQuery from '../../server/graphql/queries/Container.graphql';
+import ContainerItems from '../../server/graphql/queries/ContainerItems.graphql';
+import UpdateContainerItem from '../../server/graphql/mutations/UpdateContainerItem.graphql';
 
 function ItemCard(props) {
   const localId = window.localStorage.getItem('user-id');
@@ -38,7 +29,7 @@ function ItemCard(props) {
 
   const [quantityUsed, setQuantityUsed] = useState(item.quantityUsed);
 
-  const [updateQuantity] = useMutation(UPDATE_CONTAINER_ITEM, {
+  const [updateQuantity] = useMutation(UpdateContainerItem, {
     variables: {
       id: item.id,
       input: {
@@ -50,7 +41,7 @@ function ItemCard(props) {
     // },
   });
 
-  const [removeItem] = useMutation(UPDATE_CONTAINER_ITEM, {
+  const [removeItem] = useMutation(UpdateContainerItem, {
     variables: {
       id: item.id,
       input: {
@@ -59,13 +50,13 @@ function ItemCard(props) {
     },
     refetchQueries: [
       {
-        query: GET_CONTAINER,
+        query: ContainerQuery,
         variables: {
           id: containerId,
         },
       },
       {
-        query: GET_CONTAINER_ITEMS,
+        query: ContainerItems,
         variables: {
           containerId: containerId,
         },

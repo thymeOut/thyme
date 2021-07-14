@@ -1,64 +1,18 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { useQuery, gql, useMutation } from '@apollo/client';
+import React from 'react';
+import { useQuery } from '@apollo/client';
 import { Link } from 'react-router-dom';
+import ContainerQuery from '../../server/graphql/queries/Container.graphql';
+import ContainerItems from '../../server/graphql/queries/ContainerItems.graphql';
 
 import {
   Button,
-  ButtonGroup,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
   Grid,
-  Toolbar,
   Typography,
   Container,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import ItemCardGrid from './ItemCardGrid';
-
-export const GET_CONTAINER = gql`
-  query Container($id: ID!) {
-    container(id: $id) {
-      id
-      name
-      users {
-        id
-        firstName
-        lastName
-      }
-      items {
-        id
-        name
-        imageUrl
-        containerItem {
-          id
-          userId
-          originalQuantity
-          quantityUsed
-          expiration
-          itemStatus
-        }
-      }
-    }
-  }
-`;
-
-export const GET_CONTAINER_ITEMS = gql`
-  query ContainerItems($containerId: ID!) {
-    containerItems(containerId: $containerId) {
-      id
-      userId
-      itemId
-      containerId
-      originalQuantity
-      quantityUsed
-      expiration
-      itemStatus
-    }
-  }
-`;
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -100,7 +54,7 @@ export default function SingleContainer(props) {
     loading: itemLoading,
     error: itemError,
     data: itemData,
-  } = useQuery(GET_CONTAINER, {
+  } = useQuery(ContainerQuery, {
     variables: {
       id: containerId,
     },
@@ -110,7 +64,7 @@ export default function SingleContainer(props) {
     loading: containerItemLoading,
     error: containerItemError,
     data: containerItemData,
-  } = useQuery(GET_CONTAINER_ITEMS, {
+  } = useQuery(ContainerItems, {
     variables: {
       containerId: containerId,
     },
