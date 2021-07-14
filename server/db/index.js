@@ -19,6 +19,9 @@ Item.belongsToMany(Container, {
 User.hasMany(ContainerItem);
 ContainerItem.belongsTo(User);
 
+Item.hasMany(ContainerItem);
+ContainerItem.belongsTo(Item);
+
 // Container.belongsTo(User, { as: 'owner' });
 // User.hasMany(Container, { foreignKey: 'ownerId' });
 

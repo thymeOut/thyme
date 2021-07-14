@@ -17,7 +17,7 @@ export default function NavBar() {
         <h1 id="name">Thyme</h1>
           <Link to="/">Home</Link>
           {console.log(window.localStorage.getItem('isAdmin'))}
-        {window.localStorage.getItem('isAdmin') === "true" && <Link to="/allData">Admin</Link>}
+        {window.localStorage.getItem('isAdmin') === "true" && <Link to="/admin">Admin</Link>}
         {isLoggedIn ? (
           <>
             {/* The navbar will show these links after you log in */}

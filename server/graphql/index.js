@@ -1,14 +1,11 @@
-
-
-const { gql } = require('@apollo/client');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const containerUsers = require('../../script/data/containerUsers');
+const { gql } = require("@apollo/client");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const containerUsers = require("../../script/data/containerUsers");
 const {
   models: { User, Container, Item, ContainerItem, ContainerUser },
-} = require('../db/');
-const { Op } = require('sequelize');
-
+} = require("../db/");
+const { Op } = require("sequelize");
 
 const typeDefs = gql`
   type Query {
@@ -47,7 +44,7 @@ const typeDefs = gql`
     type: ContainerType!
     imageUrl: String!
     isActive: Boolean!
-    owner: User!
+    ownerId: ID!
     users: [User!]
     items: [Item!]
     containerUser: ContainerUser
@@ -65,6 +62,7 @@ const typeDefs = gql`
     user: User
     container: Container!
     containerId: ID!
+    itemId: ID!
     userId: ID!
   }
 
@@ -116,6 +114,13 @@ const typeDefs = gql`
     role: Role!
   }
 
+  input UserInfoInput {
+    firstName: String
+    lastName: String
+    email: String
+    isAdmin: Boolean
+  }
+
   input ContainerItemInput {
     quantityUsed: Int
     expiration: Date
@@ -142,6 +147,7 @@ const typeDefs = gql`
       itemStatus: ItemStatus!
     ): ContainerItem!
     updateContainerItem(id: ID!, input: ContainerItemInput): ContainerItem
+    updateUser(id: ID!, input: UserInfoInput): User
   }
   scalar Date
 `;
@@ -153,7 +159,10 @@ const rootResolver = {
         return null;
       } else {
         const users = await User.findAll({
-          include: Container,
+          include: [
+            { model: Container },
+            { model: ContainerItem, include: Item },
+          ],
         });
         return users;
       }
@@ -164,7 +173,10 @@ const rootResolver = {
         return null;
       } else {
         const data = await User.findByPk(args.id, {
-          include: Container,
+          include: [
+            { model: Container },
+            { model: ContainerItem, include: Item },
+          ],
         });
         return data;
       }
@@ -210,9 +222,10 @@ const rootResolver = {
               containerId: args.containerId,
             },
           });
+          return data;
         }
       } catch (error) {
-        console.error('error in containerItems query!');
+        console.error("error in containerItems query!");
       }
     },
 
@@ -233,7 +246,7 @@ const rootResolver = {
           });
         }
       } catch (error) {
-        console.error('error in containerItem query!');
+        console.error("error in containerItem query!");
       }
     },
   },
@@ -248,16 +261,47 @@ const rootResolver = {
         });
 
         const token = await user.generateToken();
-        console.log('token--->', token);
+        console.log("token--->", token);
         return { token, user };
       } catch (error) {
-        console.error('error in createUser mutation');
+        console.error("error in createUser mutation");
       }
     },
 
     async login(_, args) {
       const data = await User.authenticate(args);
       return data;
+    },
+
+    // 1. Create a root resolver in respective category (query or mutation)
+    // Simply replicate what your restful API would look like
+
+    //2. (Since I can't comment within schema), create mutation within schema
+    //Format =>
+    /*
+                 parameter
+                    |   type                     return obj
+                    |    |                          |
+        updateUser(id: ID!, input: UserInfoInput): User
+            |                           |
+            |                     define this type in schema
+            |
+        Make sure the schema mutation name matches the resolver name
+    */
+    async updateUser(_, args, context) {
+      const isAdmin = context.user.isAdmin ? args.input.isAdmin : false;
+      if (!context.user.isAdmin && +args.input.id !== +context.user.id) {
+        throw new Error("You do not have permission to edit");
+      } else {
+        const user = await User.findByPk(args.id);
+        console.log(args)
+        await user.update({
+          firstName: args.input.firstName,
+          lastName: args.input.lastName,
+          email: args.input.email,
+          isAdmin: isAdmin,
+        });
+      }
     },
 
     async createContainer(_, args, context) {
@@ -268,19 +312,19 @@ const rootResolver = {
           ownerId: context.user.id,
         });
         const user = await User.findByPk(context.user.id);
-        container.addUser(user.id, { through: { role: 'owner' } });
+        container.addUser(user.id, { through: { role: "owner" } });
         return container;
       } catch (error) {
         console.log(error);
       }
     },
     async addUserToContainer(_, args, context) {
-      const searchEmail = args.input.email ? args.input.email : '';
+      const searchEmail = args.input.email ? args.input.email : "";
       const searchUserId = args.input.id ? args.input.id : 9999999999;
 
       try {
-        if (args.input.role === 'owner') {
-          throw new Error('Invalid Request! Nice try buckaroo');
+        if (args.input.role === "owner") {
+          throw new Error("Invalid Request! Nice try buckaroo");
         }
         const container = await Container.findByPk(args.containerId);
 
@@ -293,9 +337,9 @@ const rootResolver = {
         if (context.user.id === container.ownerId) {
           container.addUser(user.id, { through: { role: args.input.role } });
         } else {
-          container.addUser(user.id, { through: { role: 'pending' } });
+          container.addUser(user.id, { through: { role: "pending" } });
           console.log(
-            'You are not the owner of this container, adding user as pending'
+            "You are not the owner of this container, adding user as pending"
           );
         }
         return container;
@@ -331,10 +375,10 @@ const rootResolver = {
       try {
         const containerItem = await ContainerItem.findByPk(args.id);
         const data = await containerItem.update(args.input);
-        console.log('new container item -->', data);
+        console.log("new container item -->", data);
         return data;
       } catch (error) {
-        console.error('error in updateContainerItem mutation resolver');
+        console.error("error in updateContainerItem mutation resolver");
       }
     },
   },
