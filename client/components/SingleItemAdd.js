@@ -1,7 +1,8 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import { Link } from 'react-router-dom';
-import { GET_CONTAINER } from './SingleContainer';
+import { GET_CONTAINER, GET_CONTAINER_ITEMS } from './SingleContainer';
+import { useHistory } from 'react-router';
 
 const GET_ITEM = gql`
   query Item($id: ID!) {
@@ -11,16 +12,18 @@ const GET_ITEM = gql`
   }
 `;
 
-const ADD_ITEM = gql`
+export const ADD_ITEM = gql`
   mutation AddItemToContainer(
     $containerId: ID!
     $itemId: ID!
     $originalQuantity: Int!
+    $expiration: Date
     $itemStatus: ItemStatus!
   ) {
     addItemToContainer(
       containerId: $containerId
       itemId: $itemId
+      expiration: $expiration
       originalQuantity: $originalQuantity
       itemStatus: $itemStatus
     ) {
@@ -32,34 +35,35 @@ const ADD_ITEM = gql`
 export default function SingleItemAdd(props) {
   const [quantity, setQuantity] = useState(1);
   const [expiration, setExpiration] = useState();
+  const history = useHistory();
   const { loading, error, data } = useQuery(GET_ITEM, {
     variables: {
       id: props.itemId,
     },
   });
 
-  const [addItem, { error: addItemError }] = useMutation(
-    ADD_ITEM,
-    {
-      variables: {
-        containerId: props.containerId,
-        itemId: props.itemId,
-        originalQuantity: +quantity,
-        itemStatus: 'ACTIVE',
-      },
+  const [addItem, { error: addItemError }] = useMutation(ADD_ITEM, {
+    variables: {
+      containerId: props.containerId,
+      itemId: props.itemId,
+      originalQuantity: +quantity,
+      itemStatus: 'ACTIVE',
     },
-
-    {
-      refetchQueries: [
-        {
-          query: GET_CONTAINER,
-          variables: {
-            id: props.containerId,
-          },
+    refetchQueries: [
+      {
+        query: GET_CONTAINER,
+        variables: {
+          id: props.containerId,
         },
-      ],
-    }
-  );
+      },
+      {
+        query: GET_CONTAINER_ITEMS,
+        variables: {
+          containerId: props.containerId,
+        },
+      },
+    ],
+  });
 
   if (loading) return '...loading';
   if (error) console.log(error);
@@ -69,8 +73,8 @@ export default function SingleItemAdd(props) {
       <form
         id='addItem-form'
         onSubmit={(e) => {
-          addItem();
           e.preventDefault();
+          addItem();
           props.setAddToggle(false);
         }}
       >

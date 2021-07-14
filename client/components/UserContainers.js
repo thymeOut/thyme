@@ -5,7 +5,7 @@ import ContainerForm from "./CreateContainerForm";
 import JoinContainer from "./JoinContainer";
 import EditContainerMenu from "./EditContainerMenu";
 import { makeStyles } from "@material-ui/core/styles";
-import User from '../../server/graphql/queries/User.graphql' 
+import User from '../../server/graphql/queries/User.graphql'
 
 import {
   Select,
@@ -75,6 +75,8 @@ export default function UserContainers() {
     return "...error";
   }
 
+  console.log(data)
+
   return (
     <div className="all-container-view">
       <h2>My Containers</h2>
@@ -119,11 +121,13 @@ export default function UserContainers() {
                 .filter(
                   (container) =>
                     container.isActive.toString() ===
-                      containerStatus.toString() &&
+                      containerStatus.toString()
+                      &&
                     container.containerUser.role === membership.role
                 )
                 .map((container) => (
                   <Grid item xs={6} sm={3} key={container.id}>
+                    {console.log(container)}
                     <Card className={classes.root}>
                       <CardHeader
                         title={
