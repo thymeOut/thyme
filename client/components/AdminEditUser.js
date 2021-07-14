@@ -34,13 +34,11 @@ function TabPanel(props) {
 }
 
 export default function AdminEditUser(props) {
-  const [containerData, setContainerData] = useState(null);
-  const [itemData, setItemData] = useState(null);
+
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  console.log(props);
 
   const { loading, error, data } = useQuery(User, {
     variables: {
@@ -65,17 +63,12 @@ export default function AdminEditUser(props) {
         centered
       >
         <Tab label="Containers" />
-        <Tab label="Container Items" />
         <Tab label="Accounts Settings" />
       </Tabs>
       <TabPanel value={value} index={0}>
         <AdminUserContainers user={data.user} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        coming soon...
-        {/* <AdminUserContainers user={data.user} /> */}
-      </TabPanel>
-      <TabPanel value={value} index={2}>
         <UserSettingForm user={data.user} />
       </TabPanel>
     </Paper>
