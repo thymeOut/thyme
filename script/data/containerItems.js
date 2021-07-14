@@ -1,45 +1,21 @@
-const containerItems = [
-  {
-    userId: 1,
-    containerId: 1,
-    itemId: 1,
-    originalQuantity: 1,
-    itemStatus: 'EXPIRED',
-    expiration: new Date(2019, 10, 24)
-  },
-  {
-    userId: 1,
-    containerId: 1,
-    itemId: 2,
-    originalQuantity: 3,
-    quantityUsed: 2,
-    itemStatus: 'ACTIVE',
-    expiration: Date.now(),
-  },
+const faker = require('faker');
 
-  //eggs
-  {
-    userId: 2,
-    containerId: 1,
-    itemId: 3,
-    originalQuantity: 12,
-    quantityUsed: 5,
-    itemStatus: 'EXPIRED',
-  },
-  {
-    userId: 2,
-    containerId: 2,
-    itemId: 3,
-    originalQuantity: 22,
-    itemStatus: 'REMOVED',
-  },
-  {
-    userId: 1,
-    containerId: 1,
-    itemId: 3,
-    originalQuantity: 234,
-    itemStatus: 'REMOVED',
-  },
-];
+let containerItems = [];
+
+for (let i = 0; i < 300; i++) {
+  let newContainerItem = {
+    itemId: Math.ceil(Math.random() * 24),
+    itemStatus: 'ACTIVE',
+    originalQuantity: Math.ceil(Math.random() * 30),
+  };
+
+  let dateTrue = Math.floor(Math.random() * 2);
+
+  if (dateTrue) {
+    newContainerItem.expiration = faker.date.between(new Date(), '2021-09-22');
+  }
+
+  containerItems.push(newContainerItem);
+}
 
 module.exports = containerItems;
