@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Link } from "react-router-dom";
 import ContainerForm from "./CreateContainerForm";
 import JoinContainer from "./JoinContainer";
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
   media: {
     height: 0,
-    paddingTop: "56.25%", // 16:9
+    paddingTop: "56.25%"
   },
   expand: {
     transform: "rotate(0deg)",
@@ -75,7 +75,6 @@ export default function UserContainers() {
     return "...error";
   }
 
-  console.log(data)
 
   return (
     <div className="all-container-view">

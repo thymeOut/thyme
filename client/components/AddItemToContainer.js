@@ -1,6 +1,6 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { useQuery, gql, useMutation } from '@apollo/client';
-import { Link, useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useQuery, gql } from '@apollo/client';
+import { Link } from 'react-router-dom';
 import SingleItemAdd from './SingleItemAdd';
 import AddItemCardGrid from './AddItemCardGrid';
 import { GET_CONTAINER, GET_CONTAINER_ITEMS } from './SingleContainer';
@@ -13,13 +13,13 @@ import { Autocomplete } from '@material-ui/lab';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 
 const GET_ITEMS = gql`
-  query Items {
-    items {
-      id
-      name
-      imageUrl
-    }
-  }
+	query Items {
+		items {
+			id
+			name
+			imageUrl
+		}
+	}
 `;
 
 const useStyles = makeStyles((theme) => ({
@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AddItemToContainer(props) {
+
   const userId = localStorage.getItem('user-id');
   const containerId = props.match.params.id;
   const classes = useStyles();
@@ -76,48 +77,48 @@ export default function AddItemToContainer(props) {
       id: containerId,
     },
   });
+	const {
+		loading: containerItemLoading,
+		error: containerItemError,
+		data: containerItemData
+	} = useQuery(GET_CONTAINER_ITEMS, {
+		variables: {
+			containerId: containerId
+		}
+	});
 
-  const {
-    loading: containerItemLoading,
-    error: containerItemError,
-    data: containerItemData,
-  } = useQuery(GET_CONTAINER_ITEMS, {
-    variables: {
-      containerId: containerId,
-    },
-  });
+	if (itemLoading || containerLoading || containerItemLoading) {
+		return '...loading';
+	}
 
-  if (itemLoading || containerLoading || containerItemLoading) {
-    return '...loading';
-  }
+	if (itemError || containerError || containerItemError) {
+		return '...error';
+	}
 
-  if (itemError || containerError || containerItemError) {
-    return '...error';
-  }
+	const { container } = containerData;
 
-  const { container } = containerData;
+	const containerItems = containerItemData.containerItems.map((cItem) => {
+		let item = container.items.filter((item) => item.id === cItem.itemId)[0];
 
-  const containerItems = containerItemData.containerItems.map((cItem) => {
-    let item = container.items.filter((item) => item.id === cItem.itemId)[0];
+		return {
+			id: cItem.id,
+			itemId: item.id,
+			userId: cItem.userId,
+			containerId: cItem.containerId,
+			name: item.name,
+			imageUrl: item.imageUrl,
+			containerItemImageUrl: cItem.imageUrl,
+			originalQuantity: cItem.originalQuantity,
+			quantityUsed: cItem.quantityUsed,
+			expiration: cItem.expiration,
+			itemStatus: cItem.itemStatus
+		};
+	});
 
-    return {
-      id: cItem.id,
-      itemId: item.id,
-      userId: cItem.userId,
-      containerId: cItem.containerId,
-      name: item.name,
-      imageUrl: item.imageUrl,
-      containerItemImageUrl: cItem.imageUrl,
-      originalQuantity: cItem.originalQuantity,
-      quantityUsed: cItem.quantityUsed,
-      expiration: cItem.expiration,
-      itemStatus: cItem.itemStatus,
-    };
-  });
+	const containerItemsFiltered = containerItems.filter((item) => {
+		return item.userId === userId && item.itemStatus === 'ACTIVE';
+	});
 
-  const containerItemsFiltered = containerItems.filter((item) => {
-    return item.userId === userId && item.itemStatus === 'ACTIVE';
-  });
 
   return (
     <main>
@@ -218,4 +219,5 @@ export default function AddItemToContainer(props) {
       </Container>
     </main>
   );
+
 }

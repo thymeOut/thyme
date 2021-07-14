@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import Card from "@material-ui/core/Card";
 import User from "../../server/graphql/queries/User.graphql";
@@ -15,24 +16,24 @@ import UserSettingForm from "./UserSettingForm";
 import AdminUserContainers from "./AdminUserContainers";
 
 const useStyles = makeStyles({
-  root: {
-    flexGrow: 1,
-  },
+	root: {
+		flexGrow: 1
+	}
 });
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box p={3}>{children}</Box>}
-    </div>
-  );
+	const { children, value, index, ...other } = props;
+	return (
+		<div
+			role="tabpanel"
+			hidden={value !== index}
+			id={`vertical-tabpanel-${index}`}
+			aria-labelledby={`vertical-tab-${index}`}
+			{...other}
+		>
+			{value === index && <Box p={3}>{children}</Box>}
+		</div>
+	);
 }
 
 export default function AdminEditUser(props) {
@@ -42,18 +43,18 @@ export default function AdminEditUser(props) {
     setValue(newValue);
   };
 
-  const { loading, error, data } = useQuery(User, {
-    variables: {
-      id: +props.match.params.id,
-    },
-  });
+	const { loading, error, data } = useQuery(User, {
+		variables: {
+			id: +props.match.params.id
+		}
+	});
 
-  if (loading) {
-    return "...loading";
-  }
-  if (error) {
-    return "...error";
-  }
+	if (loading) {
+		return '...loading';
+	}
+	if (error) {
+		return '...error';
+	}
 
   return (
     <Paper>
