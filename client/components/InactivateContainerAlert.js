@@ -5,11 +5,13 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import UpdateContainer from '../../server/graphql/mutations/UpdateContainer.graphql'
+import User from '../../server/graphql/queries/User.graphql'
 
 const InactivateContainer = (props) => {
   const [containerName, setContainerName] = useState("");
 
-  const [inactivateContainer] = useMutation(props.UPDATE_CONTAINER, {
+  const [inactivateContainer] = useMutation(UpdateContainer, {
     variables: {
       id: props.container.id,
       input: {
@@ -18,7 +20,7 @@ const InactivateContainer = (props) => {
     },
     refetchQueries: [
       {
-        query: props.GET_CONTAINERS,
+        query: User,
         variables: {
           id: localStorage.getItem("user-id"),
         },
@@ -31,6 +33,7 @@ const InactivateContainer = (props) => {
     if (containerName === props.container.name) {
       inactivateContainer();
     }
+    props.setInactiveToggle(false)
   };
 
   return (

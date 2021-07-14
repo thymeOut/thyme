@@ -1,0 +1,5 @@
+mutation UpdateContainer($id: ID!, $input: ContainerInput) {
+  updateContainer(id: $id, input: $input) {
+    name
+  }
+}

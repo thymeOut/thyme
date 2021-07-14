@@ -159,3 +159,8 @@ nav a {
   width: 100%;
   justify-content: space-between;
 }
+
+.admin-button-group {
+  display: flex;
+  justify-content: space-between;
+}
