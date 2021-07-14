@@ -5,6 +5,9 @@ const Container = db.define("container", {
   name: {
     type: Sequelize.STRING,
     allowNull: false,
+    validate: {
+      isEmpty: false
+    }
   },
   type: {
     type: Sequelize.ENUM('fridge', 'pantry', 'freezer', 'minifridge'),
