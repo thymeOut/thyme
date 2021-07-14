@@ -43,12 +43,10 @@ function RegisterForm() {
       password: formState.password,
     },
     onCompleted: (data) => {
-      console.log(data);
       localStorage.setItem('token', data.createUser.token);
       localStorage.setItem('user-id', data.createUser.user.id);
       setLoggedIn(true);
       history.push('/');
-      console.log('signup');
     },
   });
 

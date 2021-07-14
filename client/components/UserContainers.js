@@ -75,7 +75,6 @@ export default function UserContainers() {
     return "...error";
   }
 
-  console.log(data)
 
   return (
     <div className="all-container-view">

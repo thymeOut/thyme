@@ -31,7 +31,6 @@ function LoginForm() {
       password: formState.password,
     },
     onCompleted: (login) => {
-      console.log(login.login.token);
       localStorage.setItem('token', login.login.token);
       localStorage.setItem('user-id', login.login.user.id);
       localStorage.setItem('isAdmin', login.login.user.isAdmin)
