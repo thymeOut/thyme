@@ -166,7 +166,10 @@ export default function SingleContainer(props) {
                   variant='contained'
                   color='primary'
                   component={Link}
-                  to={{ pathname: `${container.id}/add`, state: { containerId: container.id } }}
+                  to={{
+                    pathname: `${container.id}/add`,
+                    state: { containerId: container.id },
+                  }}
                 >
                   Add item
                 </Button>
