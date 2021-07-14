@@ -9,23 +9,24 @@ import Grid from "@material-ui/core/Grid";
 import EmailForm from "./EmailForm";
 import AddUserToContainer from '../../server/graphql/mutations/AddUserToContainer.graphql'
 
+
 const CREATE_CONTAINER = gql`
-  mutation CreateContainer($name: String!, $type: ContainerType!) {
-    createContainer(name: $name, type: $type) {
-      id
-      name
-      type
-    }
-  }
+	mutation CreateContainer($name: String!, $type: ContainerType!) {
+		createContainer(name: $name, type: $type) {
+			id
+			name
+			type
+		}
+	}
 `;
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    "& .MuiTextField-root": {
-      margin: theme.spacing(2),
-      width: "25ch",
-    },
-  },
+	root: {
+		'& .MuiTextField-root': {
+			margin: theme.spacing(2),
+			width: '25ch'
+		}
+	}
 }));
 
 const ContainerForm = (props) => {
@@ -34,19 +35,16 @@ const ContainerForm = (props) => {
   const [containerType, setContainerType] = useState("fridge");
   const [addedUsers, setAddedUsers] = useState([]);
 
-  const [createContainer, { data, error, loading }] = useMutation(
-    CREATE_CONTAINER,
-    {
-      refetchQueries: [
-        {
-          query: props.GET_CONTAINERS,
-          variables: {
-            id: localStorage.getItem("user-id"),
-          },
-        },
-      ],
-    }
-  );
+	const [ createContainer, { data, error, loading } ] = useMutation(CREATE_CONTAINER, {
+		refetchQueries: [
+			{
+				query: props.GET_CONTAINERS,
+				variables: {
+					id: localStorage.getItem('user-id')
+				}
+			}
+		]
+	});
 
   const [addUserToContainer] = useMutation(
     AddUserToContainer

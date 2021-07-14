@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch} from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import UserContainers from './components/UserContainers';
 import LoginForm from './components/Login';
@@ -10,7 +10,6 @@ import CreateItem from './components/CreateItem';
 import RegisterForm from './components/Register';
 import JoinContainer from "./components/JoinContainer";
 import EditItem from './components/EditItem';
-import SingleItemAdd from './components/SingleItemAdd';
 import AdminEditUser from './components/AdminEditUser';
 
 export default function Routes(props) {
@@ -32,7 +31,6 @@ export default function Routes(props) {
           <RegisterForm />
         </Route>
         <Route path="/search" component={JoinContainer} />
-        {/* <Route path='/add' component={SingleItemAdd}/> */}
       </Switch>
     </div>
   );

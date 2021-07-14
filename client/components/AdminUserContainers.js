@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, ButtonGroup, Dialog, Checkbox } from "@material-ui/core";
@@ -7,11 +8,13 @@ import { useMutation } from "@apollo/client";
 import User from "../../server/graphql/queries/User.graphql";
 import InactivateContainer from "./InactivateContainerAlert";
 
+
 const AdminUserContainers = (props) => {
-  const [editToggled, setEditToggled] = useState(false);
-  const [inactiveToggled, setInactiveToggled] = useState(false);
-  const [currentContainer, setCurrentContainer] = useState({});
-  const [updateContainer] = useMutation(UpdateContainer);
+	const [ editToggled, setEditToggled ] = useState(false);
+	const [ inactiveToggled, setInactiveToggled ] = useState(false);
+	const [ currentContainer, setCurrentContainer ] = useState({});
+	const [ updateContainer ] = useMutation(UpdateContainer);
+
 
   const handleActivate = (e) => {
     e.preventDefault();
@@ -93,6 +96,7 @@ const AdminUserContainers = (props) => {
       
     </div>
   );
+
 };
 
 export default AdminUserContainers;
