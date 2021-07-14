@@ -7,14 +7,8 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Dialog from "@material-ui/core/Dialog";
 import EditContainerForm from "./EditContainerForm";
 import InactivateContainer from "./InactivateContainerAlert";
-
-const UPDATE_CONTAINER = gql`
-  mutation UpdateContainer($id: ID!, $input: ContainerInput) {
-    updateContainer(id: $id, input: $input) {
-      name
-    }
-  }
-`;
+import UpdateContainer from '../../server/graphql/mutations/UpdateContainer.graphql'
+import User from '../../server/graphql/queries/User.graphql'
 
 const EditContainerMenu = (props) => {
   const [editToggle, setEditToggle] = useState(false);
@@ -22,10 +16,10 @@ const EditContainerMenu = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  const [updateContainer] = useMutation(UPDATE_CONTAINER, {
+  const [updateContainer] = useMutation(UpdateContainer, {
     refetchQueries: [
       {
-        query: props.GET_CONTAINERS,
+        query: User,
         variables: {
           id: localStorage.getItem("user-id"),
         },
@@ -62,8 +56,6 @@ const EditContainerMenu = (props) => {
           <EditContainerForm
             setEditToggle={setEditToggle}
             container={props.container}
-            UPDATE_CONTAINER={UPDATE_CONTAINER}
-            GET_CONTAINERS={props.GET_CONTAINERS}
           />
         </Dialog>
       )}
@@ -72,8 +64,6 @@ const EditContainerMenu = (props) => {
           <InactivateContainer
             setInactiveToggle={setInactiveToggle}
             container={props.container}
-            UPDATE_CONTAINER={UPDATE_CONTAINER}
-            GET_CONTAINERS={props.GET_CONTAINERS}
           />
         </Dialog>
       )}
