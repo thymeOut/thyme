@@ -77,12 +77,16 @@ export default function UserContainers() {
     return "...loading";
   }
   if (error) {
+    console.log(error)
     return "...error";
   }
+  console.log(localStorage.getItem("user-id"))
 
+  console.log(data)
   return (
     <div className="all-container-view">
       <h2>My Containers</h2>
+      
       <div className="all-container-header">
         <ButtonGroup variant="outlined" color="primary">
           <Button onClick={() => setCreateToggle(!createToggle)}>
