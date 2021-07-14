@@ -1,0 +1,5 @@
+mutation AddUserToContainer($containerId: ID!, $input: UserInput) {
+  addUserToContainer(containerId: $containerId, input: $input) {
+    id
+  }
+}
