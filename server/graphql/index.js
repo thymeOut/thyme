@@ -299,11 +299,12 @@ const rootResolver = {
       if (!context.user.isAdmin && +args.input.id !== +context.user.id) {
         throw new Error("You do not have permission to edit");
       } else {
-        const user = await User.findByPk(args.input.id);
+        const user = await User.findByPk(args.id);
+        console.log(args)
         await user.update({
-          firstName: args.input.id,
-          lastName: args.input.id,
-          email: args.input.id,
+          firstName: args.input.firstName,
+          lastName: args.input.lastName,
+          email: args.input.email,
           isAdmin: isAdmin,
         });
       }

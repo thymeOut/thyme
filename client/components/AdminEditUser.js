@@ -11,7 +11,7 @@ import { useQuery, useMutation, gql } from "@apollo/client";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
-
+import EditContainerMenu from "./EditContainerMenu"
 
 const UPDATE_USER = gql`
   mutation UpdateUser($id: ID!, $input: UserInfoInput!) {
@@ -40,7 +40,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -84,14 +84,19 @@ export default function AdminEditUser(props) {
       }
   })
 
+
+  // const handleAccountChange = (e) => {
+  //   setAccountData(e.target.value)
+  //   console.log(e.target.value)
+  // }
+
   if (loading) {
     return "...loading";
   }
   if (error) {
     return "...error";
   }
-  
-  console.log(accountData);
+
   return (
     <Card>
       <Tabs
@@ -99,38 +104,39 @@ export default function AdminEditUser(props) {
         variant="scrollable"
         value={value}
         onChange={handleChange}
-        aria-label="Vertical tabs example"
-        // className={classes.tabs}
-      >
+        aria-label="Vertical tabs example">
         <Tab label="Containers" />
         <Tab label="Container Items" />
         <Tab label="Accounts Settings" />
       </Tabs>
-      <TabPanel value={value} index={0}>
-        <pre>
-          <code
-          >
-           
-          </code>
-        </pre>
+      <TabPanel  value={value} index={0}>
+        {data.user.containers.map((container) => {
+          return (
+            <span key={container.id} >
+              <EditContainerMenu container={ container}/>
+              {container.name}
+          </span>
+          )
+        })}
       </TabPanel>
-      <TabPanel value={value} index={1}>
-        <pre>
-          <code>test</code>
-        </pre>
+      <TabPanel  value={value} index={1}>
+        {console.log(data)}
+        {data.user.containerItems.map((item) => {
+          return (
+            <span key={item.id} >
+              {item.item.name}
+          </span>
+          )
+        })}
       </TabPanel>
-      <TabPanel value={value} index={2}>
-        <pre>
-          <code
-            contentEditable="true"
-            onChange={(e) => setAccountData(e.target.value)}
-          >
-            {accountData}
-          </code>
-        </pre>
+      <TabPanel  value={value} index={2}>
+        <span>{data.user.firstName}</span>
+      <span>{data.user.lastName}</span>
+      <span>{data.user.email}</span>
+      <span>{data.user.isAdmin}</span>
+
+
       </TabPanel>
-      <Button>Delete User</Button>
-      <Button onClick={updateUser}>Update</Button>
     </Card>
   );
 }
