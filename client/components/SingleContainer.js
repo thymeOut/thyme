@@ -81,85 +81,109 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SingleContainer(props) {
-	const containerId = props.match.params.id;
-	const classes = useStyles();
 
-	const { loading: itemLoading, error: itemError, data: itemData } = useQuery(GET_CONTAINER, {
-		variables: {
-			id: containerId
-		}
-	});
+  const containerId = props.match.params.id;
+  const classes = useStyles();
 
-	const {
-		loading: containerItemLoading,
-		error: containerItemError,
-		data: containerItemData
-	} = useQuery(GET_CONTAINER_ITEMS, {
-		variables: {
-			containerId: containerId
-		}
-	});
+  const {
+    loading: itemLoading,
+    error: itemError,
+    data: itemData,
+  } = useQuery(GET_CONTAINER, {
+    variables: {
+      id: containerId,
+    },
+  });
 
-	if (itemLoading || containerItemLoading) {
-		return '...loading';
-	}
+  const {
+    loading: containerItemLoading,
+    error: containerItemError,
+    data: containerItemData,
+  } = useQuery(GET_CONTAINER_ITEMS, {
+    variables: {
+      containerId: containerId,
+    },
+  });
 
-	if (itemError || containerItemError) {
-		return '...error';
-	}
+  if (itemLoading || containerItemLoading) {
+    return '...loading';
+  }
 
-	const { container } = itemData;
+  if (itemError || containerItemError) {
+    return '...error';
+  }
 
-	const containerItems = containerItemData.containerItems.map((cItem) => {
-		let item = container.items.filter((item) => item.id === cItem.itemId)[0];
+  const { container } = itemData;
 
-		return {
-			id: cItem.id,
-			itemId: item.id,
-			userId: cItem.userId,
-			containerId: cItem.containerId,
-			name: item.name,
-			imageUrl: item.imageUrl,
-			containerItemImageUrl: cItem.imageUrl,
-			originalQuantity: cItem.originalQuantity,
-			quantityUsed: cItem.quantityUsed,
-			expiration: cItem.expiration,
-			itemStatus: cItem.itemStatus
-		};
-	});
+  const containerItems = containerItemData.containerItems.map((cItem) => {
+    let item = container.items.filter((item) => item.id === cItem.itemId)[0];
 
-	const { items, name, users } = container;
+    return {
+      id: cItem.id,
+      itemId: item.id,
+      userId: cItem.userId,
+      containerId: cItem.containerId,
+      name: item.name,
+      imageUrl: item.imageUrl,
+      containerItemImageUrl: cItem.imageUrl,
+      originalQuantity: cItem.originalQuantity,
+      quantityUsed: cItem.quantityUsed,
+      expiration: cItem.expiration,
+      itemStatus: cItem.itemStatus,
+    };
+  });
 
-	return (
-		<main>
-			<div className={classes.heroContent}>
-				<Container maxWidth="sm">
-					<Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-						{name}
-					</Typography>
-					<div className={classes.heroButtons}>
-						<Grid container spacing={2} justifyContent="center">
-							<Grid item>
-								<Button
-									variant="contained"
-									color="primary"
-									component={Link}
-									to={{ pathname: `${container.id}/add`, state: { containerId: container.id } }}
-								>
-									Add item
-								</Button>
-							</Grid>
-							<Grid item>
-								<Button variant="outlined" color="primary" component={Link} to="/containers">
-									Back
-								</Button>
-							</Grid>
-						</Grid>
-					</div>
-				</Container>
+  const { items, name, users } = container;
 
-				<ItemCardGrid classes={classes} containerItems={containerItems} users={users} />
-			</div>
-		</main>
-	);
+  return (
+    <main>
+      <div className={classes.heroContent}>
+        <Container maxWidth='sm'>
+          <Typography
+            component='h1'
+            variant='h2'
+            align='center'
+            color='textPrimary'
+            gutterBottom
+          >
+            {name}
+          </Typography>
+          <div className={classes.heroButtons}>
+            <Grid container spacing={2} justifyContent='center'>
+              <Grid item>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  component={Link}
+                  to={{
+                    pathname: `${container.id}/add`,
+                    state: { containerId: container.id },
+                  }}
+                >
+                  Add item
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant='outlined'
+                  color='primary'
+                  component={Link}
+                  to='/containers'
+                >
+                  Back
+                </Button>
+              </Grid>
+            </Grid>
+          </div>
+        </Container>
+
+        <ItemCardGrid
+          classes={classes}
+          containerItems={containerItems}
+          users={users}
+        />
+      </div>
+    </main>
+  );
+
 }

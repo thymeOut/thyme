@@ -2,7 +2,15 @@ import React, { useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import SingleItemAdd from './SingleItemAdd';
+import AddItemCardGrid from './AddItemCardGrid';
 import { GET_CONTAINER, GET_CONTAINER_ITEMS } from './SingleContainer';
+import CreateItem from './CreateItem';
+import { useHistory } from 'react-router';
+import { Button, Typography, Container, TextField } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import { Autocomplete } from '@material-ui/lab';
+import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 
 const GET_ITEMS = gql`
 	query Items {
@@ -14,19 +22,61 @@ const GET_ITEMS = gql`
 	}
 `;
 
-export default function AddItemToContainer(props) {
-	const userId = localStorage.getItem('user-id');
-	const containerId = props.match.params.id;
-	console.log(containerId);
-	const [ addToggle, setAddToggle ] = useState(false);
-	const [ itemId, setItemId ] = useState(0);
-	const { loading: itemLoading, error: itemError, data: itemData } = useQuery(GET_ITEMS);
-	const { loading: containerLoading, error: containerError, data: containerData } = useQuery(GET_CONTAINER, {
-		variables: {
-			id: containerId
-		}
-	});
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    marginRight: theme.spacing(2),
+  },
+  heroContent: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(0, 0, 6),
+    justifyContent: 'center',
+  },
+  heroButtons: {
+    marginTop: theme.spacing(4),
+  },
+  cardGrid: {
+    paddingTop: theme.spacing(10),
+    paddingBottom: theme.spacing(10),
+  },
+  card: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  cardMedia: {
+    paddingTop: '56.25%', // 16:9
+  },
+  cardContent: {
+    flexGrow: 1,
+  },
+  footer: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(6),
+  },
+}));
 
+export default function AddItemToContainer(props) {
+
+  const userId = localStorage.getItem('user-id');
+  const containerId = props.match.params.id;
+  const classes = useStyles();
+  const history = useHistory();
+  const [addToggle, setAddToggle] = useState(false);
+  const [itemId, setItemId] = useState(0);
+  const {
+    loading: itemLoading,
+    error: itemError,
+    data: itemData,
+  } = useQuery(GET_ITEMS);
+  const {
+    loading: containerLoading,
+    error: containerError,
+    data: containerData,
+  } = useQuery(GET_CONTAINER, {
+    variables: {
+      id: containerId,
+    },
+  });
 	const {
 		loading: containerItemLoading,
 		error: containerItemError,
@@ -69,41 +119,105 @@ export default function AddItemToContainer(props) {
 		return item.userId === userId && item.itemStatus === 'ACTIVE';
 	});
 
-	return (
-		<React.Fragment>
-			<h2>Choose one of these items</h2>
-			<div>
-				{itemData.items.map((item) => {
-					return (
-						<div key={item.id}>
-							<a
-								href="#"
-								onClick={() => {
-									setAddToggle(true);
-									setItemId(item.id);
-								}}
-							>
-								{item.name}
-							</a>
-						</div>
-					);
-				})}
-			</div>
-			<h3>...or, create a new one</h3>
-			<Link to={{ pathname: 'create', state: { containerId: containerId } }}>Create</Link>
-			{addToggle && <SingleItemAdd setAddToggle={setAddToggle} itemId={itemId} containerId={containerId} />}
-			<div>
-				<h2>Your Items in the Container</h2>
-				{containerItemsFiltered.map((item) => {
-					return (
-						<div>
-							<h3>{item.name}</h3>
-							<p>Quantity: {item.originalQuantity}</p>
-							<p>Exipration: {item.expiration}</p>
-						</div>
-					);
-				})}
-			</div>
-		</React.Fragment>
-	);
+
+  return (
+    <main>
+      <Container
+        style={{ justifyContent: 'center' }}
+        className={classes.heroContent}
+        maxWidth='xl'
+      >
+        <Button
+          style={{ marginTop: '8px' }}
+          variant='contained'
+          color='primary'
+          component={Link}
+          to={{
+            pathname: `/containers/${containerId}`,
+          }}
+        >
+          <KeyboardArrowLeftIcon/> Back to Container View
+        </Button>
+        <Typography
+          component='h3'
+          variant='h6'
+          align='center'
+          color='textPrimary'
+          gutterBottom
+        >
+          Choose one of these items
+        </Typography>
+        <Autocomplete
+          id='combo-box-demo'
+          options={itemData.items}
+          getOptionLabel={(item) => item.name}
+          style={{
+            minHeight: '5vh',
+            width: 300,
+            margin: 'auto',
+            border: '1px blue',
+            padding: '10px',
+          }}
+          onChange={(event, value) => {
+            if (value) {
+              setAddToggle(true);
+              setItemId(value.id);
+            }
+          }}
+          renderInput={(params) => (
+            <TextField {...params} label='items' variant='outlined' />
+          )}
+        />
+        <Typography
+          component='h3'
+          variant='h6'
+          align='center'
+          color='textPrimary'
+          gutterBottom
+        >
+          ....or create a new one!
+        </Typography>
+        <Button
+          style={{ margin: '0 auto', display: 'flex', maxWidth: '150px' }}
+          variant='contained'
+          color='primary'
+          component={Link}
+          to={{
+            pathname: `create`,
+            state: { containerId: containerId },
+          }}
+        >
+          Create
+        </Button>
+        {addToggle && (
+          <Dialog open={addToggle}>
+            <SingleItemAdd
+              setAddToggle={setAddToggle}
+              itemId={itemId}
+              containerId={containerId}
+            />
+          </Dialog>
+        )}
+        <div>
+          <div>
+            <Typography
+              component='h4'
+              variant='h4'
+              align='left'
+              color='textPrimary'
+              gutterBottom
+              style={{ minHeight: '2vh' }}
+            >
+              Your Items in the Container
+            </Typography>
+            <AddItemCardGrid
+              classes={classes}
+              containerItems={containerItemsFiltered}
+            />
+          </div>
+        </div>
+      </Container>
+    </main>
+  );
+
 }

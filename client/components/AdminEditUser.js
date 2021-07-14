@@ -1,12 +1,19 @@
-import User from '../../server/graphql/queries/User.graphql';
-import { useQuery } from '@apollo/client';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Box from '@material-ui/core/Box';
-import Paper from '@material-ui/core/Paper';
-import { makeStyles } from '@material-ui/core/styles';
-import UserSettingForm from './UserSettingForm';
-import AdminUserContainers from './AdminUserContainers';
+
+import React, { useState } from "react";
+import Card from "@material-ui/core/Card";
+import User from "../../server/graphql/queries/User.graphql";
+import { useQuery } from "@apollo/client";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Box from "@material-ui/core/Box";
+import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core/styles";
+import {Button} from '@material-ui/core'
+import {Link} from 'react-router-dom'
+
+import EditContainerMenu from "./EditContainerMenu";
+import UserSettingForm from "./UserSettingForm";
+import AdminUserContainers from "./AdminUserContainers";
 
 const useStyles = makeStyles({
 	root: {
@@ -30,10 +37,11 @@ function TabPanel(props) {
 }
 
 export default function AdminEditUser(props) {
-	const [ value, setValue ] = React.useState(0);
-	const handleChange = (event, newValue) => {
-		setValue(newValue);
-	};
+
+  const [value, setValue] = React.useState(0);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
 	const { loading, error, data } = useQuery(User, {
 		variables: {
@@ -48,22 +56,28 @@ export default function AdminEditUser(props) {
 		return '...error';
 	}
 
-	return (
-		<Paper>
-			<Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary" centered>
-				<Tab label="Containers" />
-				<Tab label="Container Items" />
-				<Tab label="Accounts Settings" />
-			</Tabs>
-			<TabPanel value={value} index={0}>
-				<AdminUserContainers user={data.user} />
-			</TabPanel>
-			<TabPanel value={value} index={1}>
-				coming soon...
-			</TabPanel>
-			<TabPanel value={value} index={2}>
-				<UserSettingForm user={data.user} />
-			</TabPanel>
-		</Paper>
-	);
+  return (
+    <Paper>
+      <Button variant='contained'
+                  color='primary'
+                  component={Link}
+                  to={{ pathname: `/admin` }}>Back</Button>
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        indicatorColor="primary"
+        textColor="primary"
+        centered
+      >
+        <Tab label="Containers" />
+        <Tab label="Accounts Settings" />
+      </Tabs>
+      <TabPanel value={value} index={0}>
+        <AdminUserContainers user={data.user} />
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <UserSettingForm user={data.user} />
+      </TabPanel>
+    </Paper>
+  );
 }
