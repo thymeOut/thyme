@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useQuery, gql, useMutation } from '@apollo/client';
-import { GET_CONTAINER, GET_CONTAINER_ITEMS } from './SingleContainer';
+import { Link } from 'react-router-dom';
+import ContainerQuery from '../../server/graphql/queries/Container.graphql';
+import ContainerItems from '../../server/graphql/queries/ContainerItems.graphql';
 import { useHistory } from 'react-router';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -80,13 +82,13 @@ export default function SingleItemAdd(props) {
     },
     refetchQueries: [
       {
-        query: GET_CONTAINER,
+        query: ContainerQuery,
         variables: {
           id: props.containerId,
         },
       },
       {
-        query: GET_CONTAINER_ITEMS,
+        query: ContainerItems,
         variables: {
           containerId: props.containerId,
         },

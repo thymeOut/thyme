@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import { ADD_ITEM } from './SingleItemAdd';
-import { GET_CONTAINER, GET_CONTAINER_ITEMS } from './SingleContainer';
+import ContainerQuery from '../../server/graphql/queries/Container.graphql';
+import ContainerItems from '../../server/graphql/queries/ContainerItems.graphql';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -41,10 +42,7 @@ const useStyles = makeStyles((theme) => ({
 export default function CreateItem(props) {
 	const classes = useStyles();
 	const history = useHistory();
-
-	const { containerId } = props.location.state;
-	console.log('container id --->', containerId);
-
+  const { containerId } = props.location.state;
 	const [ name, setName ] = useState('');
 	const [ expiration, setExpiration ] = useState('');
 	const [ quantity, setQuantity ] = useState(1);
@@ -66,41 +64,39 @@ export default function CreateItem(props) {
 		}
 	});
 
-	const [ addItem, { error: addItemError } ] = useMutation(ADD_ITEM, {
-		variables: {
-			containerId: containerId,
-			itemId: id,
-			originalQuantity: +quantity,
-			expiration: new Date(expiration),
-			itemStatus: 'ACTIVE'
-		},
-		refetchQueries: [
-			{
-				query: GET_CONTAINER,
-				variables: {
-					id: containerId
-				}
-			},
-			{
-				query: GET_CONTAINER_ITEMS,
-				variables: {
-					containerId: containerId
-				}
-			}
-		],
-		onCompleted: (addItem) => {
-			history.push(`/containers/${containerId}`);
-		}
-	});
+  const [addItem, { error: addItemError }] = useMutation(ADD_ITEM, {
+    variables: {
+      containerId: containerId,
+      itemId: id,
+      originalQuantity: +quantity,
+      expiration: new Date(expiration),
+      itemStatus: 'ACTIVE',
+    },
+    refetchQueries: [
+      {
+        query: ContainerQuery,
+        variables: {
+          id: containerId,
+        },
+      },
+      {
+        query: ContainerItems,
+        variables: {
+          containerId: containerId,
+        },
+      },
+    ],
+    onCompleted: (addItem) => {
+      history.push(`/containers/${containerId}`);
+    },
+  });
 
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-		const data = await submitCreate();
-		setId(data.data.createItem.id);
-		console.log(expiration);
-		console.log(new Date(expiration));
-		addItem();
-	};
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = await submitCreate();
+    setId(data.data.createItem.id);
+    addItem();
+  };
 
 	return (
 		<Container component="main" maxWidth="xs">

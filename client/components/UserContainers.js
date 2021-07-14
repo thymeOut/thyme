@@ -79,7 +79,7 @@ export default function UserContainers() {
   if (error) {
     return "...error";
   }
-  
+
   return (
     <div className="all-container-view">
       <h2>My Containers</h2>

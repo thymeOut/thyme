@@ -25,20 +25,20 @@ function LoginForm() {
 		password: ''
 	});
 
-	const [ login ] = useMutation(LOGIN_MUTATION, {
-		variables: {
-			email: formState.email,
-			password: formState.password
-		},
-		onCompleted: (login) => {
-			console.log(login.login.token);
-			localStorage.setItem('token', login.login.token);
-			localStorage.setItem('user-id', login.login.user.id);
-			localStorage.setItem('isAdmin', login.login.user.isAdmin);
-			setLoggedIn(true);
-			history.push('/');
-		}
-	});
+  const [login] = useMutation(LOGIN_MUTATION, {
+    variables: {
+      email: formState.email,
+      password: formState.password,
+    },
+    onCompleted: (login) => {
+      localStorage.setItem('token', login.login.token);
+      localStorage.setItem('user-id', login.login.user.id);
+      localStorage.setItem('isAdmin', login.login.user.isAdmin)
+      setLoggedIn(true);
+      history.push('/');
+    },
+  });
+
 
 	const handleLogin = (e) => {
 		e.preventDefault();

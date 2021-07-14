@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 import { withRouter } from 'react-router';
-import { useQuery, gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Link } from 'react-router-dom';
-import { Button, ButtonGroup, Card, CardActions, CardContent, CardMedia, Grid, Typography } from '@material-ui/core';
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Grid,
+  Typography,
+} from '@material-ui/core';
 import { formatDistance } from 'date-fns';
-import { GET_CONTAINER, GET_CONTAINER_ITEMS } from './SingleContainer';
+import ContainerQuery from '../../server/graphql/queries/Container.graphql';
+import ContainerItems from '../../server/graphql/queries/ContainerItems.graphql';
+import UpdateContainerItem from '../../server/graphql/mutations/UpdateContainerItem.graphql';
 
-const UPDATE_CONTAINER_ITEM = gql`
-	mutation updateContainerItem($id: ID!, $input: ContainerItemInput) {
-		updateContainerItem(id: $id, input: $input) {
-			id
-			quantityUsed
-		}
-	}
-`;
 
 function ItemCard(props) {
 	const localId = window.localStorage.getItem('user-id');
@@ -27,55 +30,56 @@ function ItemCard(props) {
 
 	const [ quantityUsed, setQuantityUsed ] = useState(item.quantityUsed);
 
-	const [ updateQuantity ] = useMutation(UPDATE_CONTAINER_ITEM, {
-		variables: {
-			id: item.id,
-			input: {
-				quantityUsed: quantityUsed
-			}
-		}
-	});
+  const [updateQuantity] = useMutation(UpdateContainerItem, {
+    variables: {
+      id: item.id,
+      input: {
+        quantityUsed: quantityUsed,
+      },
+    },
+  });
 
-	const [ removeItem ] = useMutation(UPDATE_CONTAINER_ITEM, {
-		variables: {
-			id: item.id,
-			input: {
-				itemStatus: 'REMOVED'
-			}
-		},
-		refetchQueries: [
-			{
-				query: GET_CONTAINER,
-				variables: {
-					id: containerId
-				}
-			},
-			{
-				query: GET_CONTAINER_ITEMS,
-				variables: {
-					containerId: containerId
-				}
-			}
-		]
-	});
+  const [removeItem] = useMutation(UpdateContainerItem, {
+    variables: {
+      id: item.id,
+      input: {
+        itemStatus: 'REMOVED',
+      },
+    },
+    refetchQueries: [
+      {
+        query: ContainerQuery,
+        variables: {
+          id: containerId,
+        },
+      },
+      {
+        query: ContainerItems,
+        variables: {
+          containerId: containerId,
+        },
+      },
+    ],
+  });
+
 
 	const handleDecrement = () => {
 		setQuantityUsed(quantityUsed + 1);
 
-		// this is smelly. refactor after MVP accomplished.
-		if (quantityUsed === item.originalQuantity - 1) {
-			handleRemove();
-		} else {
-			updateQuantity({
-				variables: {
-					id: item.id,
-					input: {
-						quantityUsed: quantityUsed + 1
-					}
-				}
-			});
-		}
-	};
+    if (quantityUsed === item.originalQuantity - 1) {
+      handleRemove();
+    } else {
+      updateQuantity({
+        variables: {
+          id: item.id,
+          input: {
+            quantityUsed: quantityUsed + 1,
+          },
+        },
+      });
+    }
+  };
+
 
 	const handleIncrement = () => {
 		setQuantityUsed(quantityUsed - 1);

@@ -6,17 +6,12 @@ import Typography from '@material-ui/core/Typography';
 import { MenuItem, Select } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { useMutation, gql } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useHistory } from 'react-router';
-import { GET_CONTAINER, GET_CONTAINER_ITEMS } from './SingleContainer';
+import ContainerQuery from '../../server/graphql/queries/Container.graphql';
+import ContainerItems from '../../server/graphql/queries/ContainerItems.graphql';
+import UpdateContainerItem from '../../server/graphql/mutations/UpdateContainerItem.graphql';
 
-const UPDATE_CONTAINER_ITEM = gql`
-	mutation updateContainerItem($id: ID!, $input: ContainerItemInput) {
-		updateContainerItem(id: $id, input: $input) {
-			id
-		}
-	}
-`;
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -43,9 +38,12 @@ export default function EditItem(props) {
 	const classes = useStyles();
 	const { item, users, containerId } = props.location.state;
 
-	const [ expiration, setExpiration ] = useState(new Date(item.expiration).toISOString().slice(0, 10));
-	const [ imageUrl, setImageUrl ] = useState(item.imageUrl);
-	const [ ownerId, setOwnerId ] = useState(item.userId);
+  const [expiration, setExpiration] = useState(
+    new Date(item.expiration).toISOString().slice(0, 10)
+  );
+  const [imageUrl] = useState(item.imageUrl);
+  const [ownerId, setOwnerId] = useState(item.userId);
+
 
 	const handleChange = (event) => {
 		if (event.target.name === 'owner') {
@@ -55,36 +53,39 @@ export default function EditItem(props) {
 		}
 	};
 
-	const [ submitUpdate ] = useMutation(UPDATE_CONTAINER_ITEM, {
-		variables: {
-			id: item.id,
-			input: {
-				expiration: new Date(expiration),
-				imageUrl: imageUrl,
-				userId: ownerId
-			}
-		},
-		refetchQueries: [
-			{
-				query: GET_CONTAINER,
-				variables: {
-					id: containerId
-				}
-			},
-			{
-				query: GET_CONTAINER_ITEMS,
-				variables: {
-					containerId: containerId
-				}
-			}
-		],
-		onCompleted: (submitUpdate) => {
-			history.push(`/containers/${containerId}`);
-		}
-	});
+  const [submitUpdate] = useMutation(UpdateContainerItem, {
+    variables: {
+      id: item.id,
+      input: {
+        expiration: new Date(expiration),
+        imageUrl: imageUrl,
+        userId: ownerId,
+      },
+    },
+    refetchQueries: [
+      {
+        query: ContainerQuery,
+        variables: {
+          id: containerId,
+        },
+      },
+      {
+        query: ContainerItems,
+        variables: {
+          containerId: containerId,
+        },
+      },
+    ],
+    onCompleted: (submitUpdate) => {
+      history.push(`/containers/${containerId}`);
+    },
+  });
 
-	const handleSubmit = (event) => {
-		event.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    submitUpdate();
+  };
+
 
 		submitUpdate();
 	};

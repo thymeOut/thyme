@@ -3,7 +3,9 @@ import { useQuery, gql } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import SingleItemAdd from './SingleItemAdd';
 import AddItemCardGrid from './AddItemCardGrid';
-import { GET_CONTAINER, GET_CONTAINER_ITEMS } from './SingleContainer';
+import ContainerQuery from '../../server/graphql/queries/Container.graphql';
+import ContainerItems from '../../server/graphql/queries/ContainerItems.graphql';
+import Items from '../../server/graphql/queries/Items.graphql';
 import CreateItem from './CreateItem';
 import { useHistory } from 'react-router';
 import { Button, Typography, Container, TextField } from '@material-ui/core';
@@ -12,15 +14,6 @@ import Dialog from '@material-ui/core/Dialog';
 import { Autocomplete } from '@material-ui/lab';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 
-const GET_ITEMS = gql`
-	query Items {
-		items {
-			id
-			name
-			imageUrl
-		}
-	}
-`;
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -67,30 +60,29 @@ export default function AddItemToContainer(props) {
     loading: itemLoading,
     error: itemError,
     data: itemData,
-  } = useQuery(GET_ITEMS);
+  } = useQuery(Items);
   const {
     loading: containerLoading,
     error: containerError,
     data: containerData,
-  } = useQuery(GET_CONTAINER, {
+  } = useQuery(ContainerQuery, {
     variables: {
       id: containerId,
     },
   });
-	const {
-		loading: containerItemLoading,
-		error: containerItemError,
-		data: containerItemData
-	} = useQuery(GET_CONTAINER_ITEMS, {
-		variables: {
-			containerId: containerId
-		}
-	});
-
+	
+  const {
+    loading: containerItemLoading,
+    error: containerItemError,
+    data: containerItemData,
+  } = useQuery(ContainerItems, {
+    variables: {
+      containerId: containerId,
+    },
+  });
 	if (itemLoading || containerLoading || containerItemLoading) {
 		return '...loading';
 	}
-
 	if (itemError || containerError || containerItemError) {
 		return '...error';
 	}

@@ -25,21 +25,21 @@ function RegisterForm() {
 		lastName: ''
 	});
 
-	const [ signup ] = useMutation(SIGNUP_MUTATION, {
-		variables: {
-			firstName: formState.firstName,
-			lastName: formState.lastName,
-			email: formState.email,
-			password: formState.password
-		},
-		onCompleted: (data) => {
-			console.log(data);
-			localStorage.setItem('token', data.createUser.token);
-			localStorage.setItem('user-id', data.createUser.user.id);
-			setLoggedIn(true);
-			history.push('/');
-		}
-	});
+  const [signup] = useMutation(SIGNUP_MUTATION, {
+    variables: {
+      firstName: formState.firstName,
+      lastName: formState.lastName,
+      email: formState.email,
+      password: formState.password,
+    },
+    onCompleted: (data) => {
+      localStorage.setItem('token', data.createUser.token);
+      localStorage.setItem('user-id', data.createUser.user.id);
+      setLoggedIn(true);
+      history.push('/');
+    },
+  });
+
 
 	const handleRegister = (e) => {
 		e.preventDefault();
