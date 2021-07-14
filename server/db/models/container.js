@@ -6,7 +6,7 @@ const Container = db.define("container", {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmpty: false
+      notEmpty: false
     }
   },
   type: {
