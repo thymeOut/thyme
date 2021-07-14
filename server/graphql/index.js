@@ -1,161 +1,149 @@
-const { gql } = require("@apollo/client");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const containerUsers = require("../../script/data/containerUsers");
-const {
-  models: { User, Container, Item, ContainerItem, ContainerUser },
-} = require("../db/");
-const { Op } = require("sequelize");
+const { gql } = require('@apollo/client');
+const { models: { User, Container, Item, ContainerItem } } = require('../db/');
+const { Op } = require('sequelize');
 
 const typeDefs = gql`
-  type Query {
-    users: [User]
-    user(id: ID): User
-    containers: [Container]
-    container(id: ID): Container
-    searchContainer(name: String!): [Container]
-    items: [Item]
-    containerItems(containerId: ID): [ContainerItem]
-    containerItem(id: ID): Item
-    item(id: ID): Item
-  }
+	type Query {
+		users: [User]
+		user(id: ID): User
+		containers: [Container]
+		container(id: ID): Container
+		searchContainer(name: String!): [Container]
+		items: [Item]
+		containerItems(containerId: ID): [ContainerItem]
+		containerItem(id: ID): Item
+		item(id: ID): Item
+	}
 
-  type AuthPayload {
-    token: String
-    user: User
-  }
+	type AuthPayload {
+		token: String
+		user: User
+	}
 
-  type User {
-    id: ID!
-    firstName: String!
-    lastName: String!
-    email: String!
-    password: String!
-    isAdmin: Boolean
-    token: String
-    containers: [Container]
-    containerItems: [ContainerItem]
-    containerUsers: [ContainerUser]
-  }
+	type User {
+		id: ID!
+		firstName: String!
+		lastName: String!
+		email: String!
+		password: String!
+		isAdmin: Boolean
+		token: String
+		containers: [Container]
+		containerItems: [ContainerItem]
+		containerUsers: [ContainerUser]
+	}
 
-  type Container {
-    id: ID!
-    name: String!
-    type: ContainerType!
-    imageUrl: String!
-    isActive: Boolean!
-    ownerId: ID!
-    users: [User!]
-    items: [Item!]
-    containerUser: ContainerUser
-    containerItems: [ContainerItem]
-  }
+	type Container {
+		id: ID!
+		name: String!
+		type: ContainerType!
+		imageUrl: String!
+		isActive: Boolean!
+		ownerId: ID!
+		users: [User!]
+		items: [Item!]
+		containerUser: ContainerUser
+		containerItems: [ContainerItem]
+	}
 
-  type ContainerItem {
-    id: ID!
-    originalQuantity: Int!
-    quantityUsed: Int
-    expiration: Date
-    imageUrl: String
-    itemStatus: ItemStatus!
-    item: Item
-    user: User
-    container: Container!
-    containerId: ID!
-    itemId: ID!
-    userId: ID!
-  }
+	type ContainerItem {
+		id: ID!
+		originalQuantity: Int!
+		quantityUsed: Int
+		expiration: Date
+		imageUrl: String
+		itemStatus: ItemStatus!
+		item: Item
+		user: User
+		container: Container!
+		containerId: ID!
+		itemId: ID!
+		userId: ID!
+	}
 
-  type ContainerUser {
-    id: ID!
-    role: Role!
-    container: Container
-    user: User
-    ownerId: ID!
-  }
+	type ContainerUser {
+		id: ID!
+		role: Role!
+		container: Container
+		user: User
+		ownerId: ID!
+	}
 
-  type Item {
-    id: ID!
-    name: String!
-    imageUrl: String
-    containerItem: ContainerItem
-    users: [User]
-    containers: [Container]
-  }
+	type Item {
+		id: ID!
+		name: String!
+		imageUrl: String
+		containerItem: ContainerItem
+		users: [User]
+		containers: [Container]
+	}
 
-  enum ContainerType {
-    fridge
-    pantry
-    minifridge
-    freezer
-  }
+	enum ContainerType {
+		fridge
+		pantry
+		minifridge
+		freezer
+	}
 
-  enum ItemStatus {
-    ACTIVE
-    EXPIRED
-    REMOVED
-  }
+	enum ItemStatus {
+		ACTIVE
+		EXPIRED
+		REMOVED
+	}
 
-  enum Role {
-    user
-    owner
-    pending
-  }
+	enum Role {
+		user
+		owner
+		pending
+	}
 
-  input ContainerInput {
-    name: String
-    type: ContainerType
-    imageUrl: String
-    isActive: Boolean
-  }
+	input ContainerInput {
+		name: String
+		type: ContainerType
+		imageUrl: String
+		isActive: Boolean
+	}
 
-  input UserInput {
-    id: ID
-    email: String
-    role: Role!
-  }
+	input UserInput {
+		id: ID
+		email: String
+		role: Role!
+	}
 
-  input UserInfoInput {
-    firstName: String
-    lastName: String
-    email: String
-    isAdmin: Boolean
-  }
+	input UserInfoInput {
+		firstName: String
+		lastName: String
+		email: String
+		isAdmin: Boolean
+	}
 
-  input ContainerItemInput {
-    quantityUsed: Int
-    expiration: Date
-    imageUrl: String
-    userId: ID
-    itemStatus: ItemStatus
-  }
+	input ContainerItemInput {
+		quantityUsed: Int
+		expiration: Date
+		imageUrl: String
+		userId: ID
+		itemStatus: ItemStatus
+	}
 
-  type Mutation {
-    createUser(
-      email: String!
-      password: String!
-      firstName: String!
-      lastName: String!
-    ): AuthPayload!
-    login(email: String!, password: String!): AuthPayload!
-    createContainer(name: String!, type: ContainerType!): Container!
-    addUserToContainer(containerId: ID!, input: UserInput): Container!
-    updateContainer(id: ID!, input: ContainerInput): Container
-    addItemToContainer(
-      containerId: ID!
-      itemId: ID!
-      originalQuantity: Int!
-      expiration: Date
-      itemStatus: ItemStatus!
-    ): ContainerItem!
-    createItem(
-      name: String!
-      imageUrl: String
-    ): Item!
-    updateContainerItem(id: ID!, input: ContainerItemInput): ContainerItem
-    updateUser(id: ID!, input: UserInfoInput): User
-  }
-  scalar Date
+	type Mutation {
+		createUser(email: String!, password: String!, firstName: String!, lastName: String!): AuthPayload!
+		login(email: String!, password: String!): AuthPayload!
+		createContainer(name: String!, type: ContainerType!): Container!
+		addUserToContainer(containerId: ID!, input: UserInput): Container!
+		updateContainer(id: ID!, input: ContainerInput): Container
+		addItemToContainer(
+			containerId: ID!
+			itemId: ID!
+			originalQuantity: Int!
+			expiration: Date
+			itemStatus: ItemStatus!
+		): ContainerItem!
+		createItem(name: String!, imageUrl: String): Item!
+		updateContainerItem(id: ID!, input: ContainerItemInput): ContainerItem
+		updateUser(id: ID!, input: UserInfoInput): User
+	}
+
+	scalar Date
 `;
 
 const rootResolver = {
@@ -284,6 +272,7 @@ const rootResolver = {
     //2. (Since I can't comment within schema), create mutation within schema
     //Format =>
     /*
+
                  parameter
                     |   type                     return obj
                     |    |                          |
@@ -406,9 +395,10 @@ const rootResolver = {
       }
     },
   },
+
 };
 
 module.exports = {
-  rootResolver,
-  typeDefs,
+	rootResolver,
+	typeDefs
 };

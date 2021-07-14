@@ -5,25 +5,25 @@ import { Link } from 'react-router-dom';
 import { UserContext } from '../UserContext';
 
 const LOGIN_MUTATION = gql`
-  mutation LoginMutation($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      token
-      user {
-        id
-        isAdmin
-      }
-    }
-  }
+	mutation LoginMutation($email: String!, $password: String!) {
+		login(email: $email, password: $password) {
+			token
+			user {
+				id
+				isAdmin
+			}
+		}
+	}
 `;
 
 function LoginForm() {
-  const { setLoggedIn } = useContext(UserContext);
+	const { setLoggedIn } = useContext(UserContext);
 
-  const history = useHistory();
-  const [formState, setFormState] = useState({
-    email: '',
-    password: ''
-  });
+	const history = useHistory();
+	const [ formState, setFormState ] = useState({
+		email: '',
+		password: ''
+	});
 
   const [login] = useMutation(LOGIN_MUTATION, {
     variables: {
@@ -39,51 +39,42 @@ function LoginForm() {
     },
   });
 
-  const handleLogin = (e) => {
-    e.preventDefault()
-    login()
-  }
 
-  return (
-    <div>
-      <div className="form">
-        <h4>Login</h4>
-        <form
-          className="form-elements"
-          onSubmit={(e) => handleLogin(e)}
-        >
-          <input
-            value={formState.email}
-            onChange={(e) =>
-              setFormState({ ...formState, email: e.target.value })
-            }
-            type="text"
-            placeholder="Email"
-          />
-          <input
-            value={formState.password}
-            onChange={(e) =>
-              setFormState({
-                ...formState,
-                password: e.target.value,
-              })
-            }
-            type="password"
-            placeholder="Password"
-          />
-          <button type="submit">
-            Login
-          </button>
-        </form>
+	const handleLogin = (e) => {
+		e.preventDefault();
+		login();
+	};
 
-        <Link to="/register">
-          <button >
-            Register
-          </button>
-        </Link>
-      </div>
-    </div>
-  );
+	return (
+		<div>
+			<div className="form">
+				<h4>Login</h4>
+				<form className="form-elements" onSubmit={(e) => handleLogin(e)}>
+					<input
+						value={formState.email}
+						onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+						type="text"
+						placeholder="Email"
+					/>
+					<input
+						value={formState.password}
+						onChange={(e) =>
+							setFormState({
+								...formState,
+								password: e.target.value
+							})}
+						type="password"
+						placeholder="Password"
+					/>
+					<button type="submit">Login</button>
+				</form>
+
+				<Link to="/register">
+					<button>Register</button>
+				</Link>
+			</div>
+		</div>
+	);
 }
 
 export default LoginForm;

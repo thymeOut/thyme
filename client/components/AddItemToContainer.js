@@ -1,6 +1,6 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { useQuery, gql, useMutation } from '@apollo/client';
-import { Link, useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useQuery, gql } from '@apollo/client';
+import { Link } from 'react-router-dom';
 import SingleItemAdd from './SingleItemAdd';
 import AddItemCardGrid from './AddItemCardGrid';
 import ContainerQuery from '../../server/graphql/queries/Container.graphql';
@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import { Autocomplete } from '@material-ui/lab';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
+
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -48,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AddItemToContainer(props) {
+
   const userId = localStorage.getItem('user-id');
   const containerId = props.match.params.id;
   const classes = useStyles();
@@ -68,7 +70,7 @@ export default function AddItemToContainer(props) {
       id: containerId,
     },
   });
-
+	
   const {
     loading: containerItemLoading,
     error: containerItemError,
@@ -78,38 +80,37 @@ export default function AddItemToContainer(props) {
       containerId: containerId,
     },
   });
+	if (itemLoading || containerLoading || containerItemLoading) {
+		return '...loading';
+	}
+	if (itemError || containerError || containerItemError) {
+		return '...error';
+	}
 
-  if (itemLoading || containerLoading || containerItemLoading) {
-    return '...loading';
-  }
+	const { container } = containerData;
 
-  if (itemError || containerError || containerItemError) {
-    return '...error';
-  }
+	const containerItems = containerItemData.containerItems.map((cItem) => {
+		let item = container.items.filter((item) => item.id === cItem.itemId)[0];
 
-  const { container } = containerData;
+		return {
+			id: cItem.id,
+			itemId: item.id,
+			userId: cItem.userId,
+			containerId: cItem.containerId,
+			name: item.name,
+			imageUrl: item.imageUrl,
+			containerItemImageUrl: cItem.imageUrl,
+			originalQuantity: cItem.originalQuantity,
+			quantityUsed: cItem.quantityUsed,
+			expiration: cItem.expiration,
+			itemStatus: cItem.itemStatus
+		};
+	});
 
-  const containerItems = containerItemData.containerItems.map((cItem) => {
-    let item = container.items.filter((item) => item.id === cItem.itemId)[0];
+	const containerItemsFiltered = containerItems.filter((item) => {
+		return item.userId === userId && item.itemStatus === 'ACTIVE';
+	});
 
-    return {
-      id: cItem.id,
-      itemId: item.id,
-      userId: cItem.userId,
-      containerId: cItem.containerId,
-      name: item.name,
-      imageUrl: item.imageUrl,
-      containerItemImageUrl: cItem.imageUrl,
-      originalQuantity: cItem.originalQuantity,
-      quantityUsed: cItem.quantityUsed,
-      expiration: cItem.expiration,
-      itemStatus: cItem.itemStatus,
-    };
-  });
-
-  const containerItemsFiltered = containerItems.filter((item) => {
-    return item.userId === userId && item.itemStatus === 'ACTIVE';
-  });
 
   return (
     <main>
@@ -210,4 +211,5 @@ export default function AddItemToContainer(props) {
       </Container>
     </main>
   );
+
 }

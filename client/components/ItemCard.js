@@ -17,17 +17,18 @@ import ContainerQuery from '../../server/graphql/queries/Container.graphql';
 import ContainerItems from '../../server/graphql/queries/ContainerItems.graphql';
 import UpdateContainerItem from '../../server/graphql/mutations/UpdateContainerItem.graphql';
 
-function ItemCard(props) {
-  const localId = window.localStorage.getItem('user-id');
-  const containerId = props.match.params.id;
-  const { item, classes, users } = props;
-  const formattedExpiration = item.expiration
-    ? formatDistance(new Date(item.expiration), new Date(), {
-        addSuffix: true,
-      })
-    : '';
 
-  const [quantityUsed, setQuantityUsed] = useState(item.quantityUsed);
+function ItemCard(props) {
+	const localId = window.localStorage.getItem('user-id');
+	const containerId = props.match.params.id;
+	const { item, classes, users } = props;
+	const formattedExpiration = item.expiration
+		? formatDistance(new Date(item.expiration), new Date(), {
+				addSuffix: true
+			})
+		: '';
+
+	const [ quantityUsed, setQuantityUsed ] = useState(item.quantityUsed);
 
   const [updateQuantity] = useMutation(UpdateContainerItem, {
     variables: {
@@ -61,8 +62,9 @@ function ItemCard(props) {
     ],
   });
 
-  const handleDecrement = () => {
-    setQuantityUsed(quantityUsed + 1);
+
+	const handleDecrement = () => {
+		setQuantityUsed(quantityUsed + 1);
 
     if (quantityUsed === item.originalQuantity - 1) {
       handleRemove();
@@ -78,71 +80,68 @@ function ItemCard(props) {
     }
   };
 
-  const handleIncrement = () => {
-    setQuantityUsed(quantityUsed - 1);
-    updateQuantity({
-      variables: {
-        id: item.id,
-        input: {
-          quantityUsed: quantityUsed - 1,
-        },
-      },
-    });
-  };
 
-  const handleRemove = () => {
-    removeItem();
-  };
+	const handleIncrement = () => {
+		setQuantityUsed(quantityUsed - 1);
+		updateQuantity({
+			variables: {
+				id: item.id,
+				input: {
+					quantityUsed: quantityUsed - 1
+				}
+			}
+		});
+	};
 
-  return (
-    <Grid item key={item.id} xs={12} sm={6} md={4}>
-      <Card className={classes.card}>
-        <CardMedia
-          className={classes.cardMedia}
-          image={item.imageUrl}
-          title={item.name}
-        />
-        <CardContent className={classes.cardContent}>
-          <Typography gutterBottom variant='h5' component='h2'>
-            {item.name}
-          </Typography>
-          <Typography>
-            {users.map((user) => {
-              if (user.id === item.userId) {
-                return user.firstName;
-              } else {
-                return '';
-              }
-            })}
-          </Typography>
-          <Typography>{formattedExpiration}</Typography>
-        </CardContent>
-        {localId === item.userId && (
-          <CardActions>
-            <ButtonGroup size='small' color='primary'>
-              <Button onClick={handleDecrement}>-</Button>
-              <Button>{item.originalQuantity - item.quantityUsed}</Button>
-              <Button onClick={handleIncrement}>+</Button>
-            </ButtonGroup>
-            <Button
-              size='small'
-              color='primary'
-              component={Link}
-              to={{
-                pathname: `${containerId}/edititem/${item.id}`,
-                state: { item: item, users: users, containerId: containerId },
-              }}
-            >
-              Edit
-            </Button>
-            <Button size='small' color='primary' onClick={handleRemove}>
-              Remove
-            </Button>
-          </CardActions>
-        )}
-      </Card>
-    </Grid>
-  );
+	const handleRemove = () => {
+		removeItem();
+	};
+
+	return (
+		<Grid item key={item.id} xs={12} sm={6} md={4}>
+			<Card className={classes.card}>
+				<CardMedia className={classes.cardMedia} image={item.imageUrl} title={item.name} />
+				<CardContent className={classes.cardContent}>
+					<Typography gutterBottom variant="h5" component="h2">
+						{item.name}
+					</Typography>
+					<Typography>
+						{users.map((user) => {
+							if (user.id === item.userId) {
+								return user.firstName;
+							} else {
+								return '';
+							}
+						})}
+					</Typography>
+					<Typography>{formattedExpiration}</Typography>
+				</CardContent>
+				{localId === item.userId && (
+					<CardActions>
+						<ButtonGroup size="small" color="primary">
+							<Button onClick={handleDecrement}>-</Button>
+							<Button>{item.originalQuantity - item.quantityUsed}</Button>
+							<Button onClick={handleIncrement}>+</Button>
+						</ButtonGroup>
+						<Button
+							size="small"
+							color="primary"
+							component={Link}
+							to={{
+								pathname: `${containerId}/edititem/${item.id}`,
+								state: { item: item, users: users, containerId: containerId }
+							}}
+						>
+							Edit
+						</Button>
+						<Button size="small" color="primary" onClick={handleRemove}>
+							Remove
+						</Button>
+					</CardActions>
+				)}
+			</Card>
+		</Grid>
+	);
 }
 
 export default withRouter(ItemCard);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
+
 import { Link } from 'react-router-dom';
 import ContainerQuery from '../../server/graphql/queries/Container.graphql';
 import ContainerItems from '../../server/graphql/queries/ContainerItems.graphql';
@@ -10,6 +11,7 @@ import {
   Typography,
   Container,
 } from '@material-ui/core';
+
 import { makeStyles } from '@material-ui/core/styles';
 
 import ItemCardGrid from './ItemCardGrid';
@@ -41,9 +43,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
+
 }));
 
 export default function SingleContainer(props) {
+
   const containerId = props.match.params.id;
   const classes = useStyles();
 
@@ -147,4 +151,5 @@ export default function SingleContainer(props) {
       </div>
     </main>
   );
+
 }
