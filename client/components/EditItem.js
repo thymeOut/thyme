@@ -81,8 +81,6 @@ export default function EditItem(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('submitting update...');
-    console.log('event -->', event);
     submitUpdate();
   };
 

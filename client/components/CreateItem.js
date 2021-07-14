@@ -50,7 +50,6 @@ export default function CreateItem(props) {
   const history = useHistory();
 
   const { containerId } = props.location.state;
-  console.log('container id --->', containerId);
 
   const [name, setName] = useState('');
   const [expiration, setExpiration] = useState('');
@@ -104,8 +103,6 @@ export default function CreateItem(props) {
     event.preventDefault();
     const data = await submitCreate();
     setId(data.data.createItem.id);
-    console.log(expiration);
-    console.log(new Date(expiration));
     addItem();
   };
 

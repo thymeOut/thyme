@@ -267,7 +267,6 @@ const rootResolver = {
         });
 
         const token = await user.generateToken();
-        console.log("token--->", token);
         return { token, user };
       } catch (error) {
         console.error("error in createUser mutation");
@@ -300,7 +299,6 @@ const rootResolver = {
         throw new Error("You do not have permission to edit");
       } else {
         const user = await User.findByPk(args.id);
-        console.log(args)
         await user.update({
           firstName: args.input.firstName,
           lastName: args.input.lastName,
@@ -399,11 +397,9 @@ const rootResolver = {
     },
 
     async updateContainerItem(_, args, context) {
-      console.log(args);
       try {
         const containerItem = await ContainerItem.findByPk(args.id);
         const data = await containerItem.update(args.input);
-        console.log("new container item -->", data);
         return data;
       } catch (error) {
         console.error("error in updateContainerItem mutation resolver");

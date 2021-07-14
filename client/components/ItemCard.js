@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { withRouter } from 'react-router';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import {
   Button,
@@ -36,9 +36,6 @@ function ItemCard(props) {
         quantityUsed: quantityUsed,
       },
     },
-    // onCompleted: (updateQuantity) => {
-    //   // onComplete actions can go here
-    // },
   });
 
   const [removeItem] = useMutation(UpdateContainerItem, {
@@ -67,7 +64,6 @@ function ItemCard(props) {
   const handleDecrement = () => {
     setQuantityUsed(quantityUsed + 1);
 
-    // this is smelly. refactor after MVP accomplished.
     if (quantityUsed === item.originalQuantity - 1) {
       handleRemove();
     } else {

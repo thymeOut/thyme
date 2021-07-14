@@ -15,9 +15,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import ItemCardGrid from './ItemCardGrid';
 
 const useStyles = makeStyles((theme) => ({
-  icon: {
-    marginRight: theme.spacing(2),
-  },
   heroContent: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(8, 0, 6),
@@ -98,7 +95,7 @@ export default function SingleContainer(props) {
     };
   });
 
-  const { items, name, users } = container;
+  const { name, users } = container;
 
   return (
     <main>
