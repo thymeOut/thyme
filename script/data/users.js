@@ -1,3 +1,5 @@
+const faker = require('faker');
+
 const users = [
   {
     firstName: 'John',
@@ -22,14 +24,22 @@ const users = [
   },
 ];
 
-for (let index = 3; index < 20; index++) {
-  users.push({
-    firstName: `Test${index}`,
-    lastName: 'World',
-    email: `test${index}@world.com`,
-    password: 'pw',
-    isAdmin: false,
-  })
+for (let i = 4; i < 105; i++) {
+  const firstName = faker.name.firstName();
+  const lastName = faker.name.lastName();
+  const email = faker.internet.email();
+  const password = `pw${i}`;
+  const isAdmin = false;
+
+  const newUser = {
+    firstName,
+    lastName,
+    email,
+    password,
+    isAdmin,
+  };
+
+  users.push(newUser);
 }
 
 module.exports = users;
