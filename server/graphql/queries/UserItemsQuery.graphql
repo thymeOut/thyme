@@ -1,0 +1,15 @@
+query UserItemsQuery($id: ID!) {
+  user(id: $id) {
+    containerItems {
+      item {
+        name
+        createdAt
+      }
+      id
+      originalQuantity
+      quantityUsed
+      expiration
+      price
+    }
+  }
+}
