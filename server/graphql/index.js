@@ -1,6 +1,7 @@
 const { gql } = require('@apollo/client');
 const { models: { User, Container, Item, ContainerItem } } = require('../db/');
 const { Op } = require('sequelize');
+const { UserInputError } = require('apollo-server');
 
 const typeDefs = gql`
 	type Query {
