@@ -267,7 +267,7 @@ const rootResolver = {
         throw new UserInputError(
           error
           )
-          // error?.errors[0].message)
+          // error.errors[0].message)
       }
     },
 
