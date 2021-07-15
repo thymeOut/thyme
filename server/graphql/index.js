@@ -1,11 +1,12 @@
-const { gql } = require("@apollo/client");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const containerUsers = require("../../script/data/containerUsers");
+const { gql } = require('@apollo/client');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const containerUsers = require('../../script/data/containerUsers');
 const {
   models: { User, Container, Item, ContainerItem, ContainerUser },
-} = require("../db/");
-const { Op } = require("sequelize");
+} = require('../db/');
+const { Op } = require('sequelize');
+const { UserInputError } = require('apollo-server');
 
 const typeDefs = gql`
   type Query {
@@ -148,10 +149,7 @@ const typeDefs = gql`
       expiration: Date
       itemStatus: ItemStatus!
     ): ContainerItem!
-    createItem(
-      name: String!
-      imageUrl: String
-    ): Item!
+    createItem(name: String!, imageUrl: String): Item!
     updateContainerItem(id: ID!, input: ContainerItemInput): ContainerItem
     updateUser(id: ID!, input: UserInfoInput): User
   }
@@ -175,16 +173,22 @@ const rootResolver = {
     },
 
     async user(_, args, context) {
-      if (context.user.id !== +args.id && !context.user.isAdmin) {
-        return null;
-      } else {
-        const data = await User.findByPk(args.id, {
-          include: [
-            { model: Container },
-            { model: ContainerItem, include: Item },
-          ],
-        });
-        return data;
+      try {
+        if (context.user.id !== +args.id && !context.user.isAdmin) {
+          return null;
+        } else {
+          const data = await User.findByPk(args.id, {
+            include: [
+              { model: Container },
+              { model: ContainerItem, include: Item },
+            ],
+          });
+          return data;
+        }
+      } catch {
+        throw new UserInputError(
+          'Failed to get events due to validation errors'
+        );
       }
     },
 
@@ -231,7 +235,7 @@ const rootResolver = {
           return data;
         }
       } catch (error) {
-        console.error("error in containerItems query!");
+        console.error('error in containerItems query!');
       }
     },
 
@@ -252,7 +256,7 @@ const rootResolver = {
           });
         }
       } catch (error) {
-        console.error("error in containerItem query!");
+        console.error('error in containerItem query!');
       }
     },
   },
@@ -267,16 +271,20 @@ const rootResolver = {
         });
 
         const token = await user.generateToken();
-        console.log("token--->", token);
         return { token, user };
       } catch (error) {
-        console.error("error in createUser mutation");
+        throw new UserInputError(
+          error.errors[0].message)
       }
     },
 
     async login(_, args) {
-      const data = await User.authenticate(args);
-      return data;
+      try {
+        const data = await User.authenticate(args);
+        return data;
+      } catch {
+        console.log('error');
+      }
     },
 
     // 1. Create a root resolver in respective category (query or mutation)
@@ -297,10 +305,10 @@ const rootResolver = {
     async updateUser(_, args, context) {
       const isAdmin = context.user.isAdmin ? args.input.isAdmin : false;
       if (!context.user.isAdmin && +args.input.id !== +context.user.id) {
-        throw new Error("You do not have permission to edit");
+        throw new Error('You do not have permission to edit');
       } else {
         const user = await User.findByPk(args.id);
-        console.log(args)
+        console.log(args);
         await user.update({
           firstName: args.input.firstName,
           lastName: args.input.lastName,
@@ -318,19 +326,19 @@ const rootResolver = {
           ownerId: context.user.id,
         });
         const user = await User.findByPk(context.user.id);
-        container.addUser(user.id, { through: { role: "owner" } });
+        container.addUser(user.id, { through: { role: 'owner' } });
         return container;
       } catch (error) {
         console.log(error);
       }
     },
     async addUserToContainer(_, args, context) {
-      const searchEmail = args.input.email ? args.input.email : "";
+      const searchEmail = args.input.email ? args.input.email : '';
       const searchUserId = args.input.id ? args.input.id : 9999999999;
 
       try {
-        if (args.input.role === "owner") {
-          throw new Error("Invalid Request! Nice try buckaroo");
+        if (args.input.role === 'owner') {
+          throw new Error('Invalid Request! Nice try buckaroo');
         }
         const container = await Container.findByPk(args.containerId);
 
@@ -343,9 +351,9 @@ const rootResolver = {
         if (context.user.id === container.ownerId) {
           container.addUser(user.id, { through: { role: args.input.role } });
         } else {
-          container.addUser(user.id, { through: { role: "pending" } });
+          container.addUser(user.id, { through: { role: 'pending' } });
           console.log(
-            "You are not the owner of this container, adding user as pending"
+            'You are not the owner of this container, adding user as pending'
           );
         }
         return container;
@@ -365,16 +373,16 @@ const rootResolver = {
       try {
         if (args.imageUrl) {
           return await Item.create({
-          name: args.name,
-          imageUrl: args.imageUrl,
-        });
+            name: args.name,
+            imageUrl: args.imageUrl,
+          });
         } else {
           return await Item.create({
-          name: args.name,
-        });
+            name: args.name,
+          });
         }
       } catch (error) {
-        console.error("error creating item in GraphQL");
+        console.error('error creating item in GraphQL');
       }
     },
 
@@ -403,10 +411,10 @@ const rootResolver = {
       try {
         const containerItem = await ContainerItem.findByPk(args.id);
         const data = await containerItem.update(args.input);
-        console.log("new container item -->", data);
+        console.log('new container item -->', data);
         return data;
       } catch (error) {
-        console.error("error in updateContainerItem mutation resolver");
+        console.error('error in updateContainerItem mutation resolver');
       }
     },
   },

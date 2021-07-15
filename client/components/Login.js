@@ -22,10 +22,10 @@ function LoginForm() {
   const history = useHistory();
   const [formState, setFormState] = useState({
     email: '',
-    password: ''
+    password: '',
   });
 
-  const [login] = useMutation(LOGIN_MUTATION, {
+  const [login, { data, error }] = useMutation(LOGIN_MUTATION, {
     variables: {
       email: formState.email,
       password: formState.password,
@@ -34,32 +34,29 @@ function LoginForm() {
       console.log(login.login.token);
       localStorage.setItem('token', login.login.token);
       localStorage.setItem('user-id', login.login.user.id);
-      localStorage.setItem('isAdmin', login.login.user.isAdmin)
+      localStorage.setItem('isAdmin', login.login.user.isAdmin);
       setLoggedIn(true);
       history.push('/');
     },
   });
 
   const handleLogin = (e) => {
-    e.preventDefault()
-    login()
-  }
+    e.preventDefault();
+    login();
+  };
 
   return (
     <div>
-      <div className="form">
+      <div className='form'>
         <h4>Login</h4>
-        <form
-          className="form-elements"
-          onSubmit={(e) => handleLogin(e)}
-        >
+        <form className='form-elements' onSubmit={(e) => handleLogin(e)}>
           <input
             value={formState.email}
             onChange={(e) =>
               setFormState({ ...formState, email: e.target.value })
             }
-            type="text"
-            placeholder="Email"
+            type='text'
+            placeholder='Email'
           />
           <input
             value={formState.password}
@@ -69,19 +66,15 @@ function LoginForm() {
                 password: e.target.value,
               })
             }
-            type="password"
-            placeholder="Password"
+            type='password'
+            placeholder='Password'
           />
-          <button type="submit">
-            Login
-          </button>
+          <button type='submit'>Login</button>
         </form>
-
-        <Link to="/register">
-          <button >
-            Register
-          </button>
+        <Link to='/register'>
+          <button>Register</button>
         </Link>
+        {error ? <div style={{color:'red'}}>wrong email/password</div> : <div></div>}
       </div>
     </div>
   );

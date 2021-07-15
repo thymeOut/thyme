@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router';
 import { gql, useMutation } from '@apollo/client';
 import { UserContext } from '../UserContext';
+import {registerErrorHandler} from './ErrorHandlers';
 
 const SIGNUP_MUTATION = gql`
   mutation CreateUser(
@@ -26,7 +27,6 @@ const SIGNUP_MUTATION = gql`
 
 function RegisterForm() {
   const { isLoggedIn, setLoggedIn } = useContext(UserContext);
-
   const history = useHistory();
   const [formState, setFormState] = useState({
     email: '',
@@ -34,8 +34,7 @@ function RegisterForm() {
     firstName: '',
     lastName: '',
   });
-
-  const [signup] = useMutation(SIGNUP_MUTATION, {
+  const [signup, { error }] = useMutation(SIGNUP_MUTATION, {
     variables: {
       firstName: formState.firstName,
       lastName: formState.lastName,
@@ -43,12 +42,10 @@ function RegisterForm() {
       password: formState.password,
     },
     onCompleted: (data) => {
-      console.log(data);
       localStorage.setItem('token', data.createUser.token);
       localStorage.setItem('user-id', data.createUser.user.id);
       setLoggedIn(true);
       history.push('/');
-      console.log('signup');
     },
   });
 
@@ -57,27 +54,28 @@ function RegisterForm() {
     signup();
   };
 
+
   return (
     <div>
       <h2>Thyme</h2>
-      <div className="form">
+      <div className='form'>
         <h4>Sign Up</h4>
-        <form className="form-elements" onSubmit={(e) => handleRegister(e)}>
+        <form className='form-elements' onSubmit={(e) => handleRegister(e)}>
           <input
             value={formState.firstName}
             onChange={(e) =>
               setFormState({ ...formState, firstName: e.target.value })
             }
-            type="text"
-            placeholder="First Name"
+            type='text'
+            placeholder='First Name'
           />
           <input
             value={formState.lastName}
             onChange={(e) =>
               setFormState({ ...formState, lastName: e.target.value })
             }
-            type="text"
-            placeholder="Last Name"
+            type='text'
+            placeholder='Last Name'
           />
 
           <input
@@ -85,19 +83,20 @@ function RegisterForm() {
             onChange={(e) =>
               setFormState({ ...formState, email: e.target.value })
             }
-            type="text"
-            placeholder="Email"
+            type='text'
+            placeholder='Email'
           />
           <input
             value={formState.password}
             onChange={(e) =>
               setFormState({ ...formState, password: e.target.value })
             }
-            type="password"
-            placeholder="Password"
+            type='password'
+            placeholder='Password'
           />
-          <button type="submit">Register</button>
+          <button type='submit'>Register</button>
         </form>
+        <div style={{ color: 'red' }}>{registerErrorHandler(error)}</div>
       </div>
     </div>
   );
