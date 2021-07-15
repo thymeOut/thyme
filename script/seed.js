@@ -1,4 +1,3 @@
-'use strict';
 
 const { users, containers, items, containerItems } = require('./data');
 const {
