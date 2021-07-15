@@ -90,6 +90,7 @@ const typeDefs = gql`
 		ACTIVE
 		EXPIRED
 		REMOVED
+    EXPIRED_REMOVED
 	}
 
 	enum Role {

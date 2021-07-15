@@ -79,7 +79,8 @@ export default function SingleContainer(props) {
     return '...error';
   }
 
-  const { container } = itemData;
+  const { container, items } = itemData;
+  console.log(itemData);
 
   const containerItems = containerItemData.containerItems.map((cItem) => {
     let item = container.items.filter((item) => item.id === cItem.itemId)[0];
