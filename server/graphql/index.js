@@ -32,6 +32,7 @@ const typeDefs = gql`
 		containers: [Container]
 		containerItems: [ContainerItem]
 		containerUsers: [ContainerUser]
+    containerUser: ContainerUser
 	}
 
 	type Container {

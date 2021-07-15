@@ -10,6 +10,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useHistory } from 'react-router';
+const regeneratorRuntime = require('regenerator-runtime');
+
 
 const CREATE_ITEM = gql`
 	mutation createItem($name: String!) {
