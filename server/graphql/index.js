@@ -32,6 +32,7 @@ const typeDefs = gql`
 		containers: [Container]
 		containerItems: [ContainerItem]
 		containerUsers: [ContainerUser]
+    containerUser: ContainerUser
 	}
 
 	type Container {
@@ -90,6 +91,7 @@ const typeDefs = gql`
 		ACTIVE
 		EXPIRED
 		REMOVED
+    EXPIRED_REMOVED
 	}
 
 	enum Role {
@@ -267,7 +269,9 @@ const rootResolver = {
       } catch (error) {
         console.log(error)
         throw new UserInputError(
-          error.errors[0].message)
+          error
+          )
+          // error.errors[0].message)
       }
     },
 

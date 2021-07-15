@@ -6,6 +6,9 @@ query ContainerQuery($id: ID!) {
       id
       firstName
       lastName
+      containerUser {
+        role
+      }
     }
     items {
       id
