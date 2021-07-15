@@ -1,33 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useQuery, gql } from "@apollo/client";
 import UserItemsQuery from "../../server/graphql/queries/UserItemsQuery.graphql";
-import { Line } from "react-chartjs-2";
-
-// const labels = Utils.months({count: 7});
-// const data = {
-// //   labels: labels,
-//   datasets: [{
-//     label: 'My First Dataset',
-//     data: [65, 59, 80, 81, 56, 55, 40],
-//     fill: false,
-//     borderColor: 'rgb(75, 192, 192)',
-//     tension: 0.1
-//   }]
-// };
-
-// const config = {
-//     type: 'line',
-//     data: data,
-//   };
-
-// const stackedLine = new Chart(config);
+import MoneyChart from "./MoneyChart";
+import { Button, ButtonGroup } from "@material-ui/core";
 
 const UserItems = (props) => {
   const [userItems, setUserItems] = useState([]);
-  const [startDate] = useState('2020-01-01');
-  const [endDate] = useState('2021-08-01');
-  const [sums, setSums] = useState({})
-  
+  const [startDate] = useState("2020-01-01");
+  const [endDate] = useState("2021-08-01");
+  const [sums, setSums] = useState({});
+  const [chartFilter, setChartFilter] = useState("EXPIRED");
+
   const { data, loading, error } = useQuery(UserItemsQuery, {
     variables: {
       id: +localStorage.getItem("user-id"),
@@ -42,34 +25,28 @@ const UserItems = (props) => {
     return a;
   };
 
-  console.log(localStorage.getItem('user-id'))
+  const filterChart = (e) => {
+    e.preventDefault();
+    setChartFilter(e.currentTarget.value);
+  };
 
-  useEffect(()=> {
-      console.log(userItems)
+  useEffect(() => {
     const daylist = getDaysArray(new Date(startDate), new Date(endDate));
     const final = daylist.map((v) => v.toISOString().slice(0, 7));
     const uniqueMonths = final.filter((v, i, a) => a.indexOf(v) === i);
-    
-    const sumMap = {}
-    userItems.map(item => console.log(item))
-    uniqueMonths.forEach(month => sumMap[month]=0)
-    console.log(uniqueMonths)
-    
-    const test = userItems.reduce((acc, cur) => {
-        const createdAt = new Date(cur.createdAt).toISOString().substr(0, 7)
-        acc[createdAt] += cur.price
-        return acc
-    }, sumMap)
+    const sumMap = {};
+    uniqueMonths.forEach((month) => (sumMap[month] = 0));
 
-    setSums(test)
-
-    
-
-  }, [startDate, endDate, userItems])
-
-
-console.log(sums)
-  
+    console.log(userItems.filter((item) => item.itemStatus === chartFilter))
+    const items = !chartFilter ? userItems : userItems.filter((item) => item.itemStatus === chartFilter);
+    console.log(items)
+    const sumOfPrice = items.reduce((acc, cur) => {
+      const createdAt = new Date(cur.createdAt).toISOString().substr(0, 7);
+      acc[createdAt] += cur.price / 100;
+      return acc;
+    }, sumMap);
+    setSums(sumOfPrice);
+  }, [startDate, endDate, userItems, chartFilter]);
 
   const state = {
     labels: Object.keys(sums),
@@ -85,23 +62,20 @@ console.log(sums)
       },
     ],
   };
-  //   console.log(data);
   return (
     <div>
-      <Line
-        data={state}
-        options={{
-          title: {
-            display: true,
-            text: "Average Rainfall per month",
-            fontSize: 20,
-          },
-          legend: {
-            display: true,
-            position: "right",
-          },
-        }}
-      />
+      <ButtonGroup>
+        <Button value="" onClick={(e) => filterChart(e)}>
+          All
+        </Button>
+        <Button value="EXPIRED" onClick={(e) => filterChart(e)}>
+          Expired
+        </Button>
+        <Button value="EXPIRED" onClick={(e) => filterChart(e)}>
+          Used
+        </Button>
+      </ButtonGroup>
+      <MoneyChart data={state} />
     </div>
   );
 };
