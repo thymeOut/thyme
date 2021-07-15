@@ -15,50 +15,36 @@ async function seed() {
   console.log('db synced!');
 
   // Creating Users
-  const dummyUsers = await Promise.all(users.map((user) => User.create(user)));
+  const dummyUsers = (users.map(async (user) => await User.create(user)));
 
-  const dummyContainers = await Promise.all(
-    containers.map(async (container) => Container.create(container))
-  );
+  const dummyContainers = await Promise.all(containers.map(async (container) => {
+    const newContainer = await Container.create(container);
 
-  const dummyItems = await Promise.all(items.map((item) => Item.create(item)));
+    await newContainer.addUser(container.ownerId, {
+      through: {
+        role: 'owner',
+      },
+    })
+  }));
 
-  let containerUsers = [];
+  const dummyItems = (items.map(async (item) => await Item.create(item)));
 
-  dummyContainers.forEach((container) => {
-    let newContainerOwner = {
-      userId: container.ownerId,
-      containerId: container.id,
-      role: 'owner',
-    };
+  const dummyContainerItems = containerItems.forEach(async (containerItem, idx) => {
+    const pk = Math.ceil(Math.random() * containers.length);
 
-    containerUsers.push(newContainerOwner);
+    const container = containers[pk - 1];
+
+    containerItem.containerId = pk;
+    containerItem.userId = container.ownerId;
+
+    return await ContainerItem.create(containerItem);
   });
 
-  const dummyContainerUsers = await Promise.all(
-    containerUsers.map((containerUser) => ContainerUser.create(containerUser))
-  );
-
-  containerItems.forEach((containerItem, idx) => {
-    const i = Math.floor(Math.random() * (dummyContainerUsers.length))
-    const containerUser = dummyContainerUsers[i];
-    console.log(containerUser);
-    containerItem.userId = containerUser.userId;
-    containerItem.containerId = containerUser.containerId;
-    console.log(containerItem);
-  });
-
-  const dummyContainerItems = await Promise.all(
-    containerItems.map((item) => ContainerItem.create(item))
-  );
-
-  // console.log(`seeded ${users.length} users`);
   console.log(`seeded successfully`);
   return {
     dummyUsers,
     dummyContainers,
     dummyItems,
-    dummyContainerUsers,
     dummyContainerItems,
   };
 }
@@ -77,7 +63,7 @@ async function runSeed() {
     process.exitCode = 1;
   } finally {
     console.log('closing db connection');
-    await db.close();
+    // await db.close();
     console.log('db connection closed');
   }
 }
