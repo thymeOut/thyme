@@ -55,6 +55,8 @@ const typeDefs = gql`
 		originalQuantity: Int!
 		quantityUsed: Int
 		expiration: Date
+    price: Int
+    createdAt: Date
 		imageUrl: String
 		itemStatus: ItemStatus!
 		item: Item

@@ -25,9 +25,16 @@ import { Line } from "react-chartjs-2";
 const UserItems = (props) => {
   const [userItems, setUserItems] = useState([]);
   const [startDate] = useState('2020-01-01');
-  const [endDate] = useState('2021-01-01');
+  const [endDate] = useState('2021-08-01');
   const [sums, setSums] = useState({})
   
+  const { data, loading, error } = useQuery(UserItemsQuery, {
+    variables: {
+      id: +localStorage.getItem("user-id"),
+    },
+    onCompleted: () => setUserItems(data.user.containerItems),
+  });
+
   const getDaysArray = (s, e) => {
     for (var a = [], d = new Date(s); d <= e; d.setDate(d.getDate() + 1)) {
       a.push(new Date(d));
@@ -35,40 +42,37 @@ const UserItems = (props) => {
     return a;
   };
 
+  console.log(localStorage.getItem('user-id'))
+
   useEffect(()=> {
+      console.log(userItems)
     const daylist = getDaysArray(new Date(startDate), new Date(endDate));
     const final = daylist.map((v) => v.toISOString().slice(0, 7));
     const uniqueMonths = final.filter((v, i, a) => a.indexOf(v) === i);
     
     const sumMap = {}
+    userItems.map(item => console.log(item))
     uniqueMonths.forEach(month => sumMap[month]=0)
-
-
+    console.log(uniqueMonths)
+    
     const test = userItems.reduce((acc, cur) => {
-        const createdAt = new Date(cur.item.createdAt)
-        const monthOfCreation = createdAt.getFullYear() + '-' + createdAt.getMonth()
-        acc[monthOfCreation] += cur.item.price
+        const createdAt = new Date(cur.createdAt).toISOString().substr(0, 7)
+        acc[createdAt] += cur.price
         return acc
     }, sumMap)
 
-    console.log(test)
+    setSums(test)
 
     
 
   }, [startDate, endDate, userItems])
 
 
-
-    const { data, loading, error } = useQuery(UserItemsQuery, {
-      variables: {
-        id: localStorage.getItem("user-id"),
-      },
-      onCompleted: () => setUserItems(data.user.containerItems),
-    });
-
+console.log(sums)
+  
 
   const state = {
-    labels: ['Jan'],
+    labels: Object.keys(sums),
     datasets: [
       {
         label: "Money $$$",
@@ -77,7 +81,7 @@ const UserItems = (props) => {
         backgroundColor: "rgba(75,192,192,1)",
         borderColor: "rgba(0,0,0,1)",
         borderWidth: 2,
-        data: [0, 1, 2, 3, 4, 5],
+        data: Object.values(sums),
       },
     ],
   };

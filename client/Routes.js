@@ -12,6 +12,7 @@ import JoinContainer from "./components/JoinContainer";
 import EditItem from './components/EditItem';
 import AdminEditUser from './components/AdminEditUser';
 import PendingUsers from './components/PendingUsers';
+import UserItems from './components/UserItems';
 
 export default function Routes(props) {
   return (
@@ -24,8 +25,10 @@ export default function Routes(props) {
         <Route exact path="/containers/:id/pending" component={PendingUsers} />
         <Route exact path="/containers/:id/add" component={AddItemToContainer} />
         <Route exact path="/containers/:id/create" component={CreateItem} />
+        <Route exact path="/items" component={UserItems}/>
         <Route exact path="/containers/:id/edititem/:itemId" component={EditItem} />
         <Route exact path="/admin/:id" component={AdminEditUser}/>
+        
         <Route exact path="/login">
           <LoginForm setLoggedIn={props.setLoggedIn} />
         </Route>

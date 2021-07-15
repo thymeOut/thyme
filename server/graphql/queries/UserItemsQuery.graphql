@@ -3,8 +3,8 @@ query UserItemsQuery($id: ID!) {
     containerItems {
       item {
         name
-        createdAt
       }
+      createdAt
       id
       originalQuantity
       quantityUsed
