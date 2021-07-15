@@ -80,6 +80,7 @@ export default function SingleContainer(props) {
   }
 
   const { container } = itemData;
+  const { users } = container;
 
   const containerItems = containerItemData.containerItems.map((cItem) => {
     let item = container.items.filter((item) => item.id === cItem.itemId)[0];
@@ -99,7 +100,7 @@ export default function SingleContainer(props) {
     };
   });
 
-  const { name, users } = container;
+  const { name } = container;
 
   return (
     <main>
