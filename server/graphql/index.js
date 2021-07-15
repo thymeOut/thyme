@@ -3,6 +3,8 @@ const { models: { User, Container, Item, ContainerItem } } = require('../db/');
 const { Op } = require('sequelize');
 const { UserInputError } = require('apollo-server');
 
+console.log('test');
+
 const typeDefs = gql`
 	type Query {
 		users: [User]
