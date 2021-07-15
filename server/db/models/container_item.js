@@ -24,8 +24,11 @@ const ContainerItem = db.define("containerItem", {
     type: Sequelize.TEXT,
   },
   itemStatus: {
-    type: Sequelize.ENUM('ACTIVE', 'EXPIRED', 'REMOVED'),
+    type: Sequelize.ENUM('ACTIVE', 'EXPIRED', 'EXPIRED_REMOVED', 'REMOVED'),
     allowNull: false
+  },
+  price: {
+    type: Sequelize.INTEGER
   }
 });
 
