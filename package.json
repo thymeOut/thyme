@@ -49,7 +49,8 @@
   "scripts": {
     "seed": "node script/seed.js",
     "start": "node server",
-    "start:dev": "webpack -w & JWT=shh nodemon server"
+    "start:dev": "webpack -w & JWT=shh nodemon server",
+    "deploy": "script/deploy"
   },
   "eslintConfig": {
     "extends": [

@@ -10,7 +10,6 @@ import App from './App';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { onError } from 'apollo-link-error';
 import { setContext } from '@apollo/client/link/context';
-import { ApolloLink } from 'apollo-link';
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {

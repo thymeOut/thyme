@@ -1,6 +1,7 @@
 const { gql } = require('@apollo/client');
 const { models: { User, Container, Item, ContainerItem } } = require('../db/');
 const { Op } = require('sequelize');
+const { UserInputError } = require('apollo-server');
 
 const typeDefs = gql`
 	type Query {
@@ -264,7 +265,9 @@ const rootResolver = {
         return { token, user };
       } catch (error) {
         throw new UserInputError(
-          error.errors[0].message)
+          error
+          )
+          // error.errors[0].message)
       }
     },
 
