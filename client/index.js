@@ -10,7 +10,6 @@ import App from './App';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { onError } from 'apollo-link-error';
 import { setContext } from '@apollo/client/link/context';
-import { ApolloLink } from 'apollo-link';
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
@@ -37,7 +36,7 @@ const authLink = setContext((_, { headers }) => {
 });
 
 const client = new ApolloClient({
-  link,
+  link: authLink.concat(httpLink,errorLink),
   cache: new InMemoryCache(),
   resolvers: {},
 });
