@@ -80,11 +80,10 @@ export default function UserContainers() {
     console.log(error)
     return "...error";
   }
-
+  
   return (
     <div className="all-container-view">
-      <h2>My Containers</h2>
-
+      <h2>Containers</h2>
       <div className="all-container-header">
         <ButtonGroup variant="outlined" color="primary">
           <Button onClick={() => setCreateToggle(!createToggle)}>
@@ -129,7 +128,7 @@ export default function UserContainers() {
       {containerMembership.map((membership) => {
         return (
           <div key={membership.header}>
-            <h3>{membership.header}</h3>
+            <h2>{membership.header}</h2>
             <Grid container spacing={3} margin="100px">
               {data?.user.containers
                 .filter(

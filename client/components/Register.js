@@ -2,17 +2,27 @@ import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router';
 import { gql, useMutation } from '@apollo/client';
 import { UserContext } from '../UserContext';
-import {registerErrorHandler} from './ErrorHandlers';
+import { registerErrorHandler } from './ErrorHandlers';
 
 const SIGNUP_MUTATION = gql`
-	mutation CreateUser($email: String!, $password: String!, $firstName: String!, $lastName: String!) {
-		createUser(email: $email, password: $password, firstName: $firstName, lastName: $lastName) {
-			token
-			user {
-				id
-			}
-		}
-	}
+  mutation CreateUser(
+    $email: String!
+    $password: String!
+    $firstName: String!
+    $lastName: String!
+  ) {
+    createUser(
+      email: $email
+      password: $password
+      firstName: $firstName
+      lastName: $lastName
+    ) {
+      token
+      user {
+        id
+      }
+    }
+  }
 `;
 
 function RegisterForm() {
@@ -46,7 +56,6 @@ function RegisterForm() {
 
   return (
     <div>
-      <h2>Thyme</h2>
       <div className='form'>
         <h4>Sign Up</h4>
         <form className='form-elements' onSubmit={(e) => handleRegister(e)}>

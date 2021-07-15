@@ -11,30 +11,20 @@ const EmailForm = (props) => {
   const [lineCount, setLineCount] = useState(1);
 
   const handleAddUser = (e, idx) => {
-    console.log(idx);
     e.preventDefault();
-
     if (idx === lineCount - 1) {
-      console.log("test");
       setLineCount(lineCount + 1);
-      console.log(lineCount);
     }
-    console.log(props.addedUsers);
-    console.log(props)
     props.addedUsers[idx] = e.target.value;
-    console.log(props.addedUsers);
     props.setAddedUsers(props.addedUsers);
-    console.log(props.addedUsers);
   };
 
   useEffect(() => {
-    console.log("state changing");
   }, [props.addedUsers]);
 
   return [...Array(lineCount)].map((line, idx) => {
     return (
       <div>
-          {console.log('testtt')}
         <TextField
         variant='filled'
           label="Email"
