@@ -1,6 +1,7 @@
 query ContainerQuery($id: ID!) {
   container(id: $id) {
     id
+    ownerId
     name
     users {
       id

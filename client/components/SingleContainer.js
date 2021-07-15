@@ -4,13 +4,9 @@ import { useQuery } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import ContainerQuery from '../../server/graphql/queries/Container.graphql';
 import ContainerItems from '../../server/graphql/queries/ContainerItems.graphql';
+import PendingUsers from './PendingUsers';
 
-import {
-  Button,
-  Grid,
-  Typography,
-  Container,
-} from '@material-ui/core';
+import { Button, Grid, Typography, Container } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -43,11 +39,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
-
 }));
 
 export default function SingleContainer(props) {
-
   const containerId = props.match.params.id;
   const classes = useStyles();
 
@@ -80,7 +74,6 @@ export default function SingleContainer(props) {
   }
 
   const { container } = itemData;
-  const { users } = container;
 
   const containerItems = containerItemData.containerItems.map((cItem) => {
     let item = container.items.filter((item) => item.id === cItem.itemId)[0];
@@ -100,27 +93,29 @@ export default function SingleContainer(props) {
     };
   });
 
-  const { name } = container;
+  const { name, users } = container;
+
+  const pendingUsers = users.filter(user => user.containerUser.role === 'pending');
 
   return (
     <main>
       <div className={classes.heroContent}>
-        <Container maxWidth='sm'>
+        <Container maxWidth="sm">
           <Typography
-            component='h1'
-            variant='h2'
-            align='center'
-            color='textPrimary'
+            component="h1"
+            variant="h2"
+            align="center"
+            color="textPrimary"
             gutterBottom
           >
             {name}
           </Typography>
           <div className={classes.heroButtons}>
-            <Grid container spacing={2} justifyContent='center'>
+            <Grid container spacing={2} justifyContent="center">
               <Grid item>
                 <Button
-                  variant='contained'
-                  color='primary'
+                  variant="contained"
+                  color="primary"
                   component={Link}
                   to={{
                     pathname: `${container.id}/add`,
@@ -132,15 +127,20 @@ export default function SingleContainer(props) {
               </Grid>
               <Grid item>
                 <Button
-                  variant='outlined'
-                  color='primary'
+                  variant="outlined"
+                  color="primary"
                   component={Link}
-                  to='/containers'
+                  to="/containers"
                 >
                   Back
                 </Button>
               </Grid>
             </Grid>
+          </div>
+          <div>
+            {container.ownerId === localStorage.getItem('user-id')
+              ? <PendingUsers users={pendingUsers} />
+              : ''}
           </div>
         </Container>
 
@@ -152,5 +152,4 @@ export default function SingleContainer(props) {
       </div>
     </main>
   );
-
 }

@@ -11,6 +11,7 @@ import RegisterForm from './components/Register';
 import JoinContainer from "./components/JoinContainer";
 import EditItem from './components/EditItem';
 import AdminEditUser from './components/AdminEditUser';
+import PendingUsers from './components/PendingUsers';
 
 export default function Routes(props) {
   return (
@@ -20,6 +21,7 @@ export default function Routes(props) {
         <Route exact path="/containers" component={UserContainers} />
         <Route exact path="/admin" component={AllUsersData} />
         <Route exact path="/containers/:id" component={SingleContainer} />
+        <Route exact path="/containers/:id/pending" component={PendingUsers} />
         <Route exact path="/containers/:id/add" component={AddItemToContainer} />
         <Route exact path="/containers/:id/create" component={CreateItem} />
         <Route exact path="/containers/:id/edititem/:itemId" component={EditItem} />
