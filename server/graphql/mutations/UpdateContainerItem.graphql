@@ -1,0 +1,6 @@
+mutation UpdateContainerItem($id: ID!, $input: ContainerItemInput) {
+  updateContainerItem(id: $id, input: $input) {
+    id
+    quantityUsed
+  }
+}

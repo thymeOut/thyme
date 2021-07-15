@@ -1,7 +1,8 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import { Link } from 'react-router-dom';
-import { GET_CONTAINER, GET_CONTAINER_ITEMS } from './SingleContainer';
+import ContainerQuery from '../../server/graphql/queries/Container.graphql';
+import ContainerItems from '../../server/graphql/queries/ContainerItems.graphql';
 import { useHistory } from 'react-router';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -11,31 +12,31 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 const GET_ITEM = gql`
-  query Item($id: ID!) {
-    item(id: $id) {
-      name
-    }
-  }
+	query Item($id: ID!) {
+		item(id: $id) {
+			name
+		}
+	}
 `;
 
 export const ADD_ITEM = gql`
-  mutation AddItemToContainer(
-    $containerId: ID!
-    $itemId: ID!
-    $originalQuantity: Int!
-    $expiration: Date
-    $itemStatus: ItemStatus!
-  ) {
-    addItemToContainer(
-      containerId: $containerId
-      itemId: $itemId
-      expiration: $expiration
-      originalQuantity: $originalQuantity
-      itemStatus: $itemStatus
-    ) {
-      id
-    }
-  }
+	mutation AddItemToContainer(
+		$containerId: ID!
+		$itemId: ID!
+		$originalQuantity: Int!
+		$expiration: Date
+		$itemStatus: ItemStatus!
+	) {
+		addItemToContainer(
+			containerId: $containerId
+			itemId: $itemId
+			expiration: $expiration
+			originalQuantity: $originalQuantity
+			itemStatus: $itemStatus
+		) {
+			id
+		}
+	}
 `;
 
 const useStyles = makeStyles((theme) => ({
@@ -81,13 +82,13 @@ export default function SingleItemAdd(props) {
     },
     refetchQueries: [
       {
-        query: GET_CONTAINER,
+        query: ContainerQuery,
         variables: {
           id: props.containerId,
         },
       },
       {
-        query: GET_CONTAINER_ITEMS,
+        query: ContainerItems,
         variables: {
           containerId: props.containerId,
         },
@@ -174,33 +175,6 @@ export default function SingleItemAdd(props) {
         </form>
       </div>
     </Container>
-    // <div>
-    //   <h2>{data.item.name}</h2>
-    //   <form
-    //     id='addItem-form'
-    //     onSubmit={(e) => {
-    //       e.preventDefault();
-    //       setExpiration(new Date(expiration).toISOString().slice(0, 10));
-    //       addItem();
-    //       props.setAddToggle(false);
-    //     }}
-    //   >
-    //     <div className='form'>
-    //       <label htmlFor='Quantity'>Quantity:</label>
-    //       <input
-    //         onChange={(e) => setQuantity(e.target.value)}
-    //         value={quantity}
-    //       />
-    //     </div>
-    //     <div className='form'>
-    //       <label htmlFor='Exipation'>Expiration Date:</label>
-    //       <input
-    //         onChange={(e) => setExpiration(e.target.value)}
-    //         value={quantity}
-    //       />
-    //     </div>
-    //     <button type='submit'>Add this item</button>
-    //   </form>
-    // </div>
   );
+
 }

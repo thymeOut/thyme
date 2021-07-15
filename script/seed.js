@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
-const { users, containers, items, containerUsers, containerItems } = require("./data");
+const { users, containers, items, containerItems } = require('./data');
 const {
   db,
   models: { User, Container, Item, ContainerItem, ContainerUser },
-} = require("../server/db");
+} = require('../server/db');
 
 /**
  * seed - this function clears the database, updates tables to
@@ -12,20 +12,41 @@ const {
  */
 async function seed() {
   await db.sync({ force: true }); // clears db and matches models to tables
-  console.log("db synced!");
+  console.log('db synced!');
 
   // Creating Users
   const dummyUsers = await Promise.all(users.map((user) => User.create(user)));
 
-  const dummyItems = await Promise.all(
-    items.map((item) => Item.create(item))
+  const dummyContainers = await Promise.all(
+    containers.map(async (container) => Container.create(container))
   );
 
-  const dummyContainers = await Promise.all(containers.map((container) => Container.create(container)));
+  const dummyItems = await Promise.all(items.map((item) => Item.create(item)));
+
+  let containerUsers = [];
+
+  dummyContainers.forEach((container) => {
+    let newContainerOwner = {
+      userId: container.ownerId,
+      containerId: container.id,
+      role: 'owner',
+    };
+
+    containerUsers.push(newContainerOwner);
+  });
 
   const dummyContainerUsers = await Promise.all(
-    containerUsers.map((user) => ContainerUser.create(user))
+    containerUsers.map((containerUser) => ContainerUser.create(containerUser))
   );
+
+  containerItems.forEach((containerItem, idx) => {
+    const i = Math.floor(Math.random() * (dummyContainerUsers.length))
+    const containerUser = dummyContainerUsers[i];
+    console.log(containerUser);
+    containerItem.userId = containerUser.userId;
+    containerItem.containerId = containerUser.containerId;
+    console.log(containerItem);
+  });
 
   const dummyContainerItems = await Promise.all(
     containerItems.map((item) => ContainerItem.create(item))
@@ -37,8 +58,8 @@ async function seed() {
     dummyUsers,
     dummyContainers,
     dummyItems,
-    dummyContainerItems,
     dummyContainerUsers,
+    dummyContainerItems,
   };
 }
 
@@ -48,16 +69,16 @@ async function seed() {
  The `seed` function is concerned only with modifying the database.
 */
 async function runSeed() {
-  console.log("seeding...");
+  console.log('seeding...');
   try {
     await seed();
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
   } finally {
-    console.log("closing db connection");
+    console.log('closing db connection');
     await db.close();
-    console.log("db connection closed");
+    console.log('db connection closed');
   }
 }
 

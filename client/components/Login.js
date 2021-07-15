@@ -5,19 +5,19 @@ import { Link } from 'react-router-dom';
 import { UserContext } from '../UserContext';
 
 const LOGIN_MUTATION = gql`
-  mutation LoginMutation($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      token
-      user {
-        id
-        isAdmin
-      }
-    }
-  }
+	mutation LoginMutation($email: String!, $password: String!) {
+		login(email: $email, password: $password) {
+			token
+			user {
+				id
+				isAdmin
+			}
+		}
+	}
 `;
 
 function LoginForm() {
-  const { setLoggedIn } = useContext(UserContext);
+	const { setLoggedIn } = useContext(UserContext);
 
   const history = useHistory();
   const [formState, setFormState] = useState({
@@ -31,7 +31,6 @@ function LoginForm() {
       password: formState.password,
     },
     onCompleted: (login) => {
-      console.log(login.login.token);
       localStorage.setItem('token', login.login.token);
       localStorage.setItem('user-id', login.login.user.id);
       localStorage.setItem('isAdmin', login.login.user.isAdmin);

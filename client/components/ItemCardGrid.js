@@ -8,12 +8,15 @@ export default function ItemCardGrid(props) {
   return (
     <Container className={classes.cardGrid} maxWidth="md">
       <Grid container spacing={4}>
-        {containerItems.map((item) => {
+        {containerItems.map((item, idx) => {
           if (item.itemStatus !== 'REMOVED') {
-            return <ItemCard item={item} classes={classes} users={users} />;
+            return <ItemCard key={idx} item={item} classes={classes} users={users} />;
+          } else {
+            return <div key={idx}></div>
           }
         })}
       </Grid>
     </Container>
   );
+
 }

@@ -45,10 +45,9 @@ export default function AllUsersData() {
     return "loading..";
   }
   if (error) {
-    console.log(error)
+  
     return "Error";
   }
-
 
   return (
     <TableContainer component={Paper}>

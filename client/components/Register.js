@@ -5,24 +5,14 @@ import { UserContext } from '../UserContext';
 import {registerErrorHandler} from './ErrorHandlers';
 
 const SIGNUP_MUTATION = gql`
-  mutation CreateUser(
-    $email: String!
-    $password: String!
-    $firstName: String!
-    $lastName: String!
-  ) {
-    createUser(
-      email: $email
-      password: $password
-      firstName: $firstName
-      lastName: $lastName
-    ) {
-      token
-      user {
-        id
-      }
-    }
-  }
+	mutation CreateUser($email: String!, $password: String!, $firstName: String!, $lastName: String!) {
+		createUser(email: $email, password: $password, firstName: $firstName, lastName: $lastName) {
+			token
+			user {
+				id
+			}
+		}
+	}
 `;
 
 function RegisterForm() {
@@ -48,12 +38,6 @@ function RegisterForm() {
       history.push('/');
     },
   });
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    signup();
-  };
-
 
   return (
     <div>

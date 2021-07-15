@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Link } from "react-router-dom";
 import ContainerForm from "./CreateContainerForm";
 import JoinContainer from "./JoinContainer";
 import EditContainerMenu from "./EditContainerMenu";
 import { makeStyles } from "@material-ui/core/styles";
-import User from '../../server/graphql/queries/User.graphql'
+import User from "../../server/graphql/queries/User.graphql";
+import IconButton from '@material-ui/core/IconButton';
+import ShareIcon from '@material-ui/icons/Share';
+import InviteUser from "./InviteUser";
 
 import {
   Select,
@@ -18,6 +21,7 @@ import {
   Card,
   Grid,
 } from "@material-ui/core";
+import EmailForm from "./EmailForm";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
   media: {
     height: 0,
-    paddingTop: "56.25%", // 16:9
+    paddingTop: "56.25%"
   },
   expand: {
     transform: "rotate(0deg)",
@@ -57,8 +61,9 @@ const containerMembership = [
 export default function UserContainers() {
   const [createToggle, setCreateToggle] = useState(false);
   const [joinToggle, setJoinToggle] = useState(false);
-  const [addToggle, setAddToggle] = useState(false);
+  const [shareToggled, setShareToggle] = useState(false);
   const [containerStatus, setContainerStatus] = useState(true);
+  const [container, setContainer] = useState(0)
 
   const classes = useStyles();
 
@@ -72,14 +77,16 @@ export default function UserContainers() {
     return "...loading";
   }
   if (error) {
+    console.log(error)
     return "...error";
   }
+  console.log(localStorage.getItem("user-id"))
 
   console.log(data)
-
   return (
     <div className="all-container-view">
       <h2>My Containers</h2>
+      
       <div className="all-container-header">
         <ButtonGroup variant="outlined" color="primary">
           <Button onClick={() => setCreateToggle(!createToggle)}>
@@ -111,6 +118,15 @@ export default function UserContainers() {
           />
         </Dialog>
       )}
+      {shareToggled && (
+        <Dialog open={shareToggled}>
+          <InviteUser
+            setShareToggle={setShareToggle}
+            GET_CONTAINERS={User}
+            container={container}
+          />
+        </Dialog>
+      )}
 
       {containerMembership.map((membership) => {
         return (
@@ -121,8 +137,7 @@ export default function UserContainers() {
                 .filter(
                   (container) =>
                     container.isActive.toString() ===
-                      containerStatus.toString()
-                      &&
+                      containerStatus.toString() &&
                     container.containerUser.role === membership.role
                 )
                 .map((container) => (
@@ -137,12 +152,21 @@ export default function UserContainers() {
                           </Typography>
                         }
                         action={
-                          membership.role === "owner" && (
-                            <EditContainerMenu
-                              container={container}
-                              GET_CONTAINERS={User}
-                            />
-                          )
+                          <div className="container-buttons">
+                            
+                            {membership.role === "owner" && (
+                              <EditContainerMenu
+                                container={container}
+                                GET_CONTAINERS={User}
+                              />
+                            )}
+                            
+                            <IconButton aria-label="share" onClick={()=>{
+                              setContainer(container.id)
+                              setShareToggle(!shareToggled)}} >
+                              <ShareIcon />
+                            </IconButton>
+                          </div>
                         }
                       />
                       <CardMedia

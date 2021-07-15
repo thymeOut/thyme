@@ -1,40 +1,30 @@
-import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import { MenuItem, Select } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import { useMutation, gql } from '@apollo/client';
-import { useHistory } from 'react-router';
-import { GET_CONTAINER, GET_CONTAINER_ITEMS } from './SingleContainer';
-
-const UPDATE_CONTAINER_ITEM = gql`
-  mutation updateContainerItem($id: ID!, $input: ContainerItemInput) {
-    updateContainerItem(id: $id, input: $input) {
-      id
-    }
-  }
-`;
+import React, { useState } from "react";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import { MenuItem, Select } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import { useMutation } from "@apollo/client";
+import { useHistory } from "react-router";
+import ContainerQuery from "../../server/graphql/queries/Container.graphql";
+import ContainerItems from "../../server/graphql/queries/ContainerItems.graphql";
+import UpdateContainerItem from "../../server/graphql/mutations/UpdateContainerItem.graphql";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
   submit: {
@@ -50,18 +40,18 @@ export default function EditItem(props) {
   const [expiration, setExpiration] = useState(
     new Date(item.expiration).toISOString().slice(0, 10)
   );
-  const [imageUrl, setImageUrl] = useState(item.imageUrl);
+  const [imageUrl] = useState(item.imageUrl);
   const [ownerId, setOwnerId] = useState(item.userId);
 
   const handleChange = (event) => {
-    if (event.target.name === 'owner') {
+    if (event.target.name === "owner") {
       setOwnerId(event.target.value);
-    } else if (event.target.name === 'expiration') {
+    } else if (event.target.name === "expiration") {
       setExpiration(event.target.value);
     }
   };
 
-  const [submitUpdate] = useMutation(UPDATE_CONTAINER_ITEM, {
+  const [submitUpdate] = useMutation(UpdateContainerItem, {
     variables: {
       id: item.id,
       input: {
@@ -72,13 +62,13 @@ export default function EditItem(props) {
     },
     refetchQueries: [
       {
-        query: GET_CONTAINER,
+        query: ContainerQuery,
         variables: {
           id: containerId,
         },
       },
       {
-        query: GET_CONTAINER_ITEMS,
+        query: ContainerItems,
         variables: {
           containerId: containerId,
         },
@@ -91,8 +81,6 @@ export default function EditItem(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('submitting update...');
-    console.log('event -->', event);
     submitUpdate();
   };
 
