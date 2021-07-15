@@ -39,6 +39,11 @@ function RegisterForm() {
     },
   });
 
+  const handleRegister = (e) => {
+    e.preventDefault();
+    signup();
+  };
+
   return (
     <div>
       <h2>Thyme</h2>
