@@ -44,6 +44,7 @@ function RegisterForm() {
     signup();
   };
 
+
   return (
     <div>
       <h2>Thyme</h2>

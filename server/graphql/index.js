@@ -176,7 +176,8 @@ const rootResolver = {
           });
           return data;
         }
-      } catch {
+      } catch(error) {
+        // console.log('boooo', error)
         throw new UserInputError(
           'Failed to get events due to validation errors'
         );
@@ -264,6 +265,7 @@ const rootResolver = {
         const token = await user.generateToken();
         return { token, user };
       } catch (error) {
+        console.log(error)
         throw new UserInputError(
           error.errors[0].message)
       }
@@ -322,6 +324,10 @@ const rootResolver = {
         return container;
       } catch (error) {
         console.log(error);
+        throw new UserInputError(
+          error.errors[0].message)
+      
+        
       }
     },
     async addUserToContainer(_, args, context) {
