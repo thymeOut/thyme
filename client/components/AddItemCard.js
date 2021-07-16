@@ -30,14 +30,14 @@ export default function AddItemCard(props) {
             {new Date(item.expiration).toISOString().slice(0, 16) <
             new Date().toISOString().slice(0, 16) ? (
               <p>
-                Expired:{' '}
+                Expired: 
                 {formatDistance(new Date(item.expiration), new Date(), {
                   addSuffix: true,
                 })}
               </p>
             ) : (
               <p>
-                Expires:{' '}
+                Expires: 
                 {formatDistance(new Date(item.expiration), new Date(), {
                   addSuffix: true,
                 })}
