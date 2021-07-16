@@ -37,64 +37,66 @@ const typeDefs = gql`
     containerItems: [ContainerItem]
     containerUsers: [ContainerUser]
     containerUser: ContainerUser
-  }
+	}
 
-  type Container {
-    id: ID!
-    name: String!
-    type: ContainerType!
-    imageUrl: String!
-    isActive: Boolean!
-    ownerId: ID!
-    users: [User!]
-    items: [Item!]
-    containerUser: ContainerUser
-    containerItems: [ContainerItem]
-  }
+	type Container {
+		id: ID!
+		name: String!
+		type: ContainerType!
+		imageUrl: String!
+		isActive: Boolean!
+		ownerId: ID!
+		users: [User!]
+		items: [Item!]
+		containerUser: ContainerUser
+		containerItems: [ContainerItem]
+	}
 
-  type ContainerItem {
-    id: ID!
-    originalQuantity: Int!
-    quantityUsed: Int
-    expiration: Date
-    imageUrl: String
-    itemStatus: ItemStatus!
-    item: Item
-    user: User
-    container: Container!
-    containerId: ID!
-    itemId: ID!
-    userId: ID!
-  }
+	type ContainerItem {
+		id: ID!
+		originalQuantity: Int!
+		quantityUsed: Int
+		expiration: Date
+    price: Int
+    createdAt: Date
+		imageUrl: String
+		itemStatus: ItemStatus!
+		item: Item
+		user: User
+		container: Container!
+		containerId: ID!
+		itemId: ID!
+		userId: ID!
+	}
 
-  type ContainerUser {
-    id: ID!
-    role: Role!
-    container: Container
-    user: User
-    ownerId: ID!
-  }
+	type ContainerUser {
+		id: ID!
+		role: Role!
+		container: Container
+		user: User
+		ownerId: ID!
+	}
 
-  type Item {
-    id: ID!
-    name: String!
-    imageUrl: String
-    containerItem: ContainerItem
-    users: [User]
-    containers: [Container]
-  }
+	type Item {
+		id: ID!
+		name: String!
+		imageUrl: String
+		containerItem: ContainerItem
+		users: [User]
+		containers: [Container]
+	}
 
-  enum ContainerType {
-    fridge
-    pantry
-    minifridge
-    freezer
-  }
+	enum ContainerType {
+		fridge
+		pantry
+		minifridge
+		freezer
+	}
 
-  enum ItemStatus {
-    ACTIVE
-    EXPIRED
-    REMOVED
+	enum ItemStatus {
+		ACTIVE
+		EXPIRED
+		REMOVED
     EXPIRED_REMOVED
   }
 

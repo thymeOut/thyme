@@ -3,13 +3,16 @@ query UserItemsQuery($id: ID!) {
     containerItems {
       item {
         name
-        createdAt
+        imageUrl
       }
+      createdAt
       id
       originalQuantity
       quantityUsed
       expiration
       price
+      itemStatus
+      imageUrl
     }
   }
 }

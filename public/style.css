@@ -183,6 +183,19 @@ form {
   display: flex;
 }
 
+.test {
+  width: auto;
+  height: 500px;
+}
+
+.in-the-money {
+  color: green
+}
+
+.out-of-the-money {
+  color: red
+}
+
 .background {
   background-color: rgb(63,81,181);
 }
@@ -193,3 +206,4 @@ form {
 .text4 {
   color:rgb(63,81,181);
 }
+
