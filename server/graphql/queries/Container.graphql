@@ -8,6 +8,7 @@ query ContainerQuery($id: ID!) {
       firstName
       lastName
       containerUser {
+        id
         role
       }
     }

@@ -1,39 +1,41 @@
 const { gql } = require('@apollo/client');
-const { models: { User, Container, Item, ContainerItem } } = require('../db/');
+const {
+  models: { User, Container, Item, ContainerItem, ContainerUser },
+} = require('../db/');
 const { Op } = require('sequelize');
 const { UserInputError } = require('apollo-server');
 
 console.log('test');
 
 const typeDefs = gql`
-	type Query {
-		users: [User]
-		user(id: ID): User
-		containers: [Container]
-		container(id: ID): Container
-		searchContainer(name: String!): [Container]
-		items: [Item]
-		containerItems(containerId: ID): [ContainerItem]
-		containerItem(id: ID): Item
-		item(id: ID): Item
-	}
+  type Query {
+    users: [User]
+    user(id: ID): User
+    containers: [Container]
+    container(id: ID): Container
+    searchContainer(name: String!): [Container]
+    items: [Item]
+    containerItems(containerId: ID): [ContainerItem]
+    containerItem(id: ID): Item
+    item(id: ID): Item
+  }
 
-	type AuthPayload {
-		token: String
-		user: User
-	}
+  type AuthPayload {
+    token: String
+    user: User
+  }
 
-	type User {
-		id: ID!
-		firstName: String!
-		lastName: String!
-		email: String!
-		password: String!
-		isAdmin: Boolean
-		token: String
-		containers: [Container]
-		containerItems: [ContainerItem]
-		containerUsers: [ContainerUser]
+  type User {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    password: String!
+    isAdmin: Boolean
+    token: String
+    containers: [Container]
+    containerItems: [ContainerItem]
+    containerUsers: [ContainerUser]
     containerUser: ContainerUser
 	}
 
@@ -96,61 +98,68 @@ const typeDefs = gql`
 		EXPIRED
 		REMOVED
     EXPIRED_REMOVED
-	}
+  }
 
-	enum Role {
-		user
-		owner
-		pending
-	}
+  enum Role {
+    user
+    owner
+    pending
+  }
 
-	input ContainerInput {
-		name: String
-		type: ContainerType
-		imageUrl: String
-		isActive: Boolean
-	}
+  input ContainerInput {
+    name: String
+    type: ContainerType
+    imageUrl: String
+    isActive: Boolean
+  }
 
-	input UserInput {
-		id: ID
-		email: String
-		role: Role!
-	}
+  input UserInput {
+    id: ID
+    email: String
+    role: Role!
+  }
 
-	input UserInfoInput {
-		firstName: String
-		lastName: String
-		email: String
-		isAdmin: Boolean
-	}
+  input UserInfoInput {
+    firstName: String
+    lastName: String
+    email: String
+    isAdmin: Boolean
+  }
 
-	input ContainerItemInput {
-		quantityUsed: Int
-		expiration: Date
-		imageUrl: String
-		userId: ID
-		itemStatus: ItemStatus
-	}
+  input ContainerItemInput {
+    quantityUsed: Int
+    expiration: Date
+    imageUrl: String
+    userId: ID
+    itemStatus: ItemStatus
+  }
 
-	type Mutation {
-		createUser(email: String!, password: String!, firstName: String!, lastName: String!): AuthPayload!
-		login(email: String!, password: String!): AuthPayload!
-		createContainer(name: String!, type: ContainerType!): Container!
-		addUserToContainer(containerId: ID!, input: UserInput): Container!
-		updateContainer(id: ID!, input: ContainerInput): Container
-		addItemToContainer(
-			containerId: ID!
-			itemId: ID!
-			originalQuantity: Int!
-			expiration: Date
-			itemStatus: ItemStatus!
-		): ContainerItem!
-		createItem(name: String!, imageUrl: String): Item!
-		updateContainerItem(id: ID!, input: ContainerItemInput): ContainerItem
-		updateUser(id: ID!, input: UserInfoInput): User
-	}
+  type Mutation {
+    createUser(
+      email: String!
+      password: String!
+      firstName: String!
+      lastName: String!
+    ): AuthPayload!
+    login(email: String!, password: String!): AuthPayload!
+    createContainer(name: String!, type: ContainerType!): Container!
+    addUserToContainer(containerId: ID!, input: UserInput): Container!
+    updateContainer(id: ID!, input: ContainerInput): Container
+    addItemToContainer(
+      containerId: ID!
+      itemId: ID!
+      originalQuantity: Int!
+      expiration: Date
+      itemStatus: ItemStatus!
+    ): ContainerItem!
+    createItem(name: String!, imageUrl: String): Item!
+    updateContainerItem(id: ID!, input: ContainerItemInput): ContainerItem
+    updateUser(id: ID!, input: UserInfoInput): User
+    updateContainerUser(id: ID!, input: Role): ContainerUser
+    deleteContainerUser(id: ID!): ContainerUser
+  }
 
-	scalar Date
+  scalar Date
 `;
 
 const rootResolver = {
@@ -270,10 +279,8 @@ const rootResolver = {
         const token = await user.generateToken();
         return { token, user };
       } catch (error) {
-        throw new UserInputError(
-          error
-          )
-          // error.errors[0].message)
+        throw new UserInputError(error);
+        // error.errors[0].message)
       }
     },
 
@@ -416,11 +423,32 @@ const rootResolver = {
         console.error('error in updateContainerItem mutation resolver');
       }
     },
-  },
 
+    async updateContainerUser(_, args, context) {
+      try {
+        const containerUser = await ContainerUser.findByPk(args.id);
+        return await containerUser.update({
+          role: args.input
+        });
+      } catch (error) {
+        console.error('error in updateContainerUser mutation resolver');
+      }
+    },
+
+    async deleteContainerUser(_, args, context) {
+      try {
+        const containerUser = await ContainerUser.findByPk(args.id);
+        const data = await containerUser.destroy();
+        console.log(data);
+        return containerUser;
+      } catch (error) {
+        console.error('error in deleteContainerUser mutation reslover');
+      }
+    },
+  },
 };
 
 module.exports = {
-	rootResolver,
-	typeDefs
+  rootResolver,
+  typeDefs,
 };
