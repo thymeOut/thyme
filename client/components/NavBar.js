@@ -20,6 +20,7 @@ export default function NavBar() {
         {isLoggedIn ? (
           <>
             <Link to="/containers">My Containers</Link>
+            <Link to="/items">My Item Stats</Link>
             <Link to="/" onClick={handleLogout}>
               Logout
             </Link>
