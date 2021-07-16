@@ -26,9 +26,9 @@ async function seed() {
     })
   }));
 
-  const dummyItems = (items.map(async (item) => await Item.create(item)));
+  const dummyItems = await Promise.all(items.map(async (item) => await Item.create(item)));
 
-  const dummyContainerItems = containerItems.forEach(async (containerItem, idx) => {
+  const dummyContainerItems = await Promise.all(containerItems.map(async (containerItem, idx) => {
     const pk = Math.ceil(Math.random() * containers.length);
 
     const container = containers[pk - 1];
@@ -37,7 +37,7 @@ async function seed() {
     containerItem.userId = container.ownerId;
 
     return await ContainerItem.create(containerItem);
-  });
+  }));
 
   console.log(`seeded successfully`);
   return {
