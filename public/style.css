@@ -177,3 +177,8 @@ form {
 .container-buttons {
   display: flex;
 }
+
+.test {
+  width: auto;
+  height: 500px;
+}
