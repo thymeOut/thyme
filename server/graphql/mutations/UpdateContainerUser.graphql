@@ -1,0 +1,6 @@
+mutation UpdateContainerUser($id: ID!, $input: Role!) {
+  updateContainerUser(id: $id, input: $input) {
+    id
+    role
+  }
+}
