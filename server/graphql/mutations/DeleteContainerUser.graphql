@@ -1,0 +1,5 @@
+mutation DeleteContainerUser($id: ID!) {
+  deleteContainerUser(id: $id) {
+    id
+  }
+}
