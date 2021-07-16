@@ -88,7 +88,15 @@ function RegisterForm() {
               className='signup-background'
             >
               <Grid item>
-                <Typography component='h2' variant='h4'>
+                <Typography
+                  component='h2'
+                  variant='h4'
+                  style={{
+                    marginRight: 40,
+                    fontFamily: 'Poppins',
+                    fontWeight: 'bold',
+                  }}
+                >
                   Sign Up
                 </Typography>
               </Grid>
@@ -159,7 +167,11 @@ function RegisterForm() {
                     </Grid>
                     <Grid item>
                       <Button
-                        style={{ marginRight: 40 }}
+                        style={{
+                          marginRight: 40,
+                          fontFamily: 'Poppins',
+                          fontWeight: 'bold',
+                        }}
                         variant='contained'
                         color='primary'
                         type='submit'
@@ -168,6 +180,10 @@ function RegisterForm() {
                         Sign Up
                       </Button>
                       <Button
+                        style={{
+                          fontFamily: 'Poppins',
+                          fontWeight: 'bold',
+                        }}
                         variant='contained'
                         color='primary'
                         component={Link}

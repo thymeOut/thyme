@@ -77,7 +77,7 @@ function LoginForm() {
               className='login-background'
             >
               <Grid item>
-                <Typography component='h2' variant='h4'>
+                <Typography component='h2' variant='h4' style={{fontFamily: 'Poppins',fontWeight: 'bold'}}>
                   Sign in
                 </Typography>
               </Grid>
@@ -118,7 +118,7 @@ function LoginForm() {
                     </Grid>
                     <Grid item>
                       <Button
-                        style={{ marginRight: 40 }}
+                        style={{ marginRight: 40, fontFamily: 'Poppins',fontWeight: 'bold' }}
                         variant='contained'
                         color='primary'
                         type='submit'
@@ -127,6 +127,7 @@ function LoginForm() {
                         Sign In
                       </Button>
                       <Button
+                       style={{ fontFamily: 'Poppins',fontWeight: 'bold' }}
                         variant='contained'
                         color='primary'
                         type='submit'
