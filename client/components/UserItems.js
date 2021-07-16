@@ -65,15 +65,13 @@ const UserItems = (props) => {
     items.reduce((acc, cur) => {
       const createdAt = new Date(cur.createdAt).toISOString().substr(0, 7);
 
-      if(cur.itemStatus.includes("EXPIRED")){
+      let sum = (cur.price/100) * (cur.quantityUsed/cur.originalQuantity)
 
+      if(cur.itemStatus === ("EXPIRED") || cur.itemStatus === ("EXPIRED_REMOVED")){
+          sum += (cur.price/100) *-1 * ((cur.originalQuantity - cur.quantityUsed)/cur.originalQuantity)
       }
-      const price = cur.itemStatus.includes("EXPIRED")
-        ? cur.price * -1
-        : cur.price;
-      acc[createdAt] +=
-        ((price / 100) * (cur.originalQuantity - cur.quantityUsed)) /
-        cur.originalQuantity;
+
+      acc[createdAt] += sum
       return acc;
     }, sumMap);
 
