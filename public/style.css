@@ -180,12 +180,12 @@ form {
 }
 
 .background {
-  background-color: rgba(197, 93, 67, 0.979);
+  background-color: rgb(63,81,181);
 }
 .img2 {
-  border-top: 5px solid rgba(197, 93, 67, 0.979); ;
+  border-top: 5px solid rgb(63,81,181); ;
 }
 
 .text4 {
-  color: rgba(197, 93, 67, 0.979);
+  color:rgb(63,81,181);
 }
