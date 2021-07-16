@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useQuery, gql, useMutation } from '@apollo/client';
-import { Link } from 'react-router-dom';
 import ContainerQuery from '../../server/graphql/queries/Container.graphql';
 import ContainerItems from '../../server/graphql/queries/ContainerItems.graphql';
 import { useHistory } from 'react-router';
@@ -12,31 +11,31 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 const GET_ITEM = gql`
-	query Item($id: ID!) {
-		item(id: $id) {
-			name
-		}
-	}
+  query Item($id: ID!) {
+    item(id: $id) {
+      name
+    }
+  }
 `;
 
 export const ADD_ITEM = gql`
-	mutation AddItemToContainer(
-		$containerId: ID!
-		$itemId: ID!
-		$originalQuantity: Int!
-		$expiration: Date
-		$itemStatus: ItemStatus!
-	) {
-		addItemToContainer(
-			containerId: $containerId
-			itemId: $itemId
-			expiration: $expiration
-			originalQuantity: $originalQuantity
-			itemStatus: $itemStatus
-		) {
-			id
-		}
-	}
+  mutation AddItemToContainer(
+    $containerId: ID!
+    $itemId: ID!
+    $originalQuantity: Int!
+    $expiration: Date
+    $itemStatus: ItemStatus!
+  ) {
+    addItemToContainer(
+      containerId: $containerId
+      itemId: $itemId
+      expiration: $expiration
+      originalQuantity: $originalQuantity
+      itemStatus: $itemStatus
+    ) {
+      id
+    }
+  }
 `;
 
 const useStyles = makeStyles((theme) => ({
@@ -70,7 +69,7 @@ export default function SingleItemAdd(props) {
   });
 
   const [expiration, setExpiration] = useState(
-    new Date(1606878000000).toISOString().slice(0, 10)
+    new Date().toISOString().slice(0, 10)
   );
   const [addItem, { error: addItemError }] = useMutation(ADD_ITEM, {
     variables: {
@@ -176,5 +175,4 @@ export default function SingleItemAdd(props) {
       </div>
     </Container>
   );
-
 }

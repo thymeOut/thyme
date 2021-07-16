@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { useQuery, gql } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import SingleItemAdd from './SingleItemAdd';
 import AddItemCardGrid from './AddItemCardGrid';
 import ContainerQuery from '../../server/graphql/queries/Container.graphql';
 import ContainerItems from '../../server/graphql/queries/ContainerItems.graphql';
 import Items from '../../server/graphql/queries/Items.graphql';
-import CreateItem from './CreateItem';
 import { useHistory } from 'react-router';
 import { Button, Typography, Container, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -53,7 +52,6 @@ export default function AddItemToContainer(props) {
   const userId = localStorage.getItem('user-id');
   const containerId = props.match.params.id;
   const classes = useStyles();
-  const history = useHistory();
   const [addToggle, setAddToggle] = useState(false);
   const [itemId, setItemId] = useState(0);
   const {

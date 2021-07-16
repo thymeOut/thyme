@@ -1,6 +1,5 @@
 import React from 'react';
 import { Grid, Container } from '@material-ui/core';
-import { spacing } from '@material-ui/system';
 
 import AddItemCard from './AddItemCard';
 
