@@ -118,7 +118,7 @@ function LoginForm() {
                     </Grid>
                     <Grid item>
                       <Button
-                        style={{ marginRight: 40, fontFamily: 'Poppins',fontWeight: 'bold' }}
+                        style={{ marginRight: 60, fontFamily: 'Poppins',fontWeight: 'bold' }}
                         variant='contained'
                         color='primary'
                         type='submit'
