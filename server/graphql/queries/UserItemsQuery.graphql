@@ -3,6 +3,7 @@ query UserItemsQuery($id: ID!) {
     containerItems {
       item {
         name
+        imageUrl
       }
       createdAt
       id
@@ -11,6 +12,7 @@ query UserItemsQuery($id: ID!) {
       expiration
       price
       itemStatus
+      imageUrl
     }
   }
 }

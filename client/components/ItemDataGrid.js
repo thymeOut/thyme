@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import clsx from "clsx";
-import { lighten, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -10,16 +8,10 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import Checkbox from "@material-ui/core/Checkbox";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import DeleteIcon from "@material-ui/icons/Delete";
-import FilterListIcon from "@material-ui/icons/FilterList";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -62,11 +54,24 @@ const headCells = [
     label: "Quantity Wasted",
   },
   {
+    id: "dollarsUsed",
+    numeric: true,
+    disablePadding: false,
+    label: "$ Used",
+  },
+  {
     id: "dollarsWasted",
     numeric: true,
     disablePadding: false,
     label: "$ Wasted",
   },
+  {
+    id: "netDollars",
+    numeric: true,
+    disablePadding: false,
+    label: "$ Net",
+  },
+  
 ];
 
 function EnhancedTableHead(props) {
@@ -170,25 +175,67 @@ export default function EnhancedTable(props) {
 
     props.items.forEach((item) => {
       const itemName = item.item.name;
+
       if (newData[itemName]) {
-        newData[itemName].quantityWasted =
-          newData[itemName].quantityWasted +
-          item.originalQuantity -
-          item.quantityUsed;
-        newData[itemName].dollarsWasted =
-          newData[itemName].dollarsWasted +
-          ((item.originalQuantity - item.quantityUsed) /
-            item.originalQuantity) *
-            (item.price / 100);
-      } else {
-        newData[itemName] = {
-          ...item,
-          dollarsWasted:
+        if (item.itemStatus.includes("EXPIRED")) {
+          newData[itemName].quantityWasted =
+            newData[itemName].quantityWasted +
+            item.originalQuantity -
+            item.quantityUsed;
+
+          newData[itemName].dollarsWasted =
+            newData[itemName].dollarsWasted +
             ((item.originalQuantity - item.quantityUsed) /
               item.originalQuantity) *
-            (item.price / 100),
-          quantityWasted: item.originalQuantity - item.quantityUsed,
-        };
+              (item.price / 100);
+
+          newData[itemName].dollarsUsed =
+            newData[itemName].dollarsUsed +
+            ((item.quantityUsed) /
+              item.originalQuantity) *
+              (item.price / 100);
+              newData[itemName].netDollars = newData[itemName].dollarsUsed +
+              ((item.quantityUsed) /
+                item.originalQuantity) *
+                (item.price / 100) - newData[itemName].dollarsWasted +
+                ((item.originalQuantity - item.quantityUsed) /
+                  item.originalQuantity) *
+                  (item.price / 100);
+        }
+      } else {
+        if (item.itemStatus.includes("EXPIRED")) {
+          newData[itemName] = {
+            ...item,
+
+            dollarsWasted:
+              ((item.originalQuantity - item.quantityUsed) /
+                item.originalQuantity) *
+              (item.price / 100),
+            quantityWasted: item.originalQuantity - item.quantityUsed,
+            dollarsUsed:
+            ((item.quantityUsed) /
+              item.originalQuantity) *
+              (item.price / 100),
+            netDollars: ((item.quantityUsed) /
+            item.originalQuantity) *
+            (item.price / 100) - ((item.originalQuantity - item.quantityUsed) /
+            item.originalQuantity) *
+          (item.price / 100)
+          };
+        } else {
+          newData[itemName] = {
+            ...item,
+            dollarsWasted: 0,
+            quantityWasted: 0,
+            dollarsUsed:
+            ((item.quantityUsed) /
+              item.originalQuantity) *
+              (item.price / 100),
+            netDollars: ((item.quantityUsed) /
+            item.originalQuantity) *
+            (item.price / 100)
+          };
+        }
       }
     });
 
@@ -238,7 +285,13 @@ export default function EnhancedTable(props) {
                       <TableCell align="right">{row.quantityUsed}</TableCell>
                       <TableCell align="right">{row.quantityWasted}</TableCell>
                       <TableCell align="right">
-                        ${Number.parseFloat(row.dollarsWasted).toPrecision(2)}
+                        ${Number.parseFloat(row.dollarsUsed).toFixed(2)}
+                      </TableCell>
+                      <TableCell align="right">
+                        ${Number.parseFloat(row.dollarsWasted).toFixed(2)}
+                      </TableCell>
+                      <TableCell align="right">
+                        ${Number.parseFloat(row.netDollars).toFixed(2)}
                       </TableCell>
                     </TableRow>
                   );

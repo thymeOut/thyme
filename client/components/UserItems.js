@@ -6,7 +6,15 @@ import DateFnsUtils from "@date-io/date-fns";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MoneyLineChart from "./MoneyLineChart";
 import EnhancedTable from "./ItemDataGrid";
-import TotalDollarUsage from './TotalDollarUsage'
+import TotalDollarUsage from "./TotalDollarUsage";
+import { formatDistance } from "date-fns";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Grid,
+  Typography,
+} from "@material-ui/core";
 
 const UserItems = (props) => {
   const [userItems, setUserItems] = useState([]);
@@ -17,7 +25,6 @@ const UserItems = (props) => {
   const [filteredItems, setFilteredItems] = useState([]);
   const [totalExpiredDollar, setTotalExpiredDollar] = useState(0);
   const [totalUsedDollar, setTotalUsedDollar] = useState(0);
-
 
   const { data, loading, error } = useQuery(UserItemsQuery, {
     variables: {
@@ -65,28 +72,37 @@ const UserItems = (props) => {
     items.reduce((acc, cur) => {
       const createdAt = new Date(cur.createdAt).toISOString().substr(0, 7);
 
-      let sum = (cur.price/100) * (cur.quantityUsed/cur.originalQuantity)
+      let sum = (cur.price / 100) * (cur.quantityUsed / cur.originalQuantity);
 
-      if(cur.itemStatus === ("EXPIRED") || cur.itemStatus === ("EXPIRED_REMOVED")){
-          sum += (cur.price/100) *-1 * ((cur.originalQuantity - cur.quantityUsed)/cur.originalQuantity)
+      if (
+        cur.itemStatus === "EXPIRED" ||
+        cur.itemStatus === "EXPIRED_REMOVED"
+      ) {
+        sum +=
+          (cur.price / 100) *
+          -1 *
+          ((cur.originalQuantity - cur.quantityUsed) / cur.originalQuantity);
       }
 
-      acc[createdAt] += sum
+      acc[createdAt] += sum;
       return acc;
     }, sumMap);
 
-    let totalDollarsExpired = 0
-    let totalDollarsUsed = 0
+    let totalDollarsExpired = 0;
+    let totalDollarsUsed = 0;
 
-    items.forEach(item => {
-        if (item.itemStatus.includes('EXPIRED')){
-            totalDollarsExpired += ((item.price/100) * ((item.originalQuantity - item.quantityUsed) / (item.originalQuantity)))
-        }
-        totalDollarsUsed += ((item.price/100) * (item.quantityUsed / item.originalQuantity))
-    })
+    items.forEach((item) => {
+      if (item.itemStatus.includes("EXPIRED")) {
+        totalDollarsExpired +=
+          (item.price / 100) *
+          ((item.originalQuantity - item.quantityUsed) / item.originalQuantity);
+      }
+      totalDollarsUsed +=
+        (item.price / 100) * (item.quantityUsed / item.originalQuantity);
+    });
 
-    setTotalExpiredDollar(totalDollarsExpired.toFixed(2))
-    setTotalUsedDollar(totalDollarsUsed.toFixed(2))
+    setTotalExpiredDollar(totalDollarsExpired.toFixed(2));
+    setTotalUsedDollar(totalDollarsUsed.toFixed(2));
 
     const lineData = [];
     for (const [key, value] of Object.entries(sumMap)) {
@@ -129,9 +145,13 @@ const UserItems = (props) => {
           onChange={changeEndDate}
         />
       </MuiPickersUtilsProvider>
-      <TotalDollarUsage totalUsedDollar={totalUsedDollar} totalExpiredDollar={totalExpiredDollar}/>
+      <TotalDollarUsage
+        totalUsedDollar={totalUsedDollar}
+        totalExpiredDollar={totalExpiredDollar}
+      />
       <MoneyLineChart data={lineData} />
       <EnhancedTable items={filteredItems} />
+      
     </div>
   );
 };

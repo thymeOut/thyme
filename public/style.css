@@ -182,3 +182,11 @@ form {
   width: auto;
   height: 500px;
 }
+
+.in-the-money {
+  color: green
+}
+
+.out-of-the-money {
+  color: red
+}
