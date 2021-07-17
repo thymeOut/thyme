@@ -15,6 +15,9 @@ const AdminUserContainers = (props) => {
 	const [ currentContainer, setCurrentContainer ] = useState({});
 	const [ updateContainer ] = useMutation(UpdateContainer);
 
+  useEffect(()=> {
+    
+  },[inactiveToggled])
 
   const handleActivate = (e) => {
     e.preventDefault();
@@ -84,6 +87,7 @@ const AdminUserContainers = (props) => {
                 checked={container.isActive}
                 id={container.id}
                 onClick={(e) => {
+                  console.log(container)
                   setCurrentContainer(container);
                   handleStatus(e);
                 }}

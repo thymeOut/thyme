@@ -22,7 +22,7 @@ const InactivateContainer = (props) => {
 			{
 				query: User,
 				variables: {
-					id: localStorage.getItem('user-id')
+					id: props.container.ownerId || localStorage.getItem('user-id')
 				}
 			}
 		]

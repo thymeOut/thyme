@@ -3,6 +3,8 @@ import TextField from "@material-ui/core/TextField";
 import { useMutation, gql } from "@apollo/client";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
+import User from "../../server/graphql/queries/User.graphql";
+
 
 const UPDATE_USER = gql`
   mutation UpdateUser($id: ID!, $input: UserInfoInput!) {
@@ -34,6 +36,15 @@ const UserSettingForm = (props) => {
         id: props.user.id,
         input: accountData,
       },
+
+      refetchQueries: [
+        {
+          query: User,
+          variables: {
+            id: props.user.id,
+          },
+        },
+      ],
     });
   };
 
