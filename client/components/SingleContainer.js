@@ -139,7 +139,7 @@ export default function SingleContainer(props) {
           </div>
           <div>
             {container.ownerId === localStorage.getItem('user-id')
-              ? <PendingUsers users={pendingUsers} containerId={container.id} />
+              ? <PendingUsers users={pendingUsers} containerId={container.id} classes={classes} />
               : ''}
           </div>
         </Container>
