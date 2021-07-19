@@ -157,7 +157,7 @@ export default function Dashboard(props) {
             My Containers
           </Typography>
           <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
+            <Badge color="secondary">
               <NotificationsIcon />
             </Badge>
           </IconButton>
@@ -190,7 +190,7 @@ export default function Dashboard(props) {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth="xlg" className={classes.container}>
+        <Container maxWidth="xl" className={classes.container}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={8} lg={9}>
               <Paper>
