@@ -101,7 +101,8 @@ export default function AddItemToContainer(props) {
 			originalQuantity: cItem.originalQuantity,
 			quantityUsed: cItem.quantityUsed,
 			expiration: cItem.expiration,
-			itemStatus: cItem.itemStatus
+			itemStatus: cItem.itemStatus,
+      price:cItem.price,
 		};
 	});
 

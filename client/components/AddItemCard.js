@@ -10,7 +10,7 @@ import { formatDistance } from 'date-fns';
 
 export default function AddItemCard(props) {
   const { item, classes } = props;
-  console.log(new Date().toISOString().slice(0, 16));
+  console.log(item.price);
   return (
     <Grid item key={item.id} xs={6} sm={4} md={2}>
       <Card className={classes.card}>
@@ -29,20 +29,28 @@ export default function AddItemCard(props) {
           <Typography gutterBottom component='h3'>
             {new Date(item.expiration).toISOString().slice(0, 16) <
             new Date().toISOString().slice(0, 16) ? (
-              <p>
+              <>
                 Expired{' '}
                 {formatDistance(new Date(item.expiration), new Date(), {
                   addSuffix: true,
                 })}
-              </p>
+              </>
             ) : (
-              <p>
+              <>
                 Expires{' '}
                 {formatDistance(new Date(item.expiration), new Date(), {
                   addSuffix: true,
                 })}
-              </p>
+              </>
             )}
+          </Typography>
+          <Typography gutterBottom component='h3'>
+            {item.price ? (
+              <>
+                Total Price: {'$'}
+                {item.price / 100}
+              </>
+            ):<></>}
           </Typography>
         </CardContent>
       </Card>
