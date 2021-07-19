@@ -9,6 +9,9 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
 
 const GET_ITEM = gql`
   query Item($id: ID!) {
@@ -25,6 +28,7 @@ export const ADD_ITEM = gql`
     $originalQuantity: Int!
     $expiration: Date
     $itemStatus: ItemStatus!
+    $price: Int
   ) {
     addItemToContainer(
       containerId: $containerId
@@ -32,6 +36,7 @@ export const ADD_ITEM = gql`
       expiration: $expiration
       originalQuantity: $originalQuantity
       itemStatus: $itemStatus
+      price: $price
     ) {
       id
     }
@@ -71,6 +76,8 @@ export default function SingleItemAdd(props) {
   const [expiration, setExpiration] = useState(
     new Date().toISOString().slice(0, 10)
   );
+
+  const [price, setPrice] = useState(0);
   const [addItem, { error: addItemError }] = useMutation(ADD_ITEM, {
     variables: {
       containerId: props.containerId,
@@ -78,6 +85,7 @@ export default function SingleItemAdd(props) {
       originalQuantity: +quantity,
       itemStatus: 'ACTIVE',
       expiration: expiration,
+      price: +price *100,
     },
     refetchQueries: [
       {
@@ -103,6 +111,8 @@ export default function SingleItemAdd(props) {
       setQuantity(event.target.value);
     } else if (event.target.name === 'expiration') {
       setExpiration(event.target.value);
+    } else { 
+      setPrice(event.target.value);
     }
   };
 
@@ -111,6 +121,7 @@ export default function SingleItemAdd(props) {
     addItem();
     props.setAddToggle(false);
   };
+
   return (
     <Container className='singleItemAdd' maxWidth='xs'>
       <div className={classes.paper}>
@@ -151,6 +162,22 @@ export default function SingleItemAdd(props) {
                   shrink: true,
                 }}
               />
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={4}>
+              <FormControl>
+              <Input
+                id='integer'
+                label='Price'
+                type='integer'
+                name='price'
+                onChange={handleChange}
+                defaultValue={price}
+                className={classes.textField}
+                startAdornment={<InputAdornment position="start">$</InputAdornment>}                
+              />
+              </FormControl>
             </Grid>
           </Grid>
           <Button

@@ -5,11 +5,13 @@ import {
   ApolloProvider,
   InMemoryCache,
   createHttpLink,
+  from,
 } from '@apollo/client';
 import App from './App';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { onError } from 'apollo-link-error';
 import { setContext } from '@apollo/client/link/context';
+import { ApolloLink } from 'apollo-link';
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
@@ -35,8 +37,11 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const link = ApolloLink.from([authLink, errorLink, httpLink]);
+
 const client = new ApolloClient({
-  link: authLink.concat(httpLink,errorLink),
+  link,
+  // link: authLink.concat(httpLink, errorLink),
   cache: new InMemoryCache(),
   resolvers: {},
 });
