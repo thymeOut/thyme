@@ -71,6 +71,8 @@ export default function CreateItem(props) {
     },
   });
 
+ 
+
   const [addItem, { error: addItemError }] = useMutation(ADD_ITEM, {
     variables: {
       containerId: containerId,
@@ -78,7 +80,7 @@ export default function CreateItem(props) {
       originalQuantity: +quantity,
       expiration: new Date(expiration),
       itemStatus: 'ACTIVE',
-      price: +price * 100,
+      price: +quantity * +price * 100,
     },
     refetchQueries: [
       {

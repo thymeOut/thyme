@@ -85,7 +85,7 @@ export default function SingleItemAdd(props) {
       originalQuantity: +quantity,
       itemStatus: 'ACTIVE',
       expiration: expiration,
-      price: +price *100,
+      price: +price * 100 * +quantity,
     },
     refetchQueries: [
       {
@@ -111,7 +111,7 @@ export default function SingleItemAdd(props) {
       setQuantity(event.target.value);
     } else if (event.target.name === 'expiration') {
       setExpiration(event.target.value);
-    } else { 
+    } else {
       setPrice(event.target.value);
     }
   };
@@ -167,16 +167,18 @@ export default function SingleItemAdd(props) {
           <Grid container spacing={2}>
             <Grid item xs={12} sm={4}>
               <FormControl>
-              <Input
-                id='integer'
-                label='Price'
-                type='integer'
-                name='price'
-                onChange={handleChange}
-                defaultValue={price}
-                className={classes.textField}
-                startAdornment={<InputAdornment position="start">$</InputAdornment>}                
-              />
+                <Input
+                  id='integer'
+                  label='Price'
+                  type='integer'
+                  name='price'
+                  onChange={handleChange}
+                  defaultValue={price}
+                  className={classes.textField}
+                  startAdornment={
+                    <InputAdornment position='start'>$</InputAdornment>
+                  }
+                />
               </FormControl>
             </Grid>
           </Grid>
