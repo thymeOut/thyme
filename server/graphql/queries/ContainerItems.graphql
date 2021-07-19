@@ -1,13 +1,13 @@
 query ContainerItems($containerId: ID!) {
-    containerItems(containerId: $containerId) {
-      id
-      userId
-      itemId
-      containerId
-      originalQuantity
-      quantityUsed
-      expiration
-      itemStatus
-      
-    }
+  containerItems(containerId: $containerId) {
+    id
+    userId
+    itemId
+    containerId
+    originalQuantity
+    quantityUsed
+    expiration
+    itemStatus
+    price
   }
+}

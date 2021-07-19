@@ -37,66 +37,66 @@ const typeDefs = gql`
     containerItems: [ContainerItem]
     containerUsers: [ContainerUser]
     containerUser: ContainerUser
-	}
+  }
 
-	type Container {
-		id: ID!
-		name: String!
-		type: ContainerType!
-		imageUrl: String!
-		isActive: Boolean!
-		ownerId: ID!
-		users: [User!]
-		items: [Item!]
-		containerUser: ContainerUser
-		containerItems: [ContainerItem]
-	}
+  type Container {
+    id: ID!
+    name: String!
+    type: ContainerType!
+    imageUrl: String!
+    isActive: Boolean!
+    ownerId: ID!
+    users: [User!]
+    items: [Item!]
+    containerUser: ContainerUser
+    containerItems: [ContainerItem]
+  }
 
-	type ContainerItem {
-		id: ID!
-		originalQuantity: Int!
-		quantityUsed: Int
-		expiration: Date
+  type ContainerItem {
+    id: ID!
+    originalQuantity: Int!
+    quantityUsed: Int
+    expiration: Date
     price: Int
     createdAt: Date
-		imageUrl: String
-		itemStatus: ItemStatus!
-		item: Item
-		user: User
-		container: Container!
-		containerId: ID!
-		itemId: ID!
-		userId: ID!
-	}
+    imageUrl: String
+    itemStatus: ItemStatus!
+    item: Item
+    user: User
+    container: Container!
+    containerId: ID!
+    itemId: ID!
+    userId: ID!
+  }
 
-	type ContainerUser {
-		id: ID!
-		role: Role!
-		container: Container
-		user: User
-		ownerId: ID!
-	}
+  type ContainerUser {
+    id: ID!
+    role: Role!
+    container: Container
+    user: User
+    ownerId: ID!
+  }
 
-	type Item {
-		id: ID!
-		name: String!
-		imageUrl: String
-		containerItem: ContainerItem
-		users: [User]
-		containers: [Container]
-	}
+  type Item {
+    id: ID!
+    name: String!
+    imageUrl: String
+    containerItem: ContainerItem
+    users: [User]
+    containers: [Container]
+  }
 
-	enum ContainerType {
-		fridge
-		pantry
-		minifridge
-		freezer
-	}
+  enum ContainerType {
+    fridge
+    pantry
+    minifridge
+    freezer
+  }
 
-	enum ItemStatus {
-		ACTIVE
-		EXPIRED
-		REMOVED
+  enum ItemStatus {
+    ACTIVE
+    EXPIRED
+    REMOVED
     EXPIRED_REMOVED
   }
 
@@ -151,6 +151,7 @@ const typeDefs = gql`
       originalQuantity: Int!
       expiration: Date
       itemStatus: ItemStatus!
+      price: Int
     ): ContainerItem!
     createItem(name: String!, imageUrl: String): Item!
     updateContainerItem(id: ID!, input: ContainerItemInput): ContainerItem
@@ -406,6 +407,7 @@ const rootResolver = {
           containerId: args.containerId,
           expiration: args.expiration,
           itemId: item[0].dataValues.id,
+          price: args.price * 100,
         });
         return containerItem;
       } catch (error) {
@@ -428,7 +430,7 @@ const rootResolver = {
       try {
         const containerUser = await ContainerUser.findByPk(args.id);
         return await containerUser.update({
-          role: args.input
+          role: args.input,
         });
       } catch (error) {
         console.error('error in updateContainerUser mutation resolver');
