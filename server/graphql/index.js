@@ -407,7 +407,7 @@ const rootResolver = {
           containerId: args.containerId,
           expiration: args.expiration,
           itemId: item[0].dataValues.id,
-          price: args.price * 100,
+          price: args.price,
         });
         return containerItem;
       } catch (error) {

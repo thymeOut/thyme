@@ -85,7 +85,7 @@ export default function SingleItemAdd(props) {
       originalQuantity: +quantity,
       itemStatus: 'ACTIVE',
       expiration: expiration,
-      price: +price,
+      price: +price *100,
     },
     refetchQueries: [
       {
