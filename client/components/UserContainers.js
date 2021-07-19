@@ -85,7 +85,7 @@ export default function UserContainers() {
     <div className="all-container-view">
       <h2>Containers</h2>
       <div className="all-container-header">
-        <ButtonGroup variant="outlined" color="primary">
+        <ButtonGroup variant="outlined" color="primary" className="container-button-group">
           <Button onClick={() => setCreateToggle(!createToggle)}>
             Add new container
           </Button>

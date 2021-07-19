@@ -55,7 +55,7 @@ function RegisterForm() {
       localStorage.setItem('token', data.createUser.token);
       localStorage.setItem('user-id', data.createUser.user.id);
       setLoggedIn(true);
-      history.push('/');
+      history.push('/containers');
     },
   });
 

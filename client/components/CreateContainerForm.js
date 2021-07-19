@@ -100,8 +100,6 @@ const ContainerForm = (props) => {
     errorType = addUserError;
   }
 
-  console.log(addedUsers)
-
   useEffect(() => {}, [addedUsers]);
   return (
     <form onSubmit={handleContainerSubmit} className={classes.root}>

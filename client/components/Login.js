@@ -44,7 +44,7 @@ function LoginForm() {
       localStorage.setItem('user-id', login.login.user.id);
       localStorage.setItem('isAdmin', login.login.user.isAdmin);
       setLoggedIn(true);
-      history.push('/');
+      history.push('/containers');
     },
   });
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Routes from "./Routes";
 import NavBar from "./components/NavBar";
+import Dashboard from "./components/Dashboard";
 import { UserContext } from "./UserContext";
 
 export default function App() {
@@ -9,8 +10,7 @@ export default function App() {
 
   return (
     <UserContext.Provider value={{ isLoggedIn, setLoggedIn }}>
-      <NavBar />
-      <Routes />
+      {isLoggedIn ? <Dashboard/> : <NavBar /> }
     </UserContext.Provider>
   );
 }
