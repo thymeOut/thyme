@@ -1,30 +1,30 @@
-import React, { useState } from "react";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import { MenuItem, Select } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import { useMutation } from "@apollo/client";
-import { useHistory } from "react-router";
-import ContainerQuery from "../../server/graphql/queries/Container.graphql";
-import ContainerItems from "../../server/graphql/queries/ContainerItems.graphql";
-import UpdateContainerItem from "../../server/graphql/mutations/UpdateContainerItem.graphql";
+import React, { useState } from 'react';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import { MenuItem, Select } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import { useMutation } from '@apollo/client';
+import { useHistory } from 'react-router';
+import ContainerQuery from '../../server/graphql/queries/Container.graphql';
+import ContainerItems from '../../server/graphql/queries/ContainerItems.graphql';
+import UpdateContainerItem from '../../server/graphql/mutations/UpdateContainerItem.graphql';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
   submit: {
@@ -44,9 +44,9 @@ export default function EditItem(props) {
   const [ownerId, setOwnerId] = useState(item.userId);
 
   const handleChange = (event) => {
-    if (event.target.name === "owner") {
+    if (event.target.name === 'owner') {
       setOwnerId(event.target.value);
-    } else if (event.target.name === "expiration") {
+    } else if (event.target.name === 'expiration') {
       setExpiration(event.target.value);
     }
   };
@@ -120,11 +120,17 @@ export default function EditItem(props) {
                 value={ownerId}
                 onChange={handleChange}
               >
-                {users.map((user) => (
-                  <MenuItem key={user.id} value={user.id}>
-                    {user.firstName}
-                  </MenuItem>
-                ))}
+                {users.map((user) => {
+                  if (user.containerUser.role !== 'pending') {
+                    return (
+                      <MenuItem key={user.id} value={user.id}>
+                        {user.firstName}
+                      </MenuItem>
+                    );
+                  } else {
+                    return '';
+                  }
+                })}
               </Select>
             </Grid>
           </Grid>

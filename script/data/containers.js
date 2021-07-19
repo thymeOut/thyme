@@ -10,6 +10,7 @@ let containers = [
     name: "Jane's Pantry",
     type: 'pantry',
     ownerId: 2,
+    imageUrl: 'https://www.closetcreationsri.com/_images/pantry.png',
   },
 ];
 
@@ -21,6 +22,8 @@ for (let i = 0; i < 100; i++) {
     type: containerTypes[Math.floor(Math.random() * 4)],
     ownerId: Math.floor(Math.random() * 104),
   };
+
+
 
   containers.push(newContainer);
 }

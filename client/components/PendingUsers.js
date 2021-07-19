@@ -4,10 +4,10 @@ import UpdateContainerUser from '../../server/graphql/mutations/UpdateContainerU
 import DeleteContainerUser from '../../server/graphql/mutations/DeleteContainerUser.graphql';
 import ContainerQuery from '../../server/graphql/queries/Container.graphql';
 import ContainerItems from '../../server/graphql/queries/ContainerItems.graphql';
-import { Button, ButtonGroup, Typography } from '@material-ui/core';
+import { Button, ButtonGroup, Typography, Container } from '@material-ui/core';
 
 const PendingUsers = (props) => {
-  const { users, containerId } = props;
+  const { users, containerId, classes } = props;
 
   // WHERE I AM AT—ADD useMutation HERE (FOLLOW ITEMCARD FOR PRECEDENT)
   const [updateContainerUser] = useMutation(UpdateContainerUser);
@@ -50,28 +50,38 @@ const PendingUsers = (props) => {
   };
 
   return (
-    <div>
-      <h3>Users pending invite acceptance:</h3>
-      <div>
-        {users.map((user, idx) => {
-          return (
-            <div key={idx}>
-              <Typography>
-                {user.firstName} {user.lastName}
-              </Typography>
-              <ButtonGroup>
-                <Button onClick={() => handleAccept(user.containerUser.id)}>
-                  Accept
-                </Button>
-                <Button onClick={() => handleReject(user.containerUser.id)}>
-                  Reject
-                </Button>
-              </ButtonGroup>
-            </div>
-          );
-        })}
-      </div>
-    </div>
+    <Container
+      maxWidth="sm"
+    >
+      <Typography
+        component="h1"
+        variant="h4"
+        align="center"
+        color="textPrimary"
+        gutterBottom
+        style={{ paddingTop: '30px' }}
+      >
+        Users waiting to join:
+      </Typography>
+
+      {users.map((user, idx) => {
+        return (
+          <div key={idx}>
+            <Typography>
+              {user.firstName} {user.lastName}
+            </Typography>
+            <ButtonGroup>
+              <Button onClick={() => handleAccept(user.containerUser.id)}>
+                Accept
+              </Button>
+              <Button onClick={() => handleReject(user.containerUser.id)}>
+                Reject
+              </Button>
+            </ButtonGroup>
+          </div>
+        );
+      })}
+    </Container>
   );
 };
 
