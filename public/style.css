@@ -142,8 +142,11 @@ nav a {
 .all-container-header {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
-  margin: 10px;
+}
+
+.container-button-group {
+  padding-right: 10px;
+
 }
 
 .divider {
