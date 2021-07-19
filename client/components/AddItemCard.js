@@ -10,6 +10,7 @@ import { formatDistance } from 'date-fns';
 
 export default function AddItemCard(props) {
   const { item, classes } = props;
+  console.log(item.price)
   return (
     <Grid item key={item.id} xs={6} sm={4} md={2}>
       <Card className={classes.card}>
@@ -46,8 +47,8 @@ export default function AddItemCard(props) {
           <Typography gutterBottom component='h3'>
             {item.price ? (
               <>
-                Total Price: {'$'}
-                {item.price / 100}
+                Price per Item: {'$'}
+                {(item.price/ 100).toFixed(2)}
               </>
             ):<></>}
           </Typography>
