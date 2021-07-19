@@ -80,7 +80,7 @@ export default function CreateItem(props) {
       originalQuantity: +quantity,
       expiration: new Date(expiration),
       itemStatus: 'ACTIVE',
-      price: +quantity * +price * 100,
+      price: +price,
     },
     refetchQueries: [
       {
