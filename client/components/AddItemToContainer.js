@@ -88,7 +88,7 @@ export default function AddItemToContainer(props) {
 	const { container } = containerData;
 
 	const containerItems = containerItemData.containerItems.map((cItem) => {
-		let item = container.items.filter((item) => item.id === cItem.itemId)[0];
+		let item = container.items.find((item) => item.id === cItem.itemId);
 
 		return {
 			id: cItem.id,

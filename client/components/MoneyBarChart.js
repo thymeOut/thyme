@@ -41,20 +41,18 @@ const MoneyBarChart = (props) => {
       return acc;
     }, sumMap);
 
-    console.log(sumMap)
+
 
     const line = [];
     for (const [key, value] of Object.entries(sumMap)) {
       line.push({ month: key, dollarsUsed: value.dollarsUsed, dollarsWasted: value.dollarsWasted });
     }
-    console.log()
     setLineData(line);
   }, [props.items]);
 
   return props.items.length ? (
     <div className="test">
       Food Usage
-      {console.log(lineData, props.items)}
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           width={500}

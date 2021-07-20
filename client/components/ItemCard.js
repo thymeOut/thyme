@@ -42,12 +42,6 @@ function ItemCard(props) {
   });
 
   const [removeItem] = useMutation(UpdateContainerItem, {
-    variables: {
-      id: item.id,
-      input: {
-        itemStatus: 'REMOVED',
-      },
-    },
     refetchQueries: [
       {
         query: ContainerQuery,
@@ -93,12 +87,23 @@ function ItemCard(props) {
         },
       });
     } else {
-      alert(`Whoops! Can't add more ${item.name.toLowerCase()} than originally added. Try adding a new instance of that item. Hint: it might make it easier to keep track of which expires first :-)`);
+      alert(
+        `Whoops! Can't add more ${item.name.toLowerCase()} than originally added. Try adding a new instance of that item. Hint: it might make it easier to keep track of which expires first :-)`
+      );
     }
   };
 
   const handleRemove = () => {
-    removeItem();
+    const status =
+      item.itemStatus === 'EXPIRED' ? 'EXPIRED_REMOVED' : 'REMOVED';
+    removeItem({
+      variables: {
+        id: item.id,
+        input: {
+          itemStatus: status,
+        },
+      },
+    });
   };
 
   return (
@@ -110,7 +115,7 @@ function ItemCard(props) {
           title={item.name}
         />
         <CardContent className={classes.cardContent}>
-          <Typography gutterBottom variant="h5" component="h2">
+          <Typography gutterBottom variant='h5' component='h2'>
             {item.name}
           </Typography>
           <Typography>
@@ -143,15 +148,15 @@ function ItemCard(props) {
         </CardContent>
         {localId === item.userId && (
           <CardActions>
-            <ButtonGroup size="small" color="primary">
+            <ButtonGroup size='small' color='primary'>
               <Button onClick={handleDecrement}>-</Button>
               <Button>{item.originalQuantity - item.quantityUsed}</Button>
               <Button onClick={handleIncrement}>+</Button>
             </ButtonGroup>
             <ButtonGroup>
               <Button
-                size="small"
-                color="primary"
+                size='small'
+                color='primary'
                 component={Link}
                 to={{
                   pathname: `${containerId}/edititem/${item.id}`,
@@ -160,7 +165,7 @@ function ItemCard(props) {
               >
                 <EditIcon />
               </Button>
-              <Button size="small" color="primary" onClick={handleRemove}>
+              <Button size='small' color='primary' onClick={handleRemove}>
                 <DeleteIcon />
               </Button>
             </ButtonGroup>
