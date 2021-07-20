@@ -101,8 +101,8 @@ const ItemData = (props) => {
       <MoneyBarChart items={filteredItems} months={monthRange} />
       {' '}
       <MoneyLineChart items={filteredItems} months={monthRange} />
-      
-      <EnhancedTable items={filteredItems} />
+      {' '}
+      <EnhancedTable items={filteredItems} className="item-data-list"/>
     </div>
   );
 };
