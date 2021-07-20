@@ -72,15 +72,15 @@ export default function CreateItem(props) {
   });
 
  
-
+const expirationDate=expiration? new Date(expiration):null
   const [addItem, { error: addItemError }] = useMutation(ADD_ITEM, {
     variables: {
       containerId: containerId,
       itemId: id,
       originalQuantity: +quantity,
-      expiration: new Date(expiration),
+      expiration: expirationDate,
       itemStatus: 'ACTIVE',
-      price: +price,
+      price: +price*100,
     },
     refetchQueries: [
       {
@@ -97,7 +97,7 @@ export default function CreateItem(props) {
       },
     ],
     onCompleted: (addItem) => {
-      history.push(`/containers/${containerId}`);
+      history.push(`/containers/${containerId}/add`);
     },
   });
 
@@ -169,7 +169,7 @@ export default function CreateItem(props) {
                     type='date'
                     name='expiration'
                     onChange={handleChange}
-                    defaultValue={expiration}
+                    // defaultValue={expiration}
                     className={classes.textField}
                     InputLabelProps={{
                       shrink: true,

@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
+import React, { useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -24,7 +24,7 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
-  return order === "desc"
+  return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
@@ -40,38 +40,37 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: "name", numeric: false, disablePadding: true, label: "Item" },
+  { id: 'name', numeric: false, disablePadding: true, label: 'Item' },
   {
-    id: "quantityUsed",
+    id: 'quantityUsed',
     numeric: true,
     disablePadding: false,
-    label: "Quantity Used",
+    label: 'Quantity Used',
   },
   {
-    id: "quantityWasted",
+    id: 'quantityWasted',
     numeric: true,
     disablePadding: false,
-    label: "Quantity Wasted",
+    label: 'Quantity Wasted',
   },
   {
-    id: "dollarsUsed",
+    id: 'dollarsUsed',
     numeric: true,
     disablePadding: false,
-    label: "$ Used",
+    label: '$ Used',
   },
   {
-    id: "dollarsWasted",
+    id: 'dollarsWasted',
     numeric: true,
     disablePadding: false,
-    label: "$ Wasted",
+    label: '$ Wasted',
   },
   {
-    id: "netDollars",
+    id: 'netDollars',
     numeric: true,
     disablePadding: false,
-    label: "$ Net",
+    label: '$ Net',
   },
-  
 ];
 
 function EnhancedTableHead(props) {
@@ -94,19 +93,19 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
+            align={headCell.numeric ? 'right' : 'left'}
+            padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
+              direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
                 <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </span>
               ) : null}
             </TableSortLabel>
@@ -119,10 +118,10 @@ function EnhancedTableHead(props) {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
+    width: '100%',
   },
   paper: {
-    width: "100%",
+    width: '100%',
     marginBottom: theme.spacing(2),
   },
   table: {
@@ -130,12 +129,12 @@ const useStyles = makeStyles((theme) => ({
   },
   visuallyHidden: {
     border: 0,
-    clip: "rect(0 0 0 0)",
+    clip: 'rect(0 0 0 0)',
     height: 1,
     margin: -1,
-    overflow: "hidden",
+    overflow: 'hidden',
     padding: 0,
-    position: "absolute",
+    position: 'absolute',
     top: 20,
     width: 1,
   },
@@ -143,16 +142,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EnhancedTable(props) {
   const classes = useStyles();
-  const [order, setOrder] = useState("desc");
-  const [orderBy, setOrderBy] = useState("quantityUsed");
+  const [order, setOrder] = useState('desc');
+  const [orderBy, setOrderBy] = useState('quantityUsed');
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [itemRows, setItemRows] = useState([]);
 
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
@@ -176,7 +175,7 @@ export default function EnhancedTable(props) {
       const itemName = item.item.name;
 
       if (newData[itemName]) {
-        if (item.itemStatus.includes("EXPIRED")) {
+        if (item.itemStatus.includes('EXPIRED')) {
           newData[itemName].quantityWasted =
             newData[itemName].quantityWasted +
             item.originalQuantity -
@@ -187,22 +186,21 @@ export default function EnhancedTable(props) {
             ((item.originalQuantity - item.quantityUsed) /
               item.originalQuantity) *
               (item.price / 100);
-
+          newData[itemName].quantityUsed =
+            newData[itemName].quantityUsed + item.quantityUsed;
           newData[itemName].dollarsUsed =
             newData[itemName].dollarsUsed +
-            ((item.quantityUsed) /
+            (item.quantityUsed / item.originalQuantity) * (item.price / 100);
+          newData[itemName].netDollars =
+            newData[itemName].dollarsUsed +
+            (item.quantityUsed / item.originalQuantity) * (item.price / 100) -
+            newData[itemName].dollarsWasted +
+            ((item.originalQuantity - item.quantityUsed) /
               item.originalQuantity) *
               (item.price / 100);
-              newData[itemName].netDollars = newData[itemName].dollarsUsed +
-              ((item.quantityUsed) /
-                item.originalQuantity) *
-                (item.price / 100) - newData[itemName].dollarsWasted +
-                ((item.originalQuantity - item.quantityUsed) /
-                  item.originalQuantity) *
-                  (item.price / 100);
         }
       } else {
-        if (item.itemStatus.includes("EXPIRED")) {
+        if (item.itemStatus.includes('EXPIRED')) {
           newData[itemName] = {
             ...item,
 
@@ -212,14 +210,12 @@ export default function EnhancedTable(props) {
               (item.price / 100),
             quantityWasted: item.originalQuantity - item.quantityUsed,
             dollarsUsed:
-            ((item.quantityUsed) /
-              item.originalQuantity) *
-              (item.price / 100),
-            netDollars: ((item.quantityUsed) /
-            item.originalQuantity) *
-            (item.price / 100) - ((item.originalQuantity - item.quantityUsed) /
-            item.originalQuantity) *
-          (item.price / 100)
+              (item.quantityUsed / item.originalQuantity) * (item.price / 100),
+            netDollars:
+              (item.quantityUsed / item.originalQuantity) * (item.price / 100) -
+              ((item.originalQuantity - item.quantityUsed) /
+                item.originalQuantity) *
+                (item.price / 100),
           };
         } else {
           newData[itemName] = {
@@ -227,12 +223,9 @@ export default function EnhancedTable(props) {
             dollarsWasted: 0,
             quantityWasted: 0,
             dollarsUsed:
-            ((item.quantityUsed) /
-              item.originalQuantity) *
-              (item.price / 100),
-            netDollars: ((item.quantityUsed) /
-            item.originalQuantity) *
-            (item.price / 100)
+              (item.quantityUsed / item.originalQuantity) * (item.price / 100),
+            netDollars:
+              (item.quantityUsed / item.originalQuantity) * (item.price / 100),
           };
         }
       }
@@ -250,22 +243,22 @@ export default function EnhancedTable(props) {
     rowsPerPage -
     Math.min(rowsPerPage, props.items.length - page * rowsPerPage);
   return (
-    <div className={classes.root} id="item-data-table">
+    <div className={classes.root} id='item-data-table'>
       <Paper className={classes.paper}>
         <Typography
           className={classes.title}
-          variant="h6"
-          id="tableTitle"
-          component="div"
+          variant='h6'
+          id='tableTitle'
+          component='div'
         >
           Items
         </Typography>
         <TableContainer>
           <Table
             className={classes.table}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-            aria-label="enhanced table"
+            aria-labelledby='tableTitle'
+            size={dense ? 'small' : 'medium'}
+            aria-label='enhanced table'
           >
             <EnhancedTableHead
               classes={classes}
@@ -280,16 +273,16 @@ export default function EnhancedTable(props) {
                 .map((row, index) => {
                   return (
                     <TableRow key={index}>
-                      <TableCell align="left">{row.item.name}</TableCell>
-                      <TableCell align="right">{row.quantityUsed}</TableCell>
-                      <TableCell align="right">{row.quantityWasted}</TableCell>
-                      <TableCell align="right">
+                      <TableCell align='left'>{row.item.name}</TableCell>
+                      <TableCell align='right'>{row.quantityUsed}</TableCell>
+                      <TableCell align='right'>{row.quantityWasted}</TableCell>
+                      <TableCell align='right'>
                         ${Number.parseFloat(row.dollarsUsed).toFixed(2)}
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align='right'>
                         ${Number.parseFloat(row.dollarsWasted).toFixed(2)}
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align='right'>
                         ${Number.parseFloat(row.netDollars).toFixed(2)}
                       </TableCell>
                     </TableRow>
@@ -305,7 +298,7 @@ export default function EnhancedTable(props) {
         </TableContainer>
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
-          component="div"
+          component='div'
           count={itemRows.length}
           rowsPerPage={rowsPerPage}
           page={page}
@@ -315,7 +308,7 @@ export default function EnhancedTable(props) {
       </Paper>
       <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
+        label='Dense padding'
       />
     </div>
   );
