@@ -81,6 +81,7 @@ export default function UserItems() {
       >
         All of your Items
       </Typography>
+
       <Grid container spacing={4}>
         {data.user.containerItems.map((item, idx) => {
           return (
