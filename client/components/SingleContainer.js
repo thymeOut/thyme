@@ -94,7 +94,6 @@ export default function SingleContainer(props) {
   });
 
   const { name, users } = container;
-console.log('items', containerItemData)
   const pendingUsers = users.filter(user => user.containerUser.role === 'pending');
 
   return (
