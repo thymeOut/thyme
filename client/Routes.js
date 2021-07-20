@@ -12,6 +12,7 @@ import JoinContainer from "./components/JoinContainer";
 import EditItem from './components/EditItem';
 import AdminEditUser from './components/AdminEditUser';
 import PendingUsers from './components/PendingUsers';
+import ItemData from './components/ItemData';
 import UserItems from './components/UserItems';
 
 export default function Routes(props) {
@@ -24,7 +25,8 @@ export default function Routes(props) {
         <Route exact path="/containers/:id/pending" component={PendingUsers} />
         <Route exact path="/containers/:id/add" component={AddItemToContainer} />
         <Route exact path="/containers/:id/create" component={CreateItem} />
-        <Route exact path="/charts" component={UserItems}/>
+        <Route exact path="/charts" component={ItemData}/>
+        <Route exact path="/items" component={UserItems}/>
         <Route exact path="/containers/:id/edititem/:itemId" component={EditItem} />
         <Route exact path="/admin/:id" component={AdminEditUser}/>
         <Route path="/search" component={JoinContainer} />

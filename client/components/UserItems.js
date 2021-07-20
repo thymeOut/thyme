@@ -1,159 +1,134 @@
-import React, { useEffect, useState } from "react";
-import { useQuery, gql } from "@apollo/client";
+import React, { useState } from "react";
+import { useQuery } from "@apollo/client";
+import { Link } from "react-router-dom";
+import ContainerForm from "./CreateContainerForm";
+import JoinContainer from "./JoinContainer";
+import EditContainerMenu from "./EditContainerMenu";
+import { makeStyles } from "@material-ui/core/styles";
 import UserItemsQuery from "../../server/graphql/queries/UserItemsQuery.graphql";
-import { Button, ButtonGroup } from "@material-ui/core";
-import DateFnsUtils from "@date-io/date-fns";
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import MoneyLineChart from "./MoneyLineChart";
-import EnhancedTable from "./ItemDataGrid";
-import TotalDollarUsage from "./TotalDollarUsage";
+import IconButton from "@material-ui/core/IconButton";
+import ShareIcon from "@material-ui/icons/Share";
 import { formatDistance } from "date-fns";
+
 import {
-  Card,
-  CardContent,
-  CardMedia,
-  Grid,
+  Select,
+  Dialog,
+  ButtonGroup,
+  Button,
   Typography,
+  CardMedia,
+  CardHeader,
+  CardActions,
+  CardContent,
+  Card,
+  Container,
+  Grid,
 } from "@material-ui/core";
+import EmailForm from "./EmailForm";
 
-const UserItems = (props) => {
-  const [userItems, setUserItems] = useState([]);
-  const [startDate, changeStartDate] = useState("2020-01-01");
-  const [endDate, changeEndDate] = useState("2021-08-01");
-  const [lineData, setLineData] = useState([]);
-  const [chartFilter, setChartFilter] = useState("");
-  const [filteredItems, setFilteredItems] = useState([]);
-  const [totalExpiredDollar, setTotalExpiredDollar] = useState(0);
-  const [totalUsedDollar, setTotalUsedDollar] = useState(0);
+const useStyles = makeStyles((theme) => ({
+  heroContent: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(8, 0, 6),
+  },
+  heroButtons: {
+    marginTop: theme.spacing(4),
+  },
+  cardGrid: {
+    paddingTop: theme.spacing(8),
+    paddingBottom: theme.spacing(8),
+  },
+  card: {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+  },
+  cardMedia: {
+    paddingTop: "56.25%", // 16:9
+  },
+  cardContent: {
+    flexGrow: 1,
+  },
+  footer: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(6),
+  },
+}));
 
-  const { data, loading, error } = useQuery(UserItemsQuery, {
+export default function UserItems() {
+  const classes = useStyles();
+
+  const { loading, error, data } = useQuery(UserItemsQuery, {
     variables: {
-      id: +localStorage.getItem("user-id"),
+      id: localStorage.getItem("user-id"),
     },
-    onCompleted: () => setUserItems(data.user.containerItems),
   });
 
-  const getDaysArray = (s, e) => {
-    for (var a = [], d = new Date(s); d <= e; d.setDate(d.getDate() + 1)) {
-      a.push(new Date(d));
-    }
-    return a;
-  };
-
-  const filterChart = (e) => {
-    e.preventDefault();
-    setChartFilter(e.currentTarget.value);
-  };
-
-  const filterItems = (itemArr, uniqueMonths) => {
-    const newArr = itemArr.filter((item) =>
-      uniqueMonths.includes(new Date(item.createdAt).toISOString().substr(0, 7))
-    );
-
-    if (chartFilter === "EXPIRED") {
-      return newArr.filter((item) => item.itemStatus.includes("EXPIRED"));
-    } else if (chartFilter === "ACTIVE") {
-      return newArr.filter((item) => item.itemStatus === "ACTIVE");
-    } else if (chartFilter === "") {
-      return newArr.filter((item) => item.itemStatus !== "REMOVED");
-    }
-  };
-
-  useEffect(() => {
-    const daylist = getDaysArray(new Date(startDate), new Date(endDate));
-    const final = daylist.map((v) => v.toISOString().slice(0, 7));
-    const uniqueMonths = final.filter((v, i, a) => a.indexOf(v) === i);
-    let items = filterItems(userItems, uniqueMonths);
-    setFilteredItems(items);
-
-    const sumMap = {};
-    uniqueMonths.forEach((month) => (sumMap[month] = 0));
-
-    items.reduce((acc, cur) => {
-      const createdAt = new Date(cur.createdAt).toISOString().substr(0, 7);
-
-      let sum = (cur.price / 100) * (cur.quantityUsed / cur.originalQuantity);
-
-      if (
-        cur.itemStatus === "EXPIRED" ||
-        cur.itemStatus === "EXPIRED_REMOVED"
-      ) {
-        sum +=
-          (cur.price / 100) *
-          -1 *
-          ((cur.originalQuantity - cur.quantityUsed) / cur.originalQuantity);
-      }
-
-      acc[createdAt] += sum;
-      return acc;
-    }, sumMap);
-
-    let totalDollarsExpired = 0;
-    let totalDollarsUsed = 0;
-
-    items.forEach((item) => {
-      if (item.itemStatus.includes("EXPIRED")) {
-        totalDollarsExpired +=
-          (item.price / 100) *
-          ((item.originalQuantity - item.quantityUsed) / item.originalQuantity);
-      }
-      totalDollarsUsed +=
-        (item.price / 100) * (item.quantityUsed / item.originalQuantity);
-    });
-
-    setTotalExpiredDollar(totalDollarsExpired.toFixed(2));
-    setTotalUsedDollar(totalDollarsUsed.toFixed(2));
-
-    const lineData = [];
-    for (const [key, value] of Object.entries(sumMap)) {
-      lineData.push({ month: key, dollars: value });
-    }
-    setLineData(lineData);
-  }, [startDate, endDate, userItems, chartFilter]);
+  if (loading) {
+    return "...loading";
+  }
+  if (error) {
+    console.log(error);
+    return "...error";
+  }
 
   return (
-    <div>
-      <h2>How much food are you using?</h2>
-      <ButtonGroup>
-        <Button value="" onClick={(e) => filterChart(e)}>
-          All
-        </Button>
-        <Button value="EXPIRED" onClick={(e) => filterChart(e)}>
-          Expired
-        </Button>
-        <Button value="ACTIVE" onClick={(e) => filterChart(e)}>
-          Active
-        </Button>
-      </ButtonGroup>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <DatePicker
-          variant="inline"
-          openTo="year"
-          views={["year", "month"]}
-          label="Year and Month"
-          helperText="Start from year selection"
-          value={startDate}
-          onChange={changeStartDate}
-        />
-        <DatePicker
-          variant="inline"
-          openTo="year"
-          views={["year", "month"]}
-          label="Year and Month"
-          helperText="Start from year selection"
-          value={endDate}
-          onChange={changeEndDate}
-        />
-      </MuiPickersUtilsProvider>
-      <TotalDollarUsage
-        totalUsedDollar={totalUsedDollar}
-        totalExpiredDollar={totalExpiredDollar}
-      />
-      <MoneyLineChart data={lineData} />
-      <EnhancedTable items={filteredItems} />
-      
-    </div>
-  );
-};
+    <Container className={classes.cardGrid} maxWidth="md">
+      <Grid container spacing={4}>
+        {data.user.containerItems.map((item, idx) => {
+          return (
+            <Grid item key={item.id} xs={12} sm={6} md={4}>
+              <Card className={classes.card}>
+                <CardMedia
+                  className={classes.cardMedia}
+                  image={item.item.imageUrl}
+                  title={item.name}
+                />
+                <CardContent className={classes.cardContent}>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    {item.item.name}
+                  </Typography>
 
-export default UserItems;
+                  <Typography>
+                    {new Date(item.expiration).toISOString().slice(0, 16) <
+                    new Date().toISOString().slice(0, 16) ? (
+                      <>
+                        Expired{" "}
+                        {formatDistance(new Date(item.expiration), new Date(), {
+                          addSuffix: true,
+                        })}
+                      </>
+                    ) : (
+                      <>
+                        Expires{" "}
+                        {formatDistance(new Date(item.expiration), new Date(), {
+                          addSuffix: true,
+                        })}
+                      </>
+                    )}
+                  </Typography>
+                  <Typography gutterBottom component="h4">
+                    Container:
+                    {" "}
+                    <Link to={`/containers/${item.containerId}`}>
+                      {
+                        data.user.containers.find(
+                          (container) => container.id === item.containerId
+                        ).name
+                      }
+                    </Link>
+
+                    
+                  </Typography>
+                  <Typography gutterBottom component="h4">
+                    Remaining: {item.originalQuantity - item.quantityUsed}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          );
+        })}
+      </Grid>
+    </Container>
+  );
+}

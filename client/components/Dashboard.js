@@ -17,13 +17,11 @@ import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import UserItems from "./UserItems";
 import { MainListItems, SecondaryListItems } from "./DashboardItems";
 import { UserContext } from "../UserContext";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Routes from "../Routes";
 import { useHistory } from 'react-router';
-
 
 const drawerWidth = 240;
 

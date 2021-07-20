@@ -170,7 +170,6 @@ export default function EnhancedTable(props) {
   };
 
   useEffect(() => {
-    // if itemData[item.name] exists, then add, otherwise push
     let newData = {};
 
     props.items.forEach((item) => {
@@ -251,7 +250,7 @@ export default function EnhancedTable(props) {
     rowsPerPage -
     Math.min(rowsPerPage, props.items.length - page * rowsPerPage);
   return (
-    <div className={classes.root}>
+    <div className={classes.root} id="item-data-table">
       <Paper className={classes.paper}>
         <Typography
           className={classes.title}
