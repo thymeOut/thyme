@@ -57,7 +57,6 @@ const ItemData = (props) => {
     setMonthRange(final.filter((v, i, a) => a.indexOf(v) === i));
     let items = filterItems(userItems);
     setFilteredItems(items);
-    console.log(userItems)
   }, [startDate, endDate, userItems, chartFilter]);
 
   return (
