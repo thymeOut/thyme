@@ -1,16 +1,15 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from 'react';
 
 const TotalDollarUsage = (props) => {
-
   const [totalExpiredDollar, setTotalExpiredDollar] = useState(0);
   const [totalUsedDollar, setTotalUsedDollar] = useState(0);
 
-  useEffect(()=> {
-    let totalDollarsExpired = 0
-    let totalDollarsUsed = 0
+  useEffect(() => {
+    let totalDollarsExpired = 0;
+    let totalDollarsUsed = 0;
 
     props.items.forEach((item) => {
-      if (item.itemStatus.includes("EXPIRED")) {
+      if (item.itemStatus.includes('EXPIRED')) {
         totalDollarsExpired +=
           (item.price / 100) *
           ((item.originalQuantity - item.quantityUsed) / item.originalQuantity);
@@ -21,39 +20,41 @@ const TotalDollarUsage = (props) => {
 
     setTotalExpiredDollar(totalDollarsExpired.toFixed(2));
     setTotalUsedDollar(totalDollarsUsed.toFixed(2));
-  },[props.items])
+  }, [props.items]);
 
   return (
-    <div className="totals">
+    <div className='totals'>
       <h4>
-        Money Wasted:{" "}
+        Money Wasted:{' '}
         <div
           className={
-            totalExpiredDollar < 0 ? "in-the-money" : "out-of-the-money"
+            totalExpiredDollar < 0 ? 'in-the-money' : 'out-of-the-money'
           }
         >
-          ${totalExpiredDollar*-1}
+          ${totalExpiredDollar * -1}
         </div>
       </h4>
       <h4>
-        Money Used:{" "}
+        Money Used:{' '}
         <div
           className={
-            totalExpiredDollar > 0 ? "in-the-money" : "out-of-the-money"
+            totalUsedDollar > 0 ? 'in-the-money' : 'out-of-the-money'
           }
         >
-          {" "}
+          {' '}
           ${totalUsedDollar}
         </div>
       </h4>
       <h4>
-        Net:{" "}
+        Net:{' '}
         <div
           className={
-              totalUsedDollar - totalExpiredDollar > 0 ? "in-the-money" : "out-of-the-money"
+            totalUsedDollar - totalExpiredDollar > 0
+              ? 'in-the-money'
+              : 'out-of-the-money'
           }
         >
-          {" "}
+          {' '}
           ${(totalUsedDollar - totalExpiredDollar).toFixed(2)}
         </div>
       </h4>

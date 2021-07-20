@@ -187,9 +187,8 @@ const rootResolver = {
           const data = await User.findByPk(args.id, {
             include: [
               { model: Container },
-              { model: ContainerItem, include: Item }, 
-            ]
-            
+              { model: ContainerItem, include: Item },
+            ],
           });
           return data;
         }
@@ -238,7 +237,7 @@ const rootResolver = {
           const data = await ContainerItem.findAll({
             where: {
               containerId: args.containerId,
-            }
+            },
           });
           return data;
         }
@@ -281,8 +280,7 @@ const rootResolver = {
         const token = await user.generateToken();
         return { token, user };
       } catch (error) {
-        throw new UserInputError(error);
-        // error.errors[0].message)
+        throw new UserInputError(error.errors[0].message);
       }
     },
 

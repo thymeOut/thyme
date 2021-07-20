@@ -1,9 +1,9 @@
-
 const { users, containers, items, containerItems } = require('./data');
 const {
   db,
   models: { User, Container, Item, ContainerItem, ContainerUser },
 } = require('../server/db');
+const faker = require('faker');
 
 /**
  * seed - this function clears the database, updates tables to
@@ -14,30 +14,38 @@ async function seed() {
   console.log('db synced!');
 
   // Creating Users
-  const dummyUsers = (users.map(async (user) => await User.create(user)));
+  const dummyUsers = users.map(async (user) => await User.create(user));
 
-  const dummyContainers = await Promise.all(containers.map(async (container) => {
-    const newContainer = await Container.create(container);
+  const dummyContainers = await Promise.all(
+    containers.map(async (container) => {
+      const newContainer = await Container.create(container);
 
-    await newContainer.addUser(container.ownerId, {
-      through: {
-        role: 'owner',
-      },
+      await newContainer.addUser(container.ownerId, {
+        through: {
+          role: 'owner',
+        },
+      });
     })
-  }));
+  );
 
-  const dummyItems = await Promise.all(items.map(async (item) => await Item.create(item)));
+  const dummyItems = await Promise.all(
+    items.map(async (item) => await Item.create(item))
+  );
 
-  const dummyContainerItems = await Promise.all(containerItems.map(async (containerItem, idx) => {
-    const pk = Math.ceil(Math.random() * containers.length);
+  const dummyContainerItems = await Promise.all(
+    containerItems.map(async (containerItem, idx) => {
+      const pk = Math.ceil(Math.random() * containers.length);
 
-    const container = containers[pk - 1];
+      const container = containers[pk - 1];
 
-    containerItem.containerId = pk;
-    containerItem.userId = container.ownerId;
-
-    return await ContainerItem.create(containerItem);
-  }));
+      containerItem.containerId = 2;
+      containerItem.userId = 2;
+      const fakeDate = faker.date.between('2020-09-10', '2021-09-22');
+      // containerItem.createdAt = faker.date.between('2020-09-10', '2021-09-22');
+      const item = await ContainerItem.create(containerItem);
+      return await item.update({ ...item, createdAt: fakeDate });
+    })
+  );
 
   console.log(`seeded successfully`);
   return {
