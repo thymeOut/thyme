@@ -74,6 +74,7 @@ export default function UserItems() {
 
   return (
     <Container className={classes.cardGrid} maxWidth="md">
+        {console.log(data)}
       <Grid container spacing={4}>
         {data.user.containerItems.map((item, idx) => {
           return (
