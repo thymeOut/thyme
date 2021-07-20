@@ -38,12 +38,10 @@ async function seed() {
 
       const container = containers[pk - 1];
 
-      containerItem.containerId = 2;
-      containerItem.userId = 2;
-      const fakeDate = faker.date.between('2020-09-10', '2021-09-22');
-      // containerItem.createdAt = faker.date.between('2020-09-10', '2021-09-22');
-      const item = await ContainerItem.create(containerItem);
-      return await item.update({ ...item, createdAt: fakeDate });
+      containerItem.containerId = pk;
+      containerItem.userId = container.ownerId;
+
+      return await ContainerItem.create(containerItem);
     })
   );
 
