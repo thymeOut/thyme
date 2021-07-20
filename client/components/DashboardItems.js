@@ -9,7 +9,6 @@ import BarChartIcon from "@material-ui/icons/BarChart";
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import { Link } from 'react-router-dom';
 
-
 export const MainListItems = () => {
 
   return (

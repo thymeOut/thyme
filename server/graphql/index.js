@@ -187,8 +187,9 @@ const rootResolver = {
           const data = await User.findByPk(args.id, {
             include: [
               { model: Container },
-              { model: ContainerItem, include: Item },
-            ],
+              { model: ContainerItem, include: Item }, 
+            ]
+            
           });
           return data;
         }
@@ -237,7 +238,7 @@ const rootResolver = {
           const data = await ContainerItem.findAll({
             where: {
               containerId: args.containerId,
-            },
+            }
           });
           return data;
         }
