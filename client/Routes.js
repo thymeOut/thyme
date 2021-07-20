@@ -19,6 +19,7 @@ export default function Routes(props) {
   return (
     <div>
       <Switch>
+        <Route exact path="/" component={UserContainers} />
         <Route exact path="/containers" component={UserContainers} />
         <Route exact path="/admin" component={AllUsersData} />
         <Route exact path="/containers/:id" component={SingleContainer} />
