@@ -11,7 +11,10 @@ import {
   CardMedia,
   Grid,
   Typography,
+  Dialog,
 } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import { formatDistance } from 'date-fns';
 import ContainerQuery from '../../server/graphql/queries/Container.graphql';
 import ContainerItems from '../../server/graphql/queries/ContainerItems.graphql';
@@ -79,15 +82,19 @@ function ItemCard(props) {
   };
 
   const handleIncrement = () => {
-    setQuantityUsed(quantityUsed - 1);
-    updateQuantity({
-      variables: {
-        id: item.id,
-        input: {
-          quantityUsed: quantityUsed - 1,
+    if (quantityUsed > 0) {
+      setQuantityUsed(quantityUsed - 1);
+      updateQuantity({
+        variables: {
+          id: item.id,
+          input: {
+            quantityUsed: quantityUsed - 1,
+          },
         },
-      },
-    });
+      });
+    } else {
+      alert(`Whoops! Can't add more ${item.name.toLowerCase()} than originally added. Try adding a new instance of that item. Hint: it might make it easier to keep track of which expires first :-)`);
+    }
   };
 
   const handleRemove = () => {
@@ -103,7 +110,7 @@ function ItemCard(props) {
           title={item.name}
         />
         <CardContent className={classes.cardContent}>
-          <Typography gutterBottom variant='h5' component='h2'>
+          <Typography gutterBottom variant="h5" component="h2">
             {item.name}
           </Typography>
           <Typography>
@@ -136,25 +143,27 @@ function ItemCard(props) {
         </CardContent>
         {localId === item.userId && (
           <CardActions>
-            <ButtonGroup size='small' color='primary'>
+            <ButtonGroup size="small" color="primary">
               <Button onClick={handleDecrement}>-</Button>
               <Button>{item.originalQuantity - item.quantityUsed}</Button>
               <Button onClick={handleIncrement}>+</Button>
             </ButtonGroup>
-            <Button
-              size='small'
-              color='primary'
-              component={Link}
-              to={{
-                pathname: `${containerId}/edititem/${item.id}`,
-                state: { item: item, users: users, containerId: containerId },
-              }}
-            >
-              Edit
-            </Button>
-            <Button size='small' color='primary' onClick={handleRemove}>
-              Remove
-            </Button>
+            <ButtonGroup>
+              <Button
+                size="small"
+                color="primary"
+                component={Link}
+                to={{
+                  pathname: `${containerId}/edititem/${item.id}`,
+                  state: { item: item, users: users, containerId: containerId },
+                }}
+              >
+                <EditIcon />
+              </Button>
+              <Button size="small" color="primary" onClick={handleRemove}>
+                <DeleteIcon />
+              </Button>
+            </ButtonGroup>
           </CardActions>
         )}
       </Card>
