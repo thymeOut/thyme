@@ -1,32 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import UserItemsQuery from "../../server/graphql/queries/UserItemsQuery.graphql";
 import { Button, ButtonGroup } from "@material-ui/core";
 import DateFnsUtils from "@date-io/date-fns";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MoneyLineChart from "./MoneyLineChart";
+import MoneyBarChart from "./MoneyBarChart";
+
 import EnhancedTable from "./ItemDataGrid";
 import TotalDollarUsage from "./TotalDollarUsage";
-import { formatDistance } from "date-fns";
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Grid,
-  Typography,
-} from "@material-ui/core";
+
 
 const UserItems = (props) => {
   const [userItems, setUserItems] = useState([]);
   const [startDate, changeStartDate] = useState("2020-01-01");
   const [endDate, changeEndDate] = useState("2021-08-01");
-  const [lineData, setLineData] = useState([]);
+  const [monthRange, setMonthRange] = useState([]);
   const [chartFilter, setChartFilter] = useState("");
   const [filteredItems, setFilteredItems] = useState([]);
-  const [totalExpiredDollar, setTotalExpiredDollar] = useState(0);
-  const [totalUsedDollar, setTotalUsedDollar] = useState(0);
 
-  const { data, loading, error } = useQuery(UserItemsQuery, {
+  const { data } = useQuery(UserItemsQuery, {
     variables: {
       id: +localStorage.getItem("user-id"),
     },
@@ -45,11 +38,10 @@ const UserItems = (props) => {
     setChartFilter(e.currentTarget.value);
   };
 
-  const filterItems = (itemArr, uniqueMonths) => {
+  const filterItems = (itemArr) => {
     const newArr = itemArr.filter((item) =>
-      uniqueMonths.includes(new Date(item.createdAt).toISOString().substr(0, 7))
+      monthRange.includes(new Date(item.createdAt).toISOString().substr(0, 7))
     );
-
     if (chartFilter === "EXPIRED") {
       return newArr.filter((item) => item.itemStatus.includes("EXPIRED"));
     } else if (chartFilter === "ACTIVE") {
@@ -62,58 +54,15 @@ const UserItems = (props) => {
   useEffect(() => {
     const daylist = getDaysArray(new Date(startDate), new Date(endDate));
     const final = daylist.map((v) => v.toISOString().slice(0, 7));
-    const uniqueMonths = final.filter((v, i, a) => a.indexOf(v) === i);
-    let items = filterItems(userItems, uniqueMonths);
+    setMonthRange(final.filter((v, i, a) => a.indexOf(v) === i));
+    let items = filterItems(userItems);
     setFilteredItems(items);
-
-    const sumMap = {};
-    uniqueMonths.forEach((month) => (sumMap[month] = 0));
-
-    items.reduce((acc, cur) => {
-      const createdAt = new Date(cur.createdAt).toISOString().substr(0, 7);
-
-      let sum = (cur.price / 100) * (cur.quantityUsed / cur.originalQuantity);
-
-      if (
-        cur.itemStatus === "EXPIRED" ||
-        cur.itemStatus === "EXPIRED_REMOVED"
-      ) {
-        sum +=
-          (cur.price / 100) *
-          -1 *
-          ((cur.originalQuantity - cur.quantityUsed) / cur.originalQuantity);
-      }
-
-      acc[createdAt] += sum;
-      return acc;
-    }, sumMap);
-
-    let totalDollarsExpired = 0;
-    let totalDollarsUsed = 0;
-
-    items.forEach((item) => {
-      if (item.itemStatus.includes("EXPIRED")) {
-        totalDollarsExpired +=
-          (item.price / 100) *
-          ((item.originalQuantity - item.quantityUsed) / item.originalQuantity);
-      }
-      totalDollarsUsed +=
-        (item.price / 100) * (item.quantityUsed / item.originalQuantity);
-    });
-
-    setTotalExpiredDollar(totalDollarsExpired.toFixed(2));
-    setTotalUsedDollar(totalDollarsUsed.toFixed(2));
-
-    const lineData = [];
-    for (const [key, value] of Object.entries(sumMap)) {
-      lineData.push({ month: key, dollars: value });
-    }
-    setLineData(lineData);
   }, [startDate, endDate, userItems, chartFilter]);
 
   return (
-    <div>
+    <div className='stats'>
       <h2>How much food are you using?</h2>
+
       <ButtonGroup>
         <Button value="" onClick={(e) => filterChart(e)}>
           All
@@ -125,6 +74,7 @@ const UserItems = (props) => {
           Active
         </Button>
       </ButtonGroup>
+      <div>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <DatePicker
           variant="inline"
@@ -145,13 +95,13 @@ const UserItems = (props) => {
           onChange={changeEndDate}
         />
       </MuiPickersUtilsProvider>
-      <TotalDollarUsage
-        totalUsedDollar={totalUsedDollar}
-        totalExpiredDollar={totalExpiredDollar}
-      />
-      <MoneyLineChart data={lineData} />
-      <EnhancedTable items={filteredItems} />
+      </div>
+      <TotalDollarUsage items={filteredItems} />
+      <MoneyBarChart items={filteredItems} months={monthRange} />
+      {' '}
+      <MoneyLineChart items={filteredItems} months={monthRange} />
       
+      <EnhancedTable items={filteredItems} />
     </div>
   );
 };

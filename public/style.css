@@ -210,3 +210,14 @@ form {
   color:rgb(63,81,181);
 }
 
+.totals {
+  display: flex;
+}
+
+.totals > h4 {
+  margin: 20px;
+}
+
+.stats {
+  margin: 15px;
+}
