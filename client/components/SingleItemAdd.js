@@ -83,7 +83,7 @@ export default function SingleItemAdd(props) {
       containerId: props.containerId,
       itemId: props.itemId,
       originalQuantity: +quantity,
-      itemStatus: 'ACTIVE',
+      itemStatus: new Date(expiration) < new Date() ? 'EXPIRED':'ACTIVE',
       expiration: expiration,
       price: +price *100,
     },
