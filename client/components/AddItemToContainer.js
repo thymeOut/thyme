@@ -107,7 +107,7 @@ export default function AddItemToContainer(props) {
 	});
 
 	const containerItemsFiltered = containerItems.filter((item) => {
-		return item.userId === userId && item.itemStatus === 'ACTIVE';
+		return item.userId === userId && (item.itemStatus === 'ACTIVE' || item.itemStatus === 'EXPIRED');
 	});
 
 
